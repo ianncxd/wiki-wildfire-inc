@@ -69,10 +69,10 @@ export default defineConfig({
       { icon: 'github', link: 'https://github.com/wildfire-ro' }
     ],
 
-    footer: {
-      message: 'wildfire.ro - Toate drepturile rezervate',
-      copyright: 'mulțumim comunității pentru sprijinul continuu'
-    },
+    // footer: {
+    //   message: 'wildfire.ro - Toate drepturile rezervate',
+    //   copyright: 'mulțumim comunității pentru sprijinul continuu'
+    // },
 
     search: {
       provider: 'local'

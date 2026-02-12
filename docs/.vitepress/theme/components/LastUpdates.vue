@@ -140,8 +140,8 @@
     </div>
     
     <div class="updates-footer">
-      <a href="/updates" class="view-all-link">
-        Arhivă actualizări
+      <a href="/informatii/about" class="view-all-link">
+        <span>Vezi toate noutățile</span>
         <span class="arrow">→</span>
       </a>
     </div>

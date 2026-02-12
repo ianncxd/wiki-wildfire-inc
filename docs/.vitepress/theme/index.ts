@@ -8,6 +8,7 @@ import WikiHome from './components/WikiHome.vue'
 import LastUpdates from './components/LastUpdates.vue'
 import NavSearch from './components/NavSearch.vue'
 import WildfireTag from './components/WildfireTag.vue'
+import SiteMap from './components/SiteMap.vue'
 
 // Import toate tag-urile
 import PageTagBlue from './components/tags/PageTagBlue.vue'
@@ -30,8 +31,14 @@ export default {
   
   Layout: () => {
     return h(DefaultTheme.Layout, null, {
+      // Home page - WikiHome în hero section
       'home-hero-before': () => h(WikiHome),
-      'nav-bar-title-after': () => h(NavSearch)
+      
+      // Navbar - searchbar custom după titlu
+      'nav-bar-title-after': () => h(NavSearch),
+      
+      // FOOTER - SITEMAP AUTOMAT (ASTA CAUTAI)
+      'layout-bottom': () => h(SiteMap)
     })
   },
   
@@ -41,6 +48,7 @@ export default {
     app.component('LastUpdates', LastUpdates)
     app.component('NavSearch', NavSearch)
     app.component('WildfireTag', WildfireTag)
+    app.component('SiteMap', SiteMap)
     
     // Toate tag-urile
     app.component('PageTagBlue', PageTagBlue)

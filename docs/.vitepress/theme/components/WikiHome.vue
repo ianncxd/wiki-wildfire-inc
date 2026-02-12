@@ -33,7 +33,7 @@
 
         <!-- Buton Get Started -->
         <div class="wildfire-actions">
-          <a href="/informatii/despre" class="wildfire-button">
+          <a href="/informatii/about" class="wildfire-button">
             <span>Ghid de pornire</span>
             <span class="wildfire-button-arrow">→</span>
           </a>
