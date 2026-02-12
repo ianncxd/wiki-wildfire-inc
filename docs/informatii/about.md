@@ -1,9 +1,16 @@
 ---
-title: Despre Wildfire.ro
-description: Află povestea comunității Wildfire, valorile noastre și echipa din spatele celor mai vechi servere CS2 din România
+title: Despre Wildfire
 ---
 
-# 🔥 Despre Wildfire.ro
+# Despre Wildfire
+
+<div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+  <PageTagBlue>Informații</PageTagBlue>
+  <PageTagPurple>VIP</PageTagPurple>
+  <PageTagCyan>Leaderboard</PageTagCyan>
+</div>
+
+Conținutul paginii...
 
 ## 📖 Povestea noastră
 
@@ -55,3 +62,4 @@ Astăzi, suntem recunoscuți drept una dintre cele mai **serioase și longevive 
 - **Alex** – Moderator
 
 ---
+

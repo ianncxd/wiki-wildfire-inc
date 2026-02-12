@@ -154,3 +154,88 @@
   display: flex !important;
   margin-left: 8px !important;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ /* IMPORTANT */
+/* TEMA WILDFIRE - DOAR NAVBAR */
+/* Păstrăm culorile default VitePress */
+
+/* .VPNav {
+  background: #f9fafb !important;
+  border-bottom: 1px solid #eaeef2 !important;
+}
+
+.dark .VPNav {
+  background: #1a1a1a !important;
+  border-bottom: 1px solid #2a2a2a !important;
+}
+
+.VPNavBar {
+  background: #f9fafb !important;
+}
+
+.dark .VPNavBar {
+  background: #1a1a1a !important;
+}
+
+.VPNavBar .content {
+  background: #f9fafb !important;
+}
+
+.dark .VPNavBar .content {
+  background: #1a1a1a !important;
+}
+
+.VPNavBar:not(.has-sidebar) .content {
+  background: #f9fafb !important;
+}
+
+.dark .VPNavBar:not(.has-sidebar) .content {
+  background: #1a1a1a !important;
+}
+
+/* Eliminăm orice tranziție care cauzează flash */
+/* .VPNav,
+.VPNavBar,
+.VPNavBar .content {
+  transition: none !important;
+} */
+
+/* Ascundem searchbar-ul default */
+/* .DocSearch-Button {
+  display: none !important;
+}  */

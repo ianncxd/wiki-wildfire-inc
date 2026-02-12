@@ -60,7 +60,7 @@ export default defineConfig({
 
   // EDIT LINK - GitHub
     editLink: {
-      pattern: 'https://github.com/wildfire-ro/wiki/edit/main/docs/:path',
+      pattern: 'https://github.com/solwolfs2-dot/wiki-wildfire-inc/edit/main/docs/:path',
       text: '✏️ Editează această pagină pe GitHub'
     },
 
@@ -70,8 +70,8 @@ export default defineConfig({
     ],
 
     footer: {
-      message: 'Platforma Wildfire',
-      copyright: '© 2026 wildfire.ro'
+      message: 'wildfire.ro - Toate drepturile rezervate',
+      copyright: 'mulțumim comunității pentru sprijinul continuu'
     },
 
     search: {

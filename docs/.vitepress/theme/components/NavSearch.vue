@@ -1,13 +1,16 @@
 <template>
-  <button class="nav-search-button" @click.stop.prevent="openSearch" type="button">
+  <button class="nav-search-button" @click.stop="openSearch" type="button">
     <span class="nav-search-icon">🔍</span>
-    <span class="nav-search-text">Search</span>
-    <span class="nav-search-shortcut">CTRL K</span>
+    <span class="nav-search-text">Caută...</span>
+    <span class="nav-search-shortcut">Ctrl K</span>
   </button>
 </template>
 
 <script setup lang="ts">
-const openSearch = () => {
+const openSearch = (e: MouseEvent) => {
+  e.preventDefault()
+  e.stopPropagation()
+  
   // Metoda 1: Caută butonul DocSearch
   const searchButton = document.querySelector('.DocSearch-Button')
   if (searchButton) {
@@ -16,12 +19,24 @@ const openSearch = () => {
   }
   
   // Metoda 2: Emite shortcut-ul direct
-  window.dispatchEvent(new KeyboardEvent('keydown', {
+  const event = new KeyboardEvent('keydown', {
     key: 'k',
     ctrlKey: true,
     metaKey: true,
-    bubbles: true
-  }))
+    bubbles: true,
+    cancelable: true
+  })
+  window.dispatchEvent(event)
+  
+  // Metoda 3: Fallback pentru Safari
+  setTimeout(() => {
+    window.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'k',
+      ctrlKey: true,
+      metaKey: true,
+      bubbles: true
+    }))
+  }, 50)
 }
 </script>
 
@@ -33,12 +48,16 @@ const openSearch = () => {
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   padding: 0 16px;
-  height: 38px;
-  width: 260px;
-  margin-left: 120px;
+  height: 40px;
+  width: 260px !important;
+  min-width: 260px !important;
+  max-width: 260px !important;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
+  flex-shrink: 0;
+  margin-left: 100px !important;
+  outline: none;
 }
 
 .dark .nav-search-button {
@@ -56,10 +75,15 @@ const openSearch = () => {
   border-color: #ff4500;
 }
 
+.nav-search-button:active {
+  transform: scale(0.98);
+}
+
 .nav-search-icon {
   color: #6b7280;
   font-size: 15px;
   margin-right: 8px;
+  flex-shrink: 0;
 }
 
 .nav-search-text {
@@ -70,6 +94,7 @@ const openSearch = () => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .dark .nav-search-text {
@@ -84,10 +109,35 @@ const openSearch = () => {
   padding: 2px 6px;
   border-radius: 4px;
   margin-left: 8px;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+  font-family: inherit;
+  border: 1px solid transparent;
 }
 
 .dark .nav-search-shortcut {
   background: #111111;
   color: #d1d5db;
+  border-color: #2a2a2a;
+}
+
+@media (max-width: 768px) {
+  .nav-search-button {
+    width: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    padding: 0;
+    justify-content: center;
+    margin-left: 16px !important;
+  }
+  
+  .nav-search-text,
+  .nav-search-shortcut {
+    display: none;
+  }
+  
+  .nav-search-icon {
+    margin-right: 0;
+  }
 }
 </style>
