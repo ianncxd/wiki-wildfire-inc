@@ -1,7 +1,7 @@
 <template>
   <div v-if="isHomePage" class="footer-sitemap-wrapper">
     <div class="footer-sitemap">
-      <!-- SITEMAP GRID - FĂRĂ TITLU -->
+      <!-- SITEMAP GRID - AUTOMAT DIN CONFIG -->
       <div class="sitemap-grid">
         <div v-for="section in sidebarSections" :key="section.text" class="sitemap-col">
           <h3 class="col-title" :style="getCategoryStyle(section.text)">
@@ -9,8 +9,19 @@
             {{ cleanTitle(section.text) }}
           </h3>
           <ul class="col-list">
+            <!-- Item-uri principale -->
             <li v-for="item in section.items" :key="item.link">
-              <a :href="item.link" class="col-link">
+              <div v-if="item.items" class="subsection">
+                <span class="subsection-title">{{ cleanTitle(item.text) }}</span>
+                <ul class="subsection-list">
+                  <li v-for="sub in item.items" :key="sub.link">
+                    <a :href="sub.link" class="col-link sub-link">
+                      {{ cleanTitle(sub.text) }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <a v-else :href="item.link" class="col-link">
                 {{ cleanTitle(item.text) }}
               </a>
             </li>
@@ -39,7 +50,7 @@
           <span class="separator">•</span>
           <a href="/informatii/contact">Contact</a>
           <span class="separator">•</span>
-          <a href="/informatii/regulament">Regulament</a>
+          <a href="/informatii/regulamente/regulament-playeri">Regulament</a>
           <span class="separator">•</span>
           <a href="/informatii/faq">FAQ</a>
         </div>
@@ -72,27 +83,45 @@ const sidebarSections = computed(() => {
   if (Array.isArray(sidebar)) {
     return sidebar.map(section => ({
       text: section.text || 'General',
-      items: (section.items || []).map(item => ({
-        text: item.text,
-        link: item.link || '#'
-      }))
+      items: extractItems(section.items || [])
     })).filter(section => section.items.length > 0)
   }
   
   return []
 })
 
+// Extrage item-uri recursiv (suport pentru subcategorii)
+const extractItems = (items) => {
+  return items.map(item => {
+    if (item.items) {
+      return {
+        text: item.text,
+        link: item.link,
+        items: extractItems(item.items)
+      }
+    }
+    return {
+      text: item.text,
+      link: item.link || '#'
+    }
+  })
+}
+
 // Social links din config
 const socialLinks = computed(() => {
   return theme.value?.socialLinks || []
 })
 
-// Total pagini
+// Total pagini (inclusiv subpagini)
 const totalPages = computed(() => {
   let count = 0
-  sidebarSections.value.forEach(section => {
-    count += section.items.length
-  })
+  const countItems = (items) => {
+    items.forEach(item => {
+      if (item.link && item.link !== '#') count++
+      if (item.items) countItems(item.items)
+    })
+  }
+  sidebarSections.value.forEach(section => countItems(section.items))
   return count
 })
 
@@ -129,10 +158,6 @@ const getCategoryStyle = (text) => {
   if (t.includes('sisteme')) color = '#ff4500'
   if (t.includes('shop')) color = '#8b5cf6'
   if (t.includes('premium')) color = '#8b5cf6'
-  if (t.includes('evenimente')) color = '#10b981'
-  if (t.includes('anti-cheat')) color = '#ef4444'
-  if (t.includes('comunitate')) color = '#ec4899'
-  if (t.includes('leaderboard')) color = '#06b6d4'
   
   return {
     color: color,
@@ -147,10 +172,6 @@ const getDotClass = (text) => {
   if (t.includes('sisteme')) return 'dot-orange'
   if (t.includes('shop')) return 'dot-purple'
   if (t.includes('premium')) return 'dot-purple'
-  if (t.includes('evenimente')) return 'dot-green'
-  if (t.includes('anti-cheat')) return 'dot-red'
-  if (t.includes('comunitate')) return 'dot-pink'
-  if (t.includes('leaderboard')) return 'dot-cyan'
   return 'dot-gray'
 }
 </script>
@@ -183,7 +204,7 @@ const getDotClass = (text) => {
 /* SITEMAP GRID */
 .sitemap-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 40px;
   margin-bottom: 48px;
 }
@@ -216,10 +237,6 @@ const getDotClass = (text) => {
 .dot-blue { background: #3b82f6; }
 .dot-orange { background: #ff4500; }
 .dot-purple { background: #8b5cf6; }
-.dot-green { background: #10b981; }
-.dot-red { background: #ef4444; }
-.dot-pink { background: #ec4899; }
-.dot-cyan { background: #06b6d4; }
 .dot-gray { background: #64748b; }
 
 .col-list {
@@ -229,7 +246,7 @@ const getDotClass = (text) => {
 }
 
 .col-list li {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .col-link {
@@ -247,6 +264,43 @@ const getDotClass = (text) => {
 .col-link:hover {
   color: #ff4500 !important;
   transform: translateX(4px);
+}
+
+/* Subsecțiuni */
+.subsection {
+  margin-bottom: 12px;
+}
+
+.subsection-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 6px;
+  padding-left: 4px;
+}
+
+.dark .subsection-title {
+  color: #e5e5e5;
+}
+
+.subsection-list {
+  list-style: none;
+  padding-left: 16px;
+  margin: 4px 0 0 0;
+}
+
+.subsection-list li {
+  margin-bottom: 6px;
+}
+
+.sub-link {
+  font-size: 12px !important;
+  color: #6b7280 !important;
+}
+
+.dark .sub-link {
+  color: #9ca3af !important;
 }
 
 /* FOOTER BOTTOM */

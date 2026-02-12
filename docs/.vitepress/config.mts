@@ -26,13 +26,24 @@ export default defineConfig({
     // SIDEBAR DOAR CU 3 SECȚIUNI: INFORMAȚII, SISTEME, SHOP
     sidebar: [
       {
-        text: '📋 Informații',
-        collapsed: false,
-        items: [
-          { text: '🏠 Despre Wildfire', link: '/informatii/about' },
-          { text: '❓ Întrebări frecvente', link: '/informatii/faq' },
-          { text: '⚖️ Regulament', link: '/informatii/regulament' },
-        ]
+    text: '📋 Informații',
+    collapsed: false,
+    items: [
+    { text: '🏠 Despre Wildfire', link: '/informatii/about' },
+    { text: '❓ Întrebări frecvente', link: '/informatii/faq' },
+    { 
+      text: '⚖️ Regulament',
+      collapsed: true,
+      items: [
+        { text: '🎯 Regulament AWP', link: '/informatii/regulamente/regulament-awp' },
+        { text: '🔥 Regulament GO', link: '/informatii/regulamente/regulament-go' },
+        { text: '💀 Regulament ARENA', link: '/informatii/regulamente/regulament-arena' },
+        { text: '👑 Regulament STAFF', link: '/informatii/regulamente/regulament-staff' },
+        { text: '👥 Regulament Playeri', link: '/informatii/regulamente/regulament-playeri' },
+        { text: '💎 Regulament VIP', link: '/informatii/regulamente/regulament-vip' }
+      ]
+    }
+  ]
       },
       {
         text: '⚙️ Sisteme',
@@ -66,7 +77,8 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'discord', link: 'https://discord.gg/wildfire' },
-      { icon: 'github', link: 'https://github.com/wildfire-ro' }
+      { icon: 'steam', link: 'https://steamcommunity.com/groups/wildfire' },
+      { icon: 'tiktok', link: 'https://www.tiktok.com/@wildfire.ro' }
     ],
 
     // footer: {
