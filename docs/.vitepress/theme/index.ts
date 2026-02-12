@@ -37,7 +37,7 @@ export default {
       // Navbar - searchbar custom după titlu
       'nav-bar-title-after': () => h(NavSearch),
       
-      // FOOTER - SITEMAP AUTOMAT (ASTA CAUTAI)
+      // Footer - sitemap automat
       'layout-bottom': () => h(SiteMap)
     })
   },

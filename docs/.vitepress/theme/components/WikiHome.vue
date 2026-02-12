@@ -39,6 +39,15 @@
           </a>
         </div>
 
+        <!-- SEARCHBAR PE HOME - SUB BUTON -->
+        <div class="home-search">
+          <button class="home-search-button" @click="openSearch" type="button">
+            <img src="/icons/searchbutton.svg" class="search-icon">
+            <span class="home-search-text">Caută în documentație...</span>
+            <span class="home-search-shortcut">Ctrl K</span>
+          </button>
+        </div>
+
         <!-- ULTIMELE ACTUALIZĂRI - COMPONENTĂ SEPARATĂ -->
         <LastUpdates />
 
@@ -47,7 +56,7 @@
           <div class="wildfire-card">
             <div class="wildfire-card-icon">🏛️</div>
             <h3>Seriozitate</h3>
-            <p>6+ ani de experiență, administrare profesionistă, zero toleranță pentru abuzuri.</p>
+            <p>Ani de experiență, administrare profesionistă, zero toleranță pentru abuzuri.</p>
             <a href="/informatii/despre" class="wildfire-card-link">Află mai multe →</a>
           </div>
           
@@ -61,14 +70,14 @@
           <div class="wildfire-card">
             <div class="wildfire-card-icon">🤝</div>
             <h3>Respect</h3>
-            <p>Fără toxicitate, fără favoritisme, fără pay-to-win. Doar CS2 curat.</p>
+            <p>Fără toxicitate, fără favoritisme, fără bombardieri.</p>
             <a href="/informatii/regulament" class="wildfire-card-link">Vezi regulamentul →</a>
           </div>
           
           <div class="wildfire-card">
             <div class="wildfire-card-icon">⚡</div>
             <h3>Comunitate</h3>
-            <p>Peste 2300 de membri activi, evenimente săptămânale, turnee cu premii.</p>
+            <p>Peste 2300 de membri activi, evenimente săptămânale.</p>
             <a href="/comunitate/discord" class="wildfire-card-link">Alătură-te →</a>
           </div>
         </div>
@@ -79,6 +88,25 @@
 
 <script setup lang="ts">
 import LastUpdates from './LastUpdates.vue'
+
+const openSearch = (event: MouseEvent) => {
+  event.preventDefault()
+  event.stopPropagation()
+  
+  const searchButton = document.querySelector('.DocSearch-Button')
+  if (searchButton) {
+    ;(searchButton as HTMLElement).click()
+  } else {
+    // Fallback: emite shortcut-ul
+    const keyEvent = new KeyboardEvent('keydown', {
+      key: 'k',
+      ctrlKey: true,
+      metaKey: true,
+      bubbles: true
+    })
+    window.dispatchEvent(keyEvent)
+  }
+}
 </script>
 
 <style scoped>
@@ -91,8 +119,7 @@ import LastUpdates from './LastUpdates.vue'
   min-height: 100vh;
 }
 
-/* ===== BACKGROUND CS2 - DOAR BACKGROUND, FĂRĂ TEXT ===== */
-/* LIGHT MODE - Background CS2 pe alb */
+/* ===== BACKGROUND CS2 ===== */
 .wildfire-home .wildfire-bg {
   position: fixed;
   top: 0;
@@ -104,10 +131,18 @@ import LastUpdates from './LastUpdates.vue'
   background: #ffffff;
 }
 
+.dark .wildfire-home .wildfire-bg {
+  background: #000000;
+}
+
 .wildfire-home .wildfire-gradient {
   position: absolute;
   inset: 0;
   background: linear-gradient(to bottom, rgba(220, 38, 38, 0.06), rgba(249, 115, 22, 0.03), #ffffff);
+}
+
+.dark .wildfire-home .wildfire-gradient {
+  background: linear-gradient(to bottom, rgba(69, 10, 10, 0.4), rgba(30, 15, 0, 0.3), #000000);
 }
 
 .wildfire-home .wildfire-grid-primary {
@@ -120,6 +155,13 @@ import LastUpdates from './LastUpdates.vue'
   background-size: 40px 40px;
 }
 
+.dark .wildfire-home .wildfire-grid-primary {
+  opacity: 0.15;
+  background-image: 
+    linear-gradient(to right, rgba(255, 69, 0, 0.2) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 69, 0, 0.2) 1px, transparent 1px);
+}
+
 .wildfire-home .wildfire-grid-secondary {
   position: absolute;
   inset: 0;
@@ -130,12 +172,24 @@ import LastUpdates from './LastUpdates.vue'
   background-size: 20px 20px;
 }
 
+.dark .wildfire-home .wildfire-grid-secondary {
+  opacity: 0.1;
+  background-image: 
+    linear-gradient(to right, rgba(255, 140, 0, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 140, 0, 0.15) 1px, transparent 1px);
+}
+
 .wildfire-home .wildfire-scanlines {
   position: absolute;
   inset: 0;
   opacity: 0.02;
   background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 2px);
   background-size: 100% 2px;
+}
+
+.dark .wildfire-home .wildfire-scanlines {
+  opacity: 0.05;
+  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.8) 0px, rgba(0,0,0,0.8) 1px, transparent 1px, transparent 2px);
 }
 
 .wildfire-home .wildfire-spotlight-tl {
@@ -148,6 +202,10 @@ import LastUpdates from './LastUpdates.vue'
   border-radius: 50%;
   filter: blur(48px);
   animation: pulse-cs2 8s infinite;
+}
+
+.dark .wildfire-home .wildfire-spotlight-tl {
+  background: rgba(220, 38, 38, 0.2);
 }
 
 .wildfire-home .wildfire-spotlight-br {
@@ -163,38 +221,6 @@ import LastUpdates from './LastUpdates.vue'
   animation-delay: 2s;
 }
 
-/* DARK MODE - Background CS2 pe negru */
-.dark .wildfire-home .wildfire-bg {
-  background: #000000;
-}
-
-.dark .wildfire-home .wildfire-gradient {
-  background: linear-gradient(to bottom, rgba(69, 10, 10, 0.4), rgba(30, 15, 0, 0.3), #000000);
-}
-
-.dark .wildfire-home .wildfire-grid-primary {
-  opacity: 0.15;
-  background-image: 
-    linear-gradient(to right, rgba(255, 69, 0, 0.2) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 69, 0, 0.2) 1px, transparent 1px);
-}
-
-.dark .wildfire-home .wildfire-grid-secondary {
-  opacity: 0.1;
-  background-image: 
-    linear-gradient(to right, rgba(255, 140, 0, 0.15) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 140, 0, 0.15) 1px, transparent 1px);
-}
-
-.dark .wildfire-home .wildfire-scanlines {
-  opacity: 0.05;
-  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.8) 0px, rgba(0,0,0,0.8) 1px, transparent 1px, transparent 2px);
-}
-
-.dark .wildfire-home .wildfire-spotlight-tl {
-  background: rgba(220, 38, 38, 0.2);
-}
-
 .dark .wildfire-home .wildfire-spotlight-br {
   background: rgba(234, 88, 12, 0.2);
 }
@@ -204,7 +230,6 @@ import LastUpdates from './LastUpdates.vue'
   50% { opacity: 0.3; }
 }
 
-/* ===== RESTUL - EXACT CUM ERA ===== */
 .wildfire-home .wildfire-hero {
   position: relative;
   z-index: 10;
@@ -299,7 +324,7 @@ import LastUpdates from './LastUpdates.vue'
 .wildfire-home .wildfire-actions {
   display: flex;
   justify-content: center;
-  margin-bottom: 48px;
+  margin-bottom: 30px;
   position: relative;
   z-index: 20;
 }
@@ -334,6 +359,86 @@ import LastUpdates from './LastUpdates.vue'
 
 .wildfire-home .wildfire-button:hover .wildfire-button-arrow {
   transform: translateX(4px);
+}
+
+/* HOME SEARCHBAR */
+.wildfire-home .home-search {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 48px;
+  position: relative;
+  z-index: 20;
+}
+
+.wildfire-home .home-search-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 500px;
+  padding: 14px 24px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 50px;
+  color: #4b5563;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.dark .wildfire-home .home-search-button {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 69, 0, 0.3);
+  color: white;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.wildfire-home .home-search-button:hover {
+  border-color: #ff4500;
+  background: white;
+  box-shadow: 0 8px 25px rgba(255, 69, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.dark .wildfire-home .home-search-button:hover {
+  background: rgba(255, 69, 0, 0.1);
+  border-color: #ff4500;
+  box-shadow: 0 8px 25px rgba(255, 69, 0, 0.2);
+}
+
+.wildfire-home .search-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  filter: brightness(0) saturate(100%) invert(45%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(97%) contrast(92%) !important;
+}
+
+.dark .wildfire-home .search-icon {
+  filter: brightness(0) saturate(100%) invert(100%) !important;
+}
+
+.wildfire-home .home-search-text {
+  flex: 1;
+  text-align: left;
+  font-size: 16px;
+}
+
+.wildfire-home .home-search-shortcut {
+  font-size: 13px;
+  padding: 4px 10px;
+  background: #f3f4f6;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  color: #6b7280;
+  margin-left: 12px;
+}
+
+.dark .wildfire-home .home-search-shortcut {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
 }
 
 /* Grid carduri */
@@ -497,6 +602,15 @@ import LastUpdates from './LastUpdates.vue'
     font-size: 16px;
   }
   
+  .wildfire-home .home-search-button {
+    max-width: 100%;
+    padding: 12px 20px;
+  }
+  
+  .wildfire-home .home-search-text {
+    font-size: 14px;
+  }
+  
   .wildfire-home .wildfire-grid {
     gap: 16px;
   }
@@ -542,6 +656,10 @@ import LastUpdates from './LastUpdates.vue'
     padding: 10px 24px;
     font-size: 15px;
     gap: 8px;
+  }
+  
+  .wildfire-home .home-search-shortcut {
+    display: none;
   }
   
   .wildfire-home .wildfire-card {

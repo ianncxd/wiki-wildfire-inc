@@ -1,6 +1,7 @@
 ---
 title: Despre Wildfire
 ---
+<CategoryBadges />
 
 # Despre Wildfire
 

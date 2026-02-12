@@ -1,12 +1,21 @@
 <template>
-  <button class="nav-search-button" @click.stop="openSearch" type="button">
-    <span class="nav-search-icon">🔍</span>
+  <button v-if="!isHomePage" class="nav-search-button" @click.prevent.stop="openSearch" type="button">
+    <img src="/icons/searchbutton.svg" class="nav-icon">
     <span class="nav-search-text">Caută...</span>
     <span class="nav-search-shortcut">Ctrl K</span>
   </button>
 </template>
 
 <script setup lang="ts">
+import { useData } from 'vitepress'
+import { computed } from 'vue'
+
+const { page } = useData()
+
+const isHomePage = computed(() => {
+  return page.value.relativePath === 'index.md'
+})
+
 const openSearch = (e: MouseEvent) => {
   e.preventDefault()
   e.stopPropagation()
@@ -18,7 +27,7 @@ const openSearch = (e: MouseEvent) => {
     return
   }
   
-  // Metoda 2: Emite shortcut-ul direct
+  // Metoda 2: Emite shortcut-ul corect
   const event = new KeyboardEvent('keydown', {
     key: 'k',
     ctrlKey: true,
@@ -27,16 +36,6 @@ const openSearch = (e: MouseEvent) => {
     cancelable: true
   })
   window.dispatchEvent(event)
-  
-  // Metoda 3: Fallback pentru Safari
-  setTimeout(() => {
-    window.dispatchEvent(new KeyboardEvent('keydown', {
-      key: 'k',
-      ctrlKey: true,
-      metaKey: true,
-      bubbles: true
-    }))
-  }, 50)
 }
 </script>
 
@@ -46,22 +45,23 @@ const openSearch = (e: MouseEvent) => {
   align-items: center;
   background: white;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 0 16px;
-  height: 40px;
-  width: 260px !important;
-  min-width: 260px !important;
-  max-width: 260px !important;
+  border-radius: 40px !important; /* ← MAI ROTUND */
+  padding: 0 20px;
+  height: 44px; /* ← PUȚIN MAI ÎNALT */
+  width: 280px !important;
+  min-width: 280px !important;
+  max-width: 280px !important;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
   flex-shrink: 0;
-  margin-left: 100px !important;
+  margin-left: 300px !important;
   outline: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03) !important; /* ← SHADOW */
 }
 
 .dark .nav-search-button {
-  background: #1a1a1a;
+  background: #000000;
   border-color: #2a2a2a;
 }
 
@@ -75,15 +75,15 @@ const openSearch = (e: MouseEvent) => {
   border-color: #ff4500;
 }
 
-.nav-search-button:active {
-  transform: scale(0.98);
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  filter: brightness(0) saturate(100%) invert(45%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(97%) contrast(92%) !important;
 }
 
-.nav-search-icon {
-  color: #6b7280;
-  font-size: 15px;
-  margin-right: 8px;
-  flex-shrink: 0;
+.dark .nav-icon {
+  filter: brightness(0) saturate(100%) invert(100%) !important;
 }
 
 .nav-search-text {
@@ -111,14 +111,11 @@ const openSearch = (e: MouseEvent) => {
   margin-left: 8px;
   flex-shrink: 0;
   letter-spacing: 0.5px;
-  font-family: inherit;
-  border: 1px solid transparent;
 }
 
 .dark .nav-search-shortcut {
   background: #111111;
   color: #d1d5db;
-  border-color: #2a2a2a;
 }
 
 @media (max-width: 768px) {
@@ -136,7 +133,7 @@ const openSearch = (e: MouseEvent) => {
     display: none;
   }
   
-  .nav-search-icon {
+  .nav-icon {
     margin-right: 0;
   }
 }

@@ -18,8 +18,8 @@
         </div>
         <div class="card-footer">
           <div class="card-tags">
-            <span class="tag tag-blue">reguli</span>
-            <span class="tag tag-blue">fair-play</span>
+            <WildfireTag color="blue" text="reguli" class="small-tag" />
+            <WildfireTag color="blue" text="fair-play" class="small-tag" />
           </div>
           <a href="/informatii/regulament" class="card-button">
             <span>Vezi acum</span>
@@ -40,8 +40,8 @@
         </div>
         <div class="card-footer">
           <div class="card-tags">
-            <span class="tag tag-orange">lucky</span>
-            <span class="tag tag-orange">prizes</span>
+            <WildfireTag color="orange" text="lucky" class="small-tag" />
+            <WildfireTag color="orange" text="prizes" class="small-tag" />
           </div>
           <a href="/sisteme/crates" class="card-button">
             <span>Deschide</span>
@@ -62,8 +62,8 @@
         </div>
         <div class="card-footer">
           <div class="card-tags">
-            <span class="tag tag-blue">faq</span>
-            <span class="tag tag-blue">help</span>
+            <WildfireTag color="blue" text="faq" class="small-tag" />
+            <WildfireTag color="blue" text="help" class="small-tag" />
           </div>
           <a href="/informatii/faq" class="card-button">
             <span>Citește</span>
@@ -84,8 +84,8 @@
         </div>
         <div class="card-footer">
           <div class="card-tags">
-            <span class="tag tag-purple">vip</span>
-            <span class="tag tag-purple">anthem</span>
+            <WildfireTag color="purple" text="vip" class="small-tag" />
+            <WildfireTag color="purple" text="anthem" class="small-tag" />
           </div>
           <a href="/shop/mvp-anthem" class="card-button">
             <span>Cumpără</span>
@@ -106,8 +106,8 @@
         </div>
         <div class="card-footer">
           <div class="card-tags">
-            <span class="tag tag-green">lucky</span>
-            <span class="tag tag-green">prizes</span>
+            <WildfireTag color="green" text="lucky" class="small-tag" />
+            <WildfireTag color="green" text="prizes" class="small-tag" />
           </div>
           <a href="/gambling/blackjack" class="card-button">
             <span>Joacă</span>
@@ -128,8 +128,8 @@
         </div>
         <div class="card-footer">
           <div class="card-tags">
-            <span class="tag tag-red">rewards</span>
-            <span class="tag tag-red">income</span>
+            <WildfireTag color="red" text="rewards" class="small-tag" />
+            <WildfireTag color="red" text="income" class="small-tag" />
           </div>
           <a href="/sisteme/reports" class="card-button">
             <span>Vezi</span>
@@ -147,6 +147,10 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import WildfireTag from './WildfireTag.vue'
+</script>
 
 <style scoped>
 .last-updates {
@@ -285,23 +289,33 @@
   border-radius: 50%;
   display: inline-block;
   box-shadow: 0 0 8px currentColor;
+  animation: pulse-dot 2s ease-in-out infinite;
 }
 
-/* TOATE DOT-URILE - sincronizate cu WildfireTag */
+@keyframes pulse-dot {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+    box-shadow: 0 0 5px currentColor;
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+    box-shadow: 0 0 12px currentColor;
+  }
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+    box-shadow: 0 0 5px currentColor;
+  }
+}
+
+/* TOATE DOT-URILE */
 .dot-blue { background: #3b82f6; box-shadow: 0 0 8px #3b82f6; }
 .dot-orange { background: #ff4500; box-shadow: 0 0 8px #ff4500; }
 .dot-purple { background: #8b5cf6; box-shadow: 0 0 8px #8b5cf6; }
 .dot-green { background: #10b981; box-shadow: 0 0 8px #10b981; }
-.dot-pink { background: #ec4899; box-shadow: 0 0 8px #ec4899; }
 .dot-red { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
-.dot-indigo { background: #6366f1; box-shadow: 0 0 8px #6366f1; }
-.dot-yellow { background: #eab308; box-shadow: 0 0 8px #eab308; }
-.dot-teal { background: #14b8a6; box-shadow: 0 0 8px #14b8a6; }
-.dot-cyan { background: #06b6d4; box-shadow: 0 0 8px #06b6d4; }
-.dot-fuchsia { background: #d946ef; box-shadow: 0 0 8px #d946ef; }
-.dot-emerald { background: #10b981; box-shadow: 0 0 8px #10b981; }
-.dot-amber { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
-.dot-gray { background: #64748b; box-shadow: 0 0 8px #64748b; }
 
 .category-name {
   font-size: 11px;
@@ -338,79 +352,57 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.meta-date, .meta-time {
+.meta-date {
   display: flex;
   align-items: center;
   gap: 5px;
   font-weight: 500;
 }
 
-/* Card footer */
+/* Card footer - TAG-URI ȘI BUTON PE ACEEAȘI LINIE */
 .card-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-top: auto;
-  flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
 }
 
 .card-tags {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   flex-wrap: wrap;
 }
 
-/* TOATE TAG-URILE - sincronizate 100% cu WildfireTag */
-.tag {
-  font-size: 9px;
-  padding: 2px 8px;
-  border-radius: 14px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  color: white !important;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  transition: all 0.2s ease;
-  display: inline-block;
+/* TAG-URI MAI MICI */
+:deep(.wildfire-tag.small-tag) {
+  padding: 3px 10px !important;
+  font-size: 10px !important;
+  gap: 4px !important;
 }
 
-.tag-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
-.tag-orange { background: linear-gradient(135deg, #ff4500, #ff8c00); }
-.tag-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-.tag-green { background: linear-gradient(135deg, #10b981, #059669); }
-.tag-pink { background: linear-gradient(135deg, #ec4899, #db2777); }
-.tag-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
-.tag-indigo { background: linear-gradient(135deg, #6366f1, #4f46e5); }
-.tag-yellow { background: linear-gradient(135deg, #eab308, #ca8a04); }
-.tag-teal { background: linear-gradient(135deg, #14b8a6, #0d9488); }
-.tag-cyan { background: linear-gradient(135deg, #06b6d4, #0891b2); }
-.tag-fuchsia { background: linear-gradient(135deg, #d946ef, #c026d3); }
-.tag-emerald { background: linear-gradient(135deg, #10b981, #059669); }
-.tag-amber { background: linear-gradient(135deg, #f59e0b, #d97706); }
-.tag-gray { background: linear-gradient(135deg, #64748b, #475569); }
-
-.tag:hover {
-  transform: translateY(-1px) scale(1.02);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  filter: brightness(1.1);
+:deep(.wildfire-tag.small-tag .tag-dot) {
+  width: 6px !important;
+  height: 6px !important;
 }
 
-/* Card button */
+/* Card button - MAI MIC */
 .card-button {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   color: #ff4500;
   text-decoration: none;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
-  padding: 4px 12px;
+  padding: 4px 10px;
   border-radius: 30px;
   background: rgba(255, 69, 0, 0.08);
   transition: all 0.2s ease;
   border: 1px solid transparent;
   white-space: nowrap;
   flex-shrink: 0;
+  height: 26px;
 }
 
 .dark .card-button {
@@ -419,7 +411,7 @@
 }
 
 .card-button:hover {
-  gap: 8px;
+  gap: 6px;
   background: rgba(255, 69, 0, 0.15);
   border-color: rgba(255, 69, 0, 0.3);
   color: #ff4500;
@@ -433,12 +425,12 @@
 }
 
 .button-arrow {
-  font-size: 13px;
+  font-size: 12px;
   transition: transform 0.2s ease;
 }
 
 .card-button:hover .button-arrow {
-  transform: translateX(4px);
+  transform: translateX(3px);
 }
 
 /* Footer button */
@@ -495,10 +487,6 @@
     font-size: 22px;
   }
   
-  .section-title span {
-    font-size: 22px;
-  }
-  
   .updates-badge {
     padding: 3px 14px;
     font-size: 12px;
@@ -513,14 +501,7 @@
   }
   
   .card-footer {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .card-button {
-    align-self: flex-end;
-    padding: 4px 10px;
-    font-size: 10px;
+    flex-wrap: wrap;
   }
 }
 
@@ -533,22 +514,13 @@
     font-size: 20px;
   }
   
-  .section-title span {
-    font-size: 20px;
-  }
-  
-  .tag {
-    font-size: 8px;
-    padding: 2px 6px;
+  .card-footer {
+    flex-direction: column;
+    align-items: flex-start;
   }
   
   .card-button {
-    padding: 3px 8px;
-    font-size: 9px;
-  }
-  
-  .button-arrow {
-    font-size: 11px;
+    align-self: flex-end;
   }
 }
 </style>

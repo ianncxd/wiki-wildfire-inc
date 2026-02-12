@@ -39,7 +39,7 @@ author: Echipa Wildfire
   </div>
   <div style="background: rgba(255, 69, 0, 0.05); border: 1px solid rgba(255, 69, 0, 0.2); border-radius: 10px; padding: 12px; text-align: center;">
     <span style="font-size: 24px; display: block; margin-bottom: 4px;">👑</span>
-    <span style="font-size: 16px; font-weight: 700; color: #ff4500;">VIP AWP</span>
+    <span style="font-size: 16px; font-weight: 700; color: #ff4500;">SYSTEMS</span>
   </div>
 </div>
 

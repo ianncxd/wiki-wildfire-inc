@@ -4,25 +4,25 @@
       <!-- SITEMAP GRID - AUTOMAT DIN CONFIG -->
       <div class="sitemap-grid">
         <div v-for="section in sidebarSections" :key="section.text" class="sitemap-col">
-          <h3 class="col-title" :style="getCategoryStyle(section.text)">
-            <span class="title-dot" :class="getDotClass(section.text)"></span>
-            {{ cleanTitle(section.text) }}
+          <h3 class="col-title" :style="getCategoryStyle(section.cleanText)">
+            <span class="title-dot" :class="getDotClass(section.cleanText)"></span>
+            {{ section.cleanText }}
           </h3>
           <ul class="col-list">
             <!-- Item-uri principale -->
             <li v-for="item in section.items" :key="item.link">
               <div v-if="item.items" class="subsection">
-                <span class="subsection-title">{{ cleanTitle(item.text) }}</span>
+                <span class="subsection-title">{{ item.cleanText }}</span>
                 <ul class="subsection-list">
                   <li v-for="sub in item.items" :key="sub.link">
                     <a :href="sub.link" class="col-link sub-link">
-                      {{ cleanTitle(sub.text) }}
+                      {{ sub.cleanText }}
                     </a>
                   </li>
                 </ul>
               </div>
               <a v-else :href="item.link" class="col-link">
-                {{ cleanTitle(item.text) }}
+                {{ item.cleanText }}
               </a>
             </li>
           </ul>
@@ -56,7 +56,7 @@
         </div>
 
         <div class="footer-copyright">
-          <p>© 2026 wildfire.ro - Toate drepturile rezervate</p>
+          <p>© 2024 wildfire.ro - Toate drepturile rezervate</p>
           <p class="footer-message">mulțumim comunității pentru sprijinul continuu</p>
           <p class="footer-stats">📊 {{ totalPages }} pagini • {{ totalSections }} secțiuni</p>
         </div>
@@ -76,32 +76,47 @@ const isHomePage = computed(() => {
   return page.value.relativePath === 'index.md'
 })
 
-// ===== 100% AUTOMAT DIN CONFIG =====
+// Extrage textul curat fără HTML și iconițe
+const cleanText = (htmlString) => {
+  if (!htmlString) return ''
+  // Elimină tag-urile HTML și păstrează doar textul
+  const div = document.createElement('div')
+  div.innerHTML = htmlString
+  return div.textContent || div.innerText || ''
+}
+
+// Extrage sidebar-ul DIN CONFIG
 const sidebarSections = computed(() => {
   const sidebar = theme.value?.sidebar || []
   
   if (Array.isArray(sidebar)) {
-    return sidebar.map(section => ({
-      text: section.text || 'General',
-      items: extractItems(section.items || [])
-    })).filter(section => section.items.length > 0)
+    return sidebar.map(section => {
+      const cleanSectionText = cleanText(section.text)
+      return {
+        text: section.text,
+        cleanText: cleanSectionText,
+        items: extractItems(section.items || [])
+      }
+    }).filter(section => section.items.length > 0)
   }
-  
   return []
 })
 
-// Extrage item-uri recursiv (suport pentru subcategorii)
+// Extrage item-uri recursiv
 const extractItems = (items) => {
   return items.map(item => {
+    const cleanItemText = cleanText(item.text)
     if (item.items) {
       return {
         text: item.text,
+        cleanText: cleanItemText,
         link: item.link,
         items: extractItems(item.items)
       }
     }
     return {
       text: item.text,
+      cleanText: cleanItemText,
       link: item.link || '#'
     }
   })
@@ -112,7 +127,7 @@ const socialLinks = computed(() => {
   return theme.value?.socialLinks || []
 })
 
-// Total pagini (inclusiv subpagini)
+// Total pagini
 const totalPages = computed(() => {
   let count = 0
   const countItems = (items) => {
@@ -128,30 +143,21 @@ const totalPages = computed(() => {
 // Total secțiuni
 const totalSections = computed(() => sidebarSections.value.length)
 
-// Curăță titlul de emoji-uri
-const cleanTitle = (text) => {
-  if (!text) return ''
-  return text.replace(/[\u{1F300}-\u{1F6FF}\u{2600}-\u{26FF}]/gu, '').trim()
-}
-
 // Iconițe pentru social media
 const getSocialIcon = (icon) => {
   const icons = {
     discord: '💬',
-    github: '🐙',
-    youtube: '📺',
-    twitter: '🐦',
-    instagram: '📷',
+    steam: '🎮',
     tiktok: '🎵',
-    facebook: '📘',
-    steam: '🎮'
+    github: '🐙',
+    youtube: '📺'
   }
   return icons[icon] || '🔗'
 }
 
 // Culoare dinamică pentru fiecare secțiune
 const getCategoryStyle = (text) => {
-  const t = text.toLowerCase()
+  const t = text?.toLowerCase() || ''
   let color = '#ff4500'
   
   if (t.includes('informații')) color = '#3b82f6'
@@ -167,7 +173,7 @@ const getCategoryStyle = (text) => {
 
 // Dot class pentru fiecare secțiune
 const getDotClass = (text) => {
-  const t = text.toLowerCase()
+  const t = text?.toLowerCase() || ''
   if (t.includes('informații')) return 'dot-blue'
   if (t.includes('sisteme')) return 'dot-orange'
   if (t.includes('shop')) return 'dot-purple'

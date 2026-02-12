@@ -1,5 +1,5 @@
 <template>
-  <span class="wildfire-tag" :class="tagClass" :style="customStyle">
+  <span class="wildfire-tag" :class="tagClass">
     <span class="tag-dot" :class="dotClass"></span>
     <slot>{{ text }}</slot>
   </span>
@@ -9,169 +9,169 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-  // Culoare predefinită
   color: {
     type: String,
     default: 'gray'
   },
-  // Text personalizat
   text: {
     type: String,
     default: ''
-  },
-  // Culoare custom (hex)
-  customColor: {
-    type: String,
-    default: null
   }
 })
 
-// Mapare culori predefinite
 const colorMap = {
-  // Informații & General (Albastru)
   blue: { class: 'tag-blue', dot: 'dot-blue', color: '#3b82f6' },
-  info: { class: 'tag-blue', dot: 'dot-blue', color: '#3b82f6' },
-  
-  // Sisteme & Feature-uri (Portocaliu)
   orange: { class: 'tag-orange', dot: 'dot-orange', color: '#ff4500' },
-  system: { class: 'tag-orange', dot: 'dot-orange', color: '#ff4500' },
-  
-  // Premium & VIP (Mov)
   purple: { class: 'tag-purple', dot: 'dot-purple', color: '#8b5cf6' },
-  vip: { class: 'tag-purple', dot: 'dot-purple', color: '#8b5cf6' },
-  premium: { class: 'tag-purple', dot: 'dot-purple', color: '#8b5cf6' },
-  mvp: { class: 'tag-purple', dot: 'dot-purple', color: '#8b5cf6' },
-  
-  // Gambling & Evenimente (Verde)
   green: { class: 'tag-green', dot: 'dot-green', color: '#10b981' },
-  event: { class: 'tag-green', dot: 'dot-green', color: '#10b981' },
-  gambling: { class: 'tag-green', dot: 'dot-green', color: '#10b981' },
-  
-  // Shop & Market (Roz)
   pink: { class: 'tag-pink', dot: 'dot-pink', color: '#ec4899' },
-  shop: { class: 'tag-pink', dot: 'dot-pink', color: '#ec4899' },
-  market: { class: 'tag-pink', dot: 'dot-pink', color: '#ec4899' },
-  
-  // Anti-Cheat & Security (Roșu)
   red: { class: 'tag-red', dot: 'dot-red', color: '#ef4444' },
-  anticheat: { class: 'tag-red', dot: 'dot-red', color: '#ef4444' },
-  
-  // Development & Tech (Albastru Inchis)
   indigo: { class: 'tag-indigo', dot: 'dot-indigo', color: '#6366f1' },
-  dev: { class: 'tag-indigo', dot: 'dot-indigo', color: '#6366f1' },
-  
-  // Rapoarte & Tickets (Galben)
   yellow: { class: 'tag-yellow', dot: 'dot-yellow', color: '#eab308' },
-  report: { class: 'tag-yellow', dot: 'dot-yellow', color: '#eab308' },
-  
-  // Crafting & Systems (Teal)
   teal: { class: 'tag-teal', dot: 'dot-teal', color: '#14b8a6' },
-  craft: { class: 'tag-teal', dot: 'dot-teal', color: '#14b8a6' },
-  systems: { class: 'tag-teal', dot: 'dot-teal', color: '#14b8a6' },
-  
-  // Leaderboard & Top (Cyan)
   cyan: { class: 'tag-cyan', dot: 'dot-cyan', color: '#06b6d4' },
-  leaderboard: { class: 'tag-cyan', dot: 'dot-cyan', color: '#06b6d4' },
-  top: { class: 'tag-cyan', dot: 'dot-cyan', color: '#06b6d4' },
-  
-  // Skins & Cosmetice (Fuchsia)
   fuchsia: { class: 'tag-fuchsia', dot: 'dot-fuchsia', color: '#d946ef' },
-  skins: { class: 'tag-fuchsia', dot: 'dot-fuchsia', color: '#d946ef' },
-  
-  // Plăți & Payment (Emerald)
   emerald: { class: 'tag-emerald', dot: 'dot-emerald', color: '#10b981' },
-  payment: { class: 'tag-emerald', dot: 'dot-emerald', color: '#10b981' },
-  
-  // Sank & Entry Sounds (Amber)
   amber: { class: 'tag-amber', dot: 'dot-amber', color: '#f59e0b' },
-  sank: { class: 'tag-amber', dot: 'dot-amber', color: '#f59e0b' },
-  entry: { class: 'tag-amber', dot: 'dot-amber', color: '#f59e0b' },
-  
-  // Gray (Default)
   gray: { class: 'tag-gray', dot: 'dot-gray', color: '#64748b' }
 }
 
 const tagData = computed(() => {
-  if (props.customColor) {
-    return {
-      class: 'tag-custom',
-      dot: 'dot-custom',
-      color: props.customColor
-    }
-  }
   return colorMap[props.color.toLowerCase()] || colorMap.gray
 })
 
 const tagClass = computed(() => tagData.value.class)
 const dotClass = computed(() => tagData.value.dot)
-
-const customStyle = computed(() => {
-  if (props.customColor) {
-    return {
-      backgroundColor: props.customColor + '20',
-      color: props.customColor,
-      borderColor: props.customColor + '40'
-    }
-  }
-  return {}
-})
 </script>
 
 <style scoped>
 .wildfire-tag {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 10px;
-  border-radius: 16px;
-  font-size: 10px;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.3px;
   text-transform: uppercase;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #2a2a2a !important;
   color: white !important;
+  border: 1px solid #404040 !important;
   line-height: 1.4;
   white-space: nowrap;
 }
 
-/* TOATE CULORILE - 20+ variante */
-/* TOATE CULORILE - identice cu LastUpdates */
-.tag-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
-.tag-orange { background: linear-gradient(135deg, #ff4500, #ff8c00); }
-.tag-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
-.tag-green { background: linear-gradient(135deg, #10b981, #059669); }
-.tag-pink { background: linear-gradient(135deg, #ec4899, #db2777); }
-.tag-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
-.tag-indigo { background: linear-gradient(135deg, #6366f1, #4f46e5); }
-.tag-yellow { background: linear-gradient(135deg, #eab308, #ca8a04); }
-.tag-teal { background: linear-gradient(135deg, #14b8a6, #0d9488); }
-.tag-cyan { background: linear-gradient(135deg, #06b6d4, #0891b2); }
-.tag-fuchsia { background: linear-gradient(135deg, #d946ef, #c026d3); }
-.tag-emerald { background: linear-gradient(135deg, #10b981, #059669); }
-.tag-amber { background: linear-gradient(135deg, #f59e0b, #d97706); }
-.tag-gray { background: linear-gradient(135deg, #64748b, #475569); }
-
-/* Dots */
-.tag-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  display: inline-block;
+.dark .wildfire-tag {
+  background: #1a1a1a !important;
+  border: 1px solid #333333 !important;
 }
 
-.dot-blue { background: #3b82f6; box-shadow: 0 0 5px #3b82f6; }
-.dot-orange { background: #ff4500; box-shadow: 0 0 5px #ff4500; }
-.dot-purple { background: #8b5cf6; box-shadow: 0 0 5px #8b5cf6; }
-.dot-green { background: #10b981; box-shadow: 0 0 5px #10b981; }
-.dot-pink { background: #ec4899; box-shadow: 0 0 5px #ec4899; }
-.dot-red { background: #ef4444; box-shadow: 0 0 5px #ef4444; }
-.dot-indigo { background: #6366f1; box-shadow: 0 0 5px #6366f1; }
-.dot-yellow { background: #eab308; box-shadow: 0 0 5px #eab308; }
-.dot-teal { background: #14b8a6; box-shadow: 0 0 5px #14b8a6; }
-.dot-cyan { background: #06b6d4; box-shadow: 0 0 5px #06b6d4; }
-.dot-fuchsia { background: #d946ef; box-shadow: 0 0 5px #d946ef; }
-.dot-emerald { background: #10b981; box-shadow: 0 0 5px #10b981; }
-.dot-amber { background: #f59e0b; box-shadow: 0 0 5px #f59e0b; }
-.dot-gray { background: #64748b; box-shadow: 0 0 5px #64748b; }
-.dot-custom { background: currentColor; box-shadow: 0 0 5px currentColor; }
+:not(.dark) .wildfire-tag {
+  background: #161616 !important;
+  border: 1px solid #161616 !important;
+}
+
+/* ===== DOT CU ANIMAȚIE ===== */
+.tag-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 6px currentColor;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+    box-shadow: 0 0 5px currentColor;
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+    box-shadow: 0 0 12px currentColor;
+  }
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+    box-shadow: 0 0 5px currentColor;
+  }
+}
+
+/* CULORI DOT */
+.tag-blue .tag-dot { background: #3b82f6; }
+.tag-orange .tag-dot { background: #ff4500; }
+.tag-purple .tag-dot { background: #8b5cf6; }
+.tag-green .tag-dot { background: #10b981; }
+.tag-pink .tag-dot { background: #ec4899; }
+.tag-red .tag-dot { background: #ef4444; }
+.tag-indigo .tag-dot { background: #6366f1; }
+.tag-yellow .tag-dot { background: #eab308; }
+.tag-teal .tag-dot { background: #14b8a6; }
+.tag-cyan .tag-dot { background: #06b6d4; }
+.tag-fuchsia .tag-dot { background: #d946ef; }
+.tag-emerald .tag-dot { background: #10b981; }
+.tag-amber .tag-dot { background: #f59e0b; }
+.tag-gray .tag-dot { background: #64748b; }
+
+/* TEXT COLORAT */
+.tag-blue { color: #3b82f6 !important; }
+.tag-orange { color: #ff4500 !important; }
+.tag-purple { color: #8b5cf6 !important; }
+.tag-green { color: #10b981 !important; }
+.tag-pink { color: #ec4899 !important; }
+.tag-red { color: #ef4444 !important; }
+.tag-indigo { color: #6366f1 !important; }
+.tag-yellow { color: #eab308 !important; }
+.tag-teal { color: #14b8a6 !important; }
+.tag-cyan { color: #06b6d4 !important; }
+.tag-fuchsia { color: #d946ef !important; }
+.tag-emerald { color: #10b981 !important; }
+.tag-amber { color: #f59e0b !important; }
+.tag-gray { color: #64748b !important; }
+
+/* DARK MODE - TEXT MAI DESCHIS */
+.dark .tag-blue { color: #60a5fa !important; }
+.dark .tag-orange { color: #ff8c00 !important; }
+.dark .tag-purple { color: #a78bfa !important; }
+.dark .tag-green { color: #34d399 !important; }
+.dark .tag-pink { color: #f472b6 !important; }
+.dark .tag-red { color: #f87171 !important; }
+.dark .tag-indigo { color: #818cf8 !important; }
+.dark .tag-yellow { color: #fbbf24 !important; }
+.dark .tag-teal { color: #2dd4bf !important; }
+.dark .tag-cyan { color: #22d3ee !important; }
+.dark .tag-fuchsia { color: #e879f9 !important; }
+.dark .tag-emerald { color: #34d399 !important; }
+.dark .tag-amber { color: #fbbf24 !important; }
+.dark .tag-gray { color: #9ca3af !important; }
+
+/* HOVER EFFECT */
+.wildfire-tag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  border-color: currentColor !important;
+}
+
+.wildfire-tag:hover .tag-dot {
+  animation: pulse-dot-hover 1s ease-in-out infinite;
+}
+
+@keyframes pulse-dot-hover {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 8px currentColor;
+  }
+  50% {
+    transform: scale(1.3);
+    box-shadow: 0 0 15px currentColor;
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 8px currentColor;
+  }
+}
 </style>

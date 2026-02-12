@@ -1,44 +1,49 @@
 /**
- * Customize default theme styling by overriding CSS variables:
- * https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css
- */
-
-/**
- * Colors
+ * TEMA WILDFIRE - STYLE ORGANIZAT
  * -------------------------------------------------------------------------- */
 
+/*=============================================================================
+  1. VARIABILE ȘI CULORI
+=============================================================================*/
 :root {
-  --vp-c-default-1: var(--vp-c-gray-1);
-  --vp-c-default-2: var(--vp-c-gray-2);
-  --vp-c-default-3: var(--vp-c-gray-3);
-  --vp-c-default-soft: var(--vp-c-gray-soft);
-
-  /* Wildfire Orange - înlocuim complet indigo */
-  --vp-c-brand-1: #ff4500;
-  --vp-c-brand-2: #ff8c00;
-  --vp-c-brand-3: #ff5722;
+  /* Culori Wildfire */
+  --wf-orange: #ff4500;
+  --wf-orange-light: #ff8c00;
+  --wf-orange-dark: #ff5722;
+  --wf-gray-dark: #0a0a0a;
+  --wf-gray: #6b7280;
+  --wf-gray-light: #9ca3af;
+  
+  /* VitePress overrides */
+  --vp-c-brand-1: var(--wf-orange);
+  --vp-c-brand-2: var(--wf-orange-light);
+  --vp-c-brand-3: var(--wf-orange-dark);
   --vp-c-brand-soft: rgba(255, 69, 0, 0.16);
-
+  
   --vp-c-tip-1: var(--vp-c-brand-1);
   --vp-c-tip-2: var(--vp-c-brand-2);
   --vp-c-tip-3: var(--vp-c-brand-3);
   --vp-c-tip-soft: var(--vp-c-brand-soft);
-
-  --vp-c-warning-1: var(--vp-c-yellow-1);
-  --vp-c-warning-2: var(--vp-c-yellow-2);
-  --vp-c-warning-3: var(--vp-c-yellow-3);
-  --vp-c-warning-soft: var(--vp-c-yellow-soft);
-
-  --vp-c-danger-1: var(--vp-c-red-1);
-  --vp-c-danger-2: var(--vp-c-red-2);
-  --vp-c-danger-3: var(--vp-c-red-3);
-  --vp-c-danger-soft: var(--vp-c-red-soft);
+  
+  /* Home hero */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, var(--wf-orange) 30%, var(--wf-orange-light));
+  --vp-home-hero-image-background-image: linear-gradient(-45deg, var(--wf-orange) 50%, var(--wf-orange-light) 50%);
+  --vp-home-hero-image-filter: blur(44px);
 }
 
-/**
- * Component: Button
- * -------------------------------------------------------------------------- */
+@media (min-width: 640px) {
+  :root { --vp-home-hero-image-filter: blur(56px); }
+}
+@media (min-width: 960px) {
+  :root { --vp-home-hero-image-filter: blur(68px); }
+}
 
+/*=============================================================================
+  2. COMPONENTE VITEPRESS
+=============================================================================*/
+
+/* Butoane */
 :root {
   --vp-button-brand-border: transparent;
   --vp-button-brand-text: var(--vp-c-white);
@@ -51,42 +56,7 @@
   --vp-button-brand-active-bg: var(--vp-c-brand-1);
 }
 
-/**
- * Component: Home
- * -------------------------------------------------------------------------- */
-
-:root {
-  --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: -webkit-linear-gradient(
-    120deg,
-    #ff4500 30%,
-    #ff8c00
-  );
-
-  --vp-home-hero-image-background-image: linear-gradient(
-    -45deg,
-    #ff4500 50%,
-    #ff8c00 50%
-  );
-  --vp-home-hero-image-filter: blur(44px);
-}
-
-@media (min-width: 640px) {
-  :root {
-    --vp-home-hero-image-filter: blur(56px);
-  }
-}
-
-@media (min-width: 960px) {
-  :root {
-    --vp-home-hero-image-filter: blur(68px);
-  }
-}
-
-/**
- * Component: Custom Block
- * -------------------------------------------------------------------------- */
-
+/* Custom blocks */
 :root {
   --vp-custom-block-tip-border: transparent;
   --vp-custom-block-tip-text: var(--vp-c-text-1);
@@ -94,14 +64,18 @@
   --vp-custom-block-tip-code-bg: var(--vp-c-brand-soft);
 }
 
-/* TEMA WILDFIRE - DOAR ASCUNDERE SEARCHBAR */
+/*=============================================================================
+  3. NAVBAR & SEARCH
+=============================================================================*/
+
+/* Ascunde searchbar-ul default */
 .DocSearch-Button,
 .VPNavBarSearch,
 .VPNavBarSearchButton {
   display: none !important;
 }
 
-/* REPARĂ BUTONUL DE THEME - FORȚEAZĂ AFIȘAREA */
+/* Forțează afișarea butonului de theme */
 .VPNavBarAppearance {
   display: flex !important;
   visibility: visible !important;
@@ -114,43 +88,84 @@
   opacity: 1 !important;
 }
 
-/* Asigură că butonul rămâne în navbar */
 .VPNavBarActions .VPNavBarAppearance {
   display: flex !important;
   margin-left: 8px !important;
 }
 
+/*=============================================================================
+  4. ICONIȚE GLOBALE - CULOARE #737373
+=============================================================================*/
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: 6px;
+  display: inline-block;
+  position: relative;
+  top: -1px;
+  filter: brightness(0) saturate(100%) invert(45%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(97%) contrast(92%) !important;
+}
 
+.dark .nav-icon {
+  filter: brightness(0) saturate(100%) invert(45%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(97%) contrast(92%) !important;
+}
 
+/*=============================================================================
+  5. SIDEBAR - FĂRĂ SCROLLBAR
+=============================================================================*/
+.VPSidebar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
 
+.VPSidebar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
 
+/*=============================================================================
+  6. SCROLLBAR INCENDIAR - GLOBAL
+=============================================================================*/
 
+/* Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px !important;
+  height: 10px !important;
+}
 
+::-webkit-scrollbar-track {
+  background: var(--wf-gray-dark) !important;
+  border-left: 1px solid rgba(255, 69, 0, 0.2) !important;
+}
 
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff4500, #ff8c00, #ffd700) !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: 0 0 15px rgba(255, 69, 0, 0.5) !important;
+}
 
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ff5722, #ff9900, #ffe135) !important;
+  box-shadow: 0 0 20px rgba(255, 69, 0, 0.8) !important;
+}
 
+::-webkit-scrollbar-corner {
+  background: var(--wf-gray-dark) !important;
+}
 
+/* Firefox */
+* {
+  scrollbar-width: thin !important;
+  scrollbar-color: #ff4500 var(--wf-gray-dark) !important;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* Dark mode adjustments */
+.dark ::-webkit-scrollbar-track {
+  background: #000000 !important;
+}
 
 
  /* IMPORTANT */
