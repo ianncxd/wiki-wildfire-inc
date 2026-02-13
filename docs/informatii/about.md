@@ -1,66 +1,48 @@
 ---
-title: Despre Wildfire
+outline: deep
 ---
-<CategoryBadges />
 
-# Despre Wildfire
-
-<div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
-  <PageTagBlue>Informații</PageTagBlue>
-  <PageTagPurple>VIP</PageTagPurple>
-  <PageTagCyan>Leaderboard</PageTagCyan>
+<!-- RÂND 0 - path și introduction -->
+<div style="display: flex; align-items: center; gap: 15px; margin-bottom: 5px; font-size: 12px; color: var(--wf-gray); flex-wrap: wrap; opacity: 0.9;">
+  <div style="display: flex; align-items: center; gap: 5px;">
+    <a href="/" style="color: var(--wf-orange); text-decoration: none;">Home</a>
+    <span style="color: var(--wf-orange);">/</span>
+    <span>Introduction</span>
+    <span style="color: var(--wf-orange);">/</span>
+    <span style="color: #e0e0e0;">Despre Wildfire.ro</span>
+  </div>
+  
+  <div style="display: flex; align-items: center; gap: 6px;">
+    <img src="/icons/introduction.svg" alt="introduction" class="nav-icon" style="width: 18px; height: 18px;">
+    <span style="font-size: 12px; color: var(--wf-gray);">Introduction</span>
+  </div>
 </div>
 
-Conținutul paginii...
+<!-- RÂND 1 - logo și titlu -->
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 2px;">
+  <img src="https://wildfire.ro/public/images/logo-sv22.png" alt="Wildfire.ro" width="60" style="margin: 0;">
+  <h1 style="font-size: 32px; margin: 0; background: linear-gradient(135deg, var(--wf-orange-light), var(--wf-orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800;">Despre Wildfire.ro</h1>
+</div>
 
-## 📖 Povestea noastră
-
-**Wildfire.ro** este o comunitate de Counter-Strike 2 construită de jucători, pentru jucători. Povestea noastră a început în **2018**, când un grup de prieteni pasionați au decis să creeze un loc unde fair-play-ul, distracția și competiția să meargă mână în mână.
-
-Astăzi, suntem recunoscuți drept una dintre cele mai **serioase și longevive comunități** de CS2 din România, cu o medie de **peste 120 de jucători activi zilnic** și o comunitate de **2300+ membri** pe Discord.
-
----
-
-## 🎯 Misiunea noastră
-
-> „Să oferim cea mai bună experiență de joc, într-un mediu curat, competitiv și prietenos.”
-
-**Fără compromisuri:**
-- ✅ Anti-cheat avansat – zero toleranță pentru trișori
-- ✅ Sisteme proprii – skin-uri, crafting, trade, economie
-- ✅ Comunitate activă – evenimente săptămânale, turnee
-- ✅ Suport 24/7 – staff mereu disponibil
-
----
-
-## 👑 Ce ne face diferiți?
-
-- **🏛️ Tradiție** – 6+ ani de experiență în administrarea serverelor CS
-- **🛡️ Integritate** – Fără pay-to-win, fără abuzuri, fără favoritisme
-- **⚡ Inovație** – Sisteme custom dezvoltate intern pentru CS2
-- **🤝 Comunitate** – Oameni faini, atmosferă plăcută, glume proaste
-
----
-
-## 🎮 Servere active
-
-| Server | Mod | IP | Jucători |
-|--------|-----|-----|----------|
-| **Wildfire #1** | Competitive | `go.wildfire.ro:27015` | 24/32 |
-| **Wildfire #2** | AWP | `awp.wildfire.ro:27016` | 18/32 |
-| **Wildfire #3** | ARENA | `arena.wildfire.ro:27017` | 29/32 |
-| **Wildfire #4** | RETAKE | `retake.wildfire.ro:27018` | 16/32 |
-
-**Conectează-te acum:** `connect play.wildfire.ro`
-
----
-
-## 👥 Echipa Wildfire
-
-- **Ghost** – Fondator & Developer
-- **Cristi** – Administrator
-- **Andrei** – Moderator
-- **Alex** – Moderator
-
----
-
+<!-- RÂND 2 - tags și updated by -->
+<div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 25px;">
+  <img src="/icons/tag.svg" alt="tag" class="nav-icon" style="width: 18px; height: 18px;">
+  
+  <PageTagRed style="font-size: 11px; padding: 2px 8px;">information</PageTagRed>
+  <PageTagOrange style="font-size: 11px; padding: 2px 8px;">guide</PageTagOrange>
+  
+  <!-- Updated by cu popout -->
+  <div style="display: flex; align-items: center; gap: 6px;">
+    <span style="font-size: 13px; color: var(--wf-gray); font-weight: 500;">updated by</span>
+    <a 
+      href="https://github.com/iannc" 
+      target="_blank" 
+      class="github-profile"
+      data-username="ianncxd"
+      style="display: block; padding: 2px; background: linear-gradient(135deg, #8b5cf6, #c084fc, #f472b6); border-radius: 50%;" 
+      title="ianncxd"
+    >
+      <img src="https://github.com/ianncxd.png" alt="ianncxd" style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid #1a1a1a; display: block;">
+    </a>
+  </div>
+</div>

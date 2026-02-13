@@ -1,3 +1,4 @@
+// .vitepress/theme/index.ts
 import { h } from 'vue'
 import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
@@ -9,6 +10,9 @@ import LastUpdates from './components/LastUpdates.vue'
 import NavSearch from './components/NavSearch.vue'
 import WildfireTag from './components/WildfireTag.vue'
 import SiteMap from './components/SiteMap.vue'
+
+// Import popout
+import './popout.js'
 
 // Import toate tag-urile
 import PageTagBlue from './components/tags/PageTagBlue.vue'
@@ -31,13 +35,8 @@ export default {
   
   Layout: () => {
     return h(DefaultTheme.Layout, null, {
-      // Home page - WikiHome în hero section
       'home-hero-before': () => h(WikiHome),
-      
-      // Navbar - searchbar custom după titlu
       'nav-bar-title-after': () => h(NavSearch),
-      
-      // Footer - sitemap automat
       'layout-bottom': () => h(SiteMap)
     })
   },

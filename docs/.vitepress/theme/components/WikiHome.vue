@@ -175,7 +175,7 @@ onMounted(() => {
   right: 0;
   bottom: 0;
   z-index: -2;
-  background-image: url('/wallpaper/poza2.jpg');
+  background-image: url('/wallpaper/poza102.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -197,7 +197,7 @@ onMounted(() => {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('/wallpaper/poza3.jpg');
+    background-image: url('/wallpaper/da.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
