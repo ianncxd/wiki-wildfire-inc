@@ -4,8 +4,8 @@
     :class="{ 'visible': isVisible }"
     :style="popoutStyle"
     ref="popout"
-    @mouseenter="onPopoutEnter"
-    @mouseleave="onPopoutLeave"
+    @mouseenter.stop="onPopoutEnter"
+    @mouseleave.stop="onPopoutLeave"
     v-show="isVisible"
   >
     <div class="popout-arrow" :class="{ 'below': isBelow }"></div>
@@ -16,9 +16,25 @@
       enter-class="popout-enter"
       leave-to-class="popout-leave-to"
     >
-      <div v-if="isVisible" class="popout-content">
+      <div v-if="isVisible" class="popout-content" @mouseenter.stop @mouseleave.stop>
+        <!-- Background Logo Watermark - Wildfire Logo -->
+        <div class="popout-background">
+          <img src="/icons/wildfire.png" alt="Wildfire" class="background-logo main">
+          <img src="/icons/wildfire.png" alt="Wildfire" class="background-logo secondary">
+          <img src="/icons/wildfire.png" alt="Wildfire" class="background-logo tertiary">
+        </div>
+
+        <!-- Fire Particles -->
+        <div class="fire-particles">
+          <div class="particle"></div>
+          <div class="particle"></div>
+          <div class="particle"></div>
+          <div class="particle"></div>
+          <div class="particle"></div>
+        </div>
+
         <!-- Close Button -->
-        <button class="popout-close" @click="closePopout" title="Close (ESC)">
+        <button class="popout-close" @click.stop="closePopout" title="Close (ESC)">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M18 6L6 18M6 6l12 12"/>
           </svg>
@@ -43,7 +59,7 @@
             <img :src="user.avatar" :alt="user.username" class="popout-avatar">
             <div class="popout-header-info">
               <h3>{{ user.name || user.username }}</h3>
-              <a :href="user.profileUrl" target="_blank">@{{ user.username }}</a>
+              <a :href="user.profileUrl" target="_blank" rel="noopener noreferrer" @click.stop>@{{ user.username }}</a>
             </div>
           </div>
 
@@ -76,7 +92,7 @@
             </div>
             <div v-if="user.blog">
               <span>🔗</span> 
-              <a :href="user.blog" target="_blank">{{ formatUrl(user.blog) }}</a>
+              <a :href="user.blog" target="_blank" rel="noopener noreferrer" @click.stop>{{ formatUrl(user.blog) }}</a>
             </div>
             <div>
               <span>📅</span> Joined {{ formatDate(user.createdAt) }}
@@ -84,7 +100,7 @@
           </div>
 
           <!-- Button -->
-          <a :href="user.profileUrl" target="_blank" class="popout-button">
+          <a :href="user.profileUrl" target="_blank" rel="noopener noreferrer" class="popout-button" @click.stop>
             View GitHub Profile →
           </a>
         </template>
@@ -263,8 +279,8 @@ export default {
   bottom: -8px;
   left: 50%;
   margin-left: -8px;
-  border-bottom: 2px solid #333;
-  border-right: 2px solid #333;
+  border-bottom: 2px solid #ff4500;
+  border-right: 2px solid #ff4500;
   border-radius: 2px;
   z-index: 1;
   opacity: 0;
@@ -275,8 +291,8 @@ export default {
   top: -8px;
   bottom: auto;
   transform: rotate(45deg);
-  border-top: 2px solid #333;
-  border-left: 2px solid #333;
+  border-top: 2px solid #ff4500;
+  border-left: 2px solid #ff4500;
   border-bottom: none;
   border-right: none;
 }
@@ -316,8 +332,8 @@ export default {
 }
 
 .popout-content {
-  background: #1a1a1a;
-  border: 1px solid #333;
+  background: linear-gradient(135deg, #1a0f0a, #2a150a, #1f0f05);
+  border: 2px solid #ff4500;
   border-radius: 20px;
   padding: 24px 20px 20px 20px;
   width: 300px;
@@ -325,10 +341,148 @@ export default {
   position: relative;
   z-index: 2;
   backdrop-filter: blur(10px);
-  background: rgba(26, 26, 26, 0.98);
-  pointer-events: auto;
+  background: rgba(26, 10, 5, 0.95);
   transform-origin: top center;
   will-change: transform, opacity;
+  overflow: hidden;
+  pointer-events: auto;
+  box-shadow: 0 0 30px rgba(255, 69, 0, 0.4);
+}
+
+/* Background Effects - Wildfire Style */
+.popout-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 69, 0, 0.25), transparent 70%),
+              radial-gradient(circle at 70% 80%, rgba(255, 140, 0, 0.2), transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+  animation: fireGlow 3s ease-in-out infinite;
+}
+
+@keyframes fireGlow {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+/* Background Logo Watermark - Wildfire Logo */
+.popout-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.background-logo {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  opacity: 0.12;
+  filter: brightness(0) invert(1) drop-shadow(0 0 5px #ff4500);
+  animation: floatWildfire 10s ease-in-out infinite;
+}
+
+.background-logo.main {
+  bottom: -10px;
+  right: -10px;
+  width: 150px;
+  height: 150px;
+  opacity: 0.15;
+  transform: rotate(5deg);
+  animation: floatMain 12s ease-in-out infinite;
+}
+
+.background-logo.secondary {
+  top: -20px;
+  left: -20px;
+  width: 130px;
+  height: 130px;
+  opacity: 0.1;
+  transform: rotate(-8deg);
+  animation: floatSecondary 15s ease-in-out infinite;
+}
+
+.background-logo.tertiary {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(15deg);
+  width: 180px;
+  height: 180px;
+  opacity: 0.05;
+  filter: blur(4px) brightness(0) invert(1);
+  animation: floatTertiary 20s ease-in-out infinite;
+}
+
+@keyframes floatMain {
+  0%, 100% { transform: rotate(5deg) translateY(0); }
+  50% { transform: rotate(8deg) translateY(-10px); }
+}
+
+@keyframes floatSecondary {
+  0%, 100% { transform: rotate(-8deg) translateY(0); }
+  50% { transform: rotate(-12deg) translateY(10px); }
+}
+
+@keyframes floatTertiary {
+  0%, 100% { transform: translate(-50%, -50%) rotate(15deg) scale(1); }
+  50% { transform: translate(-50%, -50%) rotate(25deg) scale(1.1); }
+}
+
+/* Fire Particles */
+.fire-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #ff4500;
+  border-radius: 50%;
+  filter: blur(2px);
+  opacity: 0;
+  animation: particleFloat 3s ease-in-out infinite;
+}
+
+.particle:nth-child(1) { left: 20%; top: 30%; animation-delay: 0s; }
+.particle:nth-child(2) { left: 70%; top: 60%; animation-delay: 0.5s; }
+.particle:nth-child(3) { left: 40%; top: 80%; animation-delay: 1s; }
+.particle:nth-child(4) { left: 85%; top: 20%; animation-delay: 1.5s; }
+.particle:nth-child(5) { left: 15%; top: 70%; animation-delay: 2s; }
+
+@keyframes particleFloat {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-30px) scale(2);
+    opacity: 0.4;
+  }
+  75% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(-60px) scale(1);
+    opacity: 0;
+  }
 }
 
 .popout-close {
@@ -338,9 +492,9 @@ export default {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #333;
-  border: none;
-  color: #888;
+  background: rgba(255, 69, 0, 0.2);
+  border: 1px solid #ff4500;
+  color: #ff4500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -348,12 +502,15 @@ export default {
   transition: all 0.2s;
   padding: 0;
   z-index: 3;
+  backdrop-filter: blur(5px);
 }
 
 .popout-close:hover {
   background: #ff4500;
+  border-color: #ff4500;
   color: white;
   transform: rotate(90deg);
+  box-shadow: 0 0 15px #ff4500;
 }
 
 .popout-loading {
@@ -391,6 +548,8 @@ export default {
   display: flex;
   gap: 15px;
   margin-bottom: 15px;
+  position: relative;
+  z-index: 1;
 }
 
 .popout-avatar {
@@ -398,12 +557,15 @@ export default {
   height: 65px;
   border-radius: 50%;
   border: 3px solid #ff4500;
-  box-shadow: 0 0 20px rgba(255, 69, 0, 0.3);
+  box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
   transition: transform 0.3s;
+  position: relative;
+  pointer-events: auto;
 }
 
 .popout-avatar:hover {
   transform: scale(1.05);
+  box-shadow: 0 0 30px #ff4500;
 }
 
 .popout-header-info {
@@ -415,6 +577,7 @@ export default {
   font-size: 18px;
   font-weight: 600;
   color: white;
+  text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
 }
 
 .popout-header-info a {
@@ -423,10 +586,14 @@ export default {
   font-size: 14px;
   transition: color 0.2s;
   position: relative;
+  display: inline-block;
+  cursor: pointer;
+  pointer-events: auto;
 }
 
 .popout-header-info a:hover {
   color: #ff8c00;
+  text-shadow: 0 0 10px #ff8c00;
 }
 
 .popout-header-info a::after {
@@ -436,8 +603,9 @@ export default {
   left: 0;
   width: 0;
   height: 1px;
-  background: currentColor;
+  background: #ff4500;
   transition: width 0.2s;
+  box-shadow: 0 0 10px #ff4500;
 }
 
 .popout-header-info a:hover::after {
@@ -450,9 +618,13 @@ export default {
   color: #e0e0e0;
   margin-bottom: 15px;
   padding: 12px;
-  background: rgba(255, 69, 0, 0.05);
+  background: rgba(0, 0, 0, 0.3);
   border-radius: 12px;
   border-left: 3px solid #ff4500;
+  backdrop-filter: blur(5px);
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
 }
 
 .popout-stats {
@@ -461,13 +633,19 @@ export default {
   gap: 10px;
   margin-bottom: 15px;
   padding: 12px;
-  background: #222;
+  background: rgba(0, 0, 0, 0.3);
   border-radius: 14px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 69, 0, 0.2);
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
 }
 
 .popout-stats div {
   text-align: center;
   transition: transform 0.2s;
+  pointer-events: auto;
 }
 
 .popout-stats div:hover {
@@ -480,6 +658,7 @@ export default {
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 4px;
+  text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
 }
 
 .popout-stats span {
@@ -491,21 +670,26 @@ export default {
 
 .popout-details {
   margin-bottom: 15px;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
 }
 
 .popout-details div {
   padding: 10px 0;
   color: #ccc;
   font-size: 13px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid rgba(255, 69, 0, 0.2);
   display: flex;
   align-items: center;
   gap: 10px;
   transition: background 0.2s;
+  pointer-events: auto;
 }
 
 .popout-details div:hover {
-  background: rgba(255, 69, 0, 0.02);
+  background: rgba(255, 69, 0, 0.1);
+  border-bottom-color: #ff4500;
 }
 
 .popout-details div:last-child {
@@ -516,6 +700,7 @@ export default {
   width: 22px;
   color: #ff4500;
   font-size: 14px;
+  text-shadow: 0 0 10px #ff4500;
 }
 
 .popout-details a {
@@ -523,6 +708,8 @@ export default {
   text-decoration: none;
   transition: color 0.2s;
   word-break: break-all;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .popout-details a:hover {
@@ -534,7 +721,8 @@ export default {
   display: block;
   text-align: center;
   padding: 12px;
-  background: linear-gradient(135deg, #ff4500, #ff8c00);
+  background: linear-gradient(135deg, #ff4500, #ff8c00, #ff4500, #ff8c00);
+  background-size: 300% 300%;
   color: white;
   text-decoration: none;
   border-radius: 40px;
@@ -544,10 +732,37 @@ export default {
   border: none;
   position: relative;
   overflow: hidden;
+  z-index: 1;
+  animation: fireGradient 4s ease infinite;
+  pointer-events: auto;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(255, 69, 0, 0.3);
+}
+
+@keyframes fireGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .popout-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(255, 69, 0, 0.4);
+  box-shadow: 0 8px 25px rgba(255, 69, 0, 0.6);
+}
+
+.popout-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+  z-index: -1;
+}
+
+.popout-button:hover::before {
+  left: 100%;
 }
 </style>

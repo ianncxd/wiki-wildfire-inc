@@ -35,7 +35,7 @@ outline: deep
   <div style="display: flex; align-items: center; gap: 6px;">
     <span style="font-size: 13px; color: var(--wf-gray); font-weight: 500;">updated by</span>
     <a 
-      href="https://github.com/iannc" 
+      href="https://github.com/ianncxd" 
       target="_blank" 
       class="github-profile"
       data-username="ianncxd"
