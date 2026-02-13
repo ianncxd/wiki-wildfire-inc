@@ -1,3 +1,4 @@
+<!-- .vitepress/theme/components/GithubPopout.vue -->
 <template>
   <div 
     class="github-popout" 
@@ -17,11 +18,11 @@
       leave-to-class="popout-leave-to"
     >
       <div v-if="isVisible" class="popout-content" @mouseenter.stop @mouseleave.stop>
-        <!-- Background Logo Watermark - Wildfire Logo -->
+        <!-- Background Logo Watermark -->
         <div class="popout-background">
-          <img src="/icons/wildfire.png" alt="Wildfire" class="background-logo main">
-          <img src="/icons/wildfire.png" alt="Wildfire" class="background-logo secondary">
-          <img src="/icons/wildfire.png" alt="Wildfire" class="background-logo tertiary">
+          <img src="/icons/wildfire.png" alt="Wildfire" class="background-logo main" @error="handleImageError">
+          <img src="/icons/wildfire.png" alt="Wildfire" class="background-logo secondary" @error="handleImageError">
+          <img src="/icons/wildfire.png" alt="Wildfire" class="background-logo tertiary" @error="handleImageError">
         </div>
 
         <!-- Fire Particles -->
@@ -54,12 +55,74 @@
 
         <!-- Profile -->
         <template v-else>
-          <!-- Header -->
+          <!-- Header cu TAG-URI si USERNAME SUB LOGO -->
           <div class="popout-header">
-            <img :src="user.avatar" :alt="user.username" class="popout-avatar">
+            <img :src="user.avatar" :alt="user.username" class="popout-avatar" @error="handleAvatarError">
             <div class="popout-header-info">
-              <h3>{{ user.name || user.username }}</h3>
-              <a :href="user.profileUrl" target="_blank" rel="noopener noreferrer" @click.stop>@{{ user.username }}</a>
+              <div class="name-row">
+                <h3>{{ user.name || user.username }}</h3>
+                <!-- TOATE TAG-URILE POSIBILE CU ICONITE - PASTRĂ CULOAREA ORIGINALĂ -->
+                <div class="square-tags" :class="tagClasses">
+                  <span class="square-tag tag-staff">
+                    <img src="/icons/wildfire.png" alt="staff" class="tag-icon original-color" @error="handleIconError">
+                    <span>STAFF</span>
+                  </span>
+                  <span class="square-tag tag-dev">
+                    <img src="/icons/wildfire.png" alt="dev" class="tag-icon original-color" @error="handleIconError">
+                    <span>DEV</span>
+                  </span>
+                  <span class="square-tag tag-wiki">
+                    <img src="/icons/wildfire.png" alt="wiki" class="tag-icon original-color" @error="handleIconError">
+                    <span>WIKI</span>
+                  </span>
+                  <span class="square-tag tag-trusted">
+                    <img src="/icons/wildfire.png" alt="trusted" class="tag-icon original-color" @error="handleIconError">
+                    <span>TRUSTED</span>
+                  </span>
+                  <span class="square-tag tag-pro">
+                    <img src="/icons/wildfire.png" alt="pro" class="tag-icon original-color" @error="handleIconError">
+                    <span>PRO</span>
+                  </span>
+                  <span class="square-tag tag-vip">
+                    <img src="/icons/wildfire.png" alt="vip" class="tag-icon original-color" @error="handleIconError">
+                    <span>VIP</span>
+                  </span>
+                  <span class="square-tag tag-owner">
+                    <img src="/icons/wildfire.png" alt="owner" class="tag-icon original-color" @error="handleIconError">
+                    <span>OWNER</span>
+                  </span>
+                  <span class="square-tag tag-admin">
+                    <img src="/icons/wildfire.png" alt="admin" class="tag-icon original-color" @error="handleIconError">
+                    <span>ADMIN</span>
+                  </span>
+                  <span class="square-tag tag-mod">
+                    <img src="/icons/wildfire.png" alt="mod" class="tag-icon original-color" @error="handleIconError">
+                    <span>MOD</span>
+                  </span>
+                  <span class="square-tag tag-supporter">
+                    <img src="/icons/wildfire.png" alt="supporter" class="tag-icon original-color" @error="handleIconError">
+                    <span>SUPPORTER</span>
+                  </span>
+                  <span class="square-tag tag-booster">
+                    <img src="/icons/wildfire.png" alt="booster" class="tag-icon original-color" @error="handleIconError">
+                    <span>BOOSTER</span>
+                  </span>
+                  <span class="square-tag tag-partner">
+                    <img src="/icons/wildfire.png" alt="partner" class="tag-icon original-color" @error="handleIconError">
+                    <span>PARTNER</span>
+                  </span>
+                  <span class="square-tag tag-contributor">
+                    <img src="/icons/wildfire.png" alt="contributor" class="tag-icon original-color" @error="handleIconError">
+                    <span>CONTRIBUTOR</span>
+                  </span>
+                  <span class="square-tag tag-wildfire">
+                    <img src="/icons/wildfire.png" alt="wildfire" class="tag-icon original-color" @error="handleIconError">
+                    <span>WILDFIRE</span>
+                  </span>
+                </div>
+              </div>
+              <!-- USERNAME SUB LOGO -->
+              <a :href="user.profileUrl" target="_blank" rel="noopener noreferrer" @click.stop class="username-link">@{{ user.username }}</a>
             </div>
           </div>
 
@@ -142,7 +205,8 @@ export default {
         createdAt: '',
         profileUrl: `https://github.com/${this.username}`
       },
-      popoutStyle: {}
+      popoutStyle: {},
+      tagClasses: ''
     }
   },
   mounted() {
@@ -150,6 +214,11 @@ export default {
     window.addEventListener('resize', this.positionPopout)
     window.addEventListener('scroll', this.positionPopout, true)
     window.addEventListener('keydown', this.handleKeyDown)
+    
+    // Ia clasele de pe trigger-ul din .md
+    if (this.targetElement) {
+      this.tagClasses = this.targetElement.getAttribute('data-tags') || ''
+    }
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.positionPopout)
@@ -257,6 +326,21 @@ export default {
     
     onPopoutLeave() {
       this.$emit('popout-leave')
+    },
+    
+    handleImageError(e) {
+      console.log('Imagine lipsă, ignorăm')
+      e.target.style.display = 'none'
+    },
+    
+    handleIconError(e) {
+      console.log('Iconiță lipsă, afișăm doar text')
+      e.target.style.display = 'none'
+    },
+    
+    handleAvatarError(e) {
+      console.log('Avatar lipsă, folosim fallback')
+      e.target.src = `https://github.com/${this.username}.png`
     }
   }
 }
@@ -349,7 +433,6 @@ export default {
   box-shadow: 0 0 30px rgba(255, 69, 0, 0.4);
 }
 
-/* Background Effects - Wildfire Style */
 .popout-content::before {
   content: '';
   position: absolute;
@@ -369,7 +452,6 @@ export default {
   50% { opacity: 1; }
 }
 
-/* Background Logo Watermark - Wildfire Logo */
 .popout-background {
   position: absolute;
   top: 0;
@@ -436,7 +518,6 @@ export default {
   50% { transform: translate(-50%, -50%) rotate(25deg) scale(1.1); }
 }
 
-/* Fire Particles */
 .fire-particles {
   position: absolute;
   top: 0;
@@ -570,51 +651,189 @@ export default {
 
 .popout-header-info {
   flex: 1;
+  min-width: 0;
 }
 
-.popout-header-info h3 {
-  margin: 0 0 5px 0;
+.name-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.name-row h3 {
+  margin: 0;
   font-size: 18px;
   font-weight: 600;
   color: white;
   text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
+  line-height: 1.2;
 }
 
-.popout-header-info a {
+.username-link {
   color: #ff4500;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
   transition: color 0.2s;
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-  pointer-events: auto;
+  display: block;
+  margin-top: 2px;
 }
 
-.popout-header-info a:hover {
+.username-link:hover {
   color: #ff8c00;
   text-shadow: 0 0 10px #ff8c00;
 }
 
-.popout-header-info a::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: #ff4500;
-  transition: width 0.2s;
-  box-shadow: 0 0 10px #ff4500;
+.square-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
-.popout-header-info a:hover::after {
-  width: 100%;
+/* ASCUNDE TOATE TAG-URILE DOMN */
+.square-tags .square-tag {
+  display: none;
+}
+
+/* AFIȘEAZĂ DOAR TAG-URILE CU CLASA ACTIVĂ */
+.square-tags.show-staff .tag-staff,
+.square-tags.show-dev .tag-dev,
+.square-tags.show-wiki .tag-wiki,
+.square-tags.show-trusted .tag-trusted,
+.square-tags.show-pro .tag-pro,
+.square-tags.show-vip .tag-vip,
+.square-tags.show-owner .tag-owner,
+.square-tags.show-admin .tag-admin,
+.square-tags.show-mod .tag-mod,
+.square-tags.show-supporter .tag-supporter,
+.square-tags.show-booster .tag-booster,
+.square-tags.show-partner .tag-partner,
+.square-tags.show-contributor .tag-contributor,
+.square-tags.show-wildfire .tag-wildfire {
+  display: inline-flex !important;
+}
+
+.square-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.tag-icon {
+  width: 12px;
+  height: 12px;
+}
+
+.tag-icon.original-color {
+  filter: none; /* Păstrează culoarea originală */
+}
+
+/* Tag-ul STAFF - gradient verde */
+.square-tag.tag-staff {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+}
+
+/* Tag-ul DEV - gradient albastru */
+.square-tag.tag-dev {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+/* Tag-ul WIKI - gradient turcoaz */
+.square-tag.tag-wiki {
+  background: linear-gradient(135deg, #1abc9c, #16a085);
+  box-shadow: 0 2px 8px rgba(26, 188, 156, 0.3);
+}
+
+/* Tag-ul TRUSTED - gradient galben */
+.square-tag.tag-trusted {
+  background: linear-gradient(135deg, #f1c40f, #f39c12);
+  box-shadow: 0 2px 8px rgba(241, 196, 15, 0.3);
+  color: #2c3e50;
+}
+
+/* Tag-ul PRO - gradient portocaliu */
+.square-tag.tag-pro {
+  background: linear-gradient(135deg, #ff4500, #ff8c00);
+  box-shadow: 0 2px 8px rgba(255, 69, 0, 0.3);
+}
+
+/* Tag-ul VIP - gradient mov */
+.square-tag.tag-vip {
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+  box-shadow: 0 2px 8px rgba(155, 89, 182, 0.3);
+}
+
+/* Tag-ul OWNER - gradient roșu */
+.square-tag.tag-owner {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+/* Tag-ul ADMIN - gradient roșu închis */
+.square-tag.tag-admin {
+  background: linear-gradient(135deg, #c0392b, #962d22);
+  box-shadow: 0 2px 8px rgba(192, 57, 43, 0.3);
+}
+
+/* Tag-ul MOD - gradient verde închis */
+.square-tag.tag-mod {
+  background: linear-gradient(135deg, #16a085, #1e8449);
+  box-shadow: 0 2px 8px rgba(22, 160, 133, 0.3);
+}
+
+/* Tag-ul SUPPORTER - gradient portocaliu-gălbui */
+.square-tag.tag-supporter {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+  box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+}
+
+/* Tag-ul BOOSTER - gradient mov închis */
+.square-tag.tag-booster {
+  background: linear-gradient(135deg, #8e44ad, #6c3483);
+  box-shadow: 0 2px 8px rgba(142, 68, 173, 0.3);
+}
+
+/* Tag-ul PARTNER - gradient gri-albăstrui */
+.square-tag.tag-partner {
+  background: linear-gradient(135deg, #2c3e50, #1a2632);
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.3);
+}
+
+/* Tag-ul CONTRIBUTOR - gradient gri */
+.square-tag.tag-contributor {
+  background: linear-gradient(135deg, #7f8c8d, #5d6d6e);
+  box-shadow: 0 2px 8px rgba(127, 140, 141, 0.3);
+}
+
+/* Tag-ul WILDFIRE - gradient special wildfire */
+.square-tag.tag-wildfire {
+  background: linear-gradient(135deg, #ff4500, #ff8c00, #ffd700, #ff4500);
+  background-size: 300% 300%;
+  animation: wildfireGradient 3s ease infinite;
+  box-shadow: 0 2px 8px rgba(255, 69, 0, 0.4);
+}
+
+@keyframes wildfireGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .popout-bio {
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 13px;
+  line-height: 1.5;
   color: #e0e0e0;
   margin-bottom: 15px;
   padding: 12px;
@@ -630,7 +849,7 @@ export default {
 .popout-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 15px;
   padding: 12px;
   background: rgba(0, 0, 0, 0.3);
@@ -655,17 +874,17 @@ export default {
 .popout-stats strong {
   display: block;
   color: #ff4500;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   text-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
 }
 
 .popout-stats span {
-  font-size: 11px;
+  font-size: 10px;
   color: #888;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .popout-details {
@@ -676,13 +895,13 @@ export default {
 }
 
 .popout-details div {
-  padding: 10px 0;
+  padding: 8px 0;
   color: #ccc;
-  font-size: 13px;
+  font-size: 12px;
   border-bottom: 1px solid rgba(255, 69, 0, 0.2);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   transition: background 0.2s;
   pointer-events: auto;
 }
@@ -697,9 +916,9 @@ export default {
 }
 
 .popout-details span {
-  width: 22px;
+  width: 20px;
   color: #ff4500;
-  font-size: 14px;
+  font-size: 13px;
   text-shadow: 0 0 10px #ff4500;
 }
 
@@ -720,14 +939,14 @@ export default {
 .popout-button {
   display: block;
   text-align: center;
-  padding: 12px;
+  padding: 10px;
   background: linear-gradient(135deg, #ff4500, #ff8c00, #ff4500, #ff8c00);
   background-size: 300% 300%;
   color: white;
   text-decoration: none;
-  border-radius: 40px;
+  border-radius: 30px;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   transition: all 0.3s;
   border: none;
   position: relative;
