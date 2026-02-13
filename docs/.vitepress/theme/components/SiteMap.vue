@@ -34,16 +34,10 @@
         <div class="footer-brand">
           <img src="https://wildfire.ro/public/images/logo-sv22.png" alt="Wildfire.ro" class="footer-logo">
           <div class="footer-info">
-            <h4>Wildfire<span>.ro</span></h4>
+            <h4>Wildfire<span class="dot-ro">.ro</span></h4>
             <p>Comunitatea #1 de CS2 din România</p>
           </div>
         </div>
-
-        <!-- <div class="footer-social">
-          <a v-for="social in socialLinks" :key="social.icon" :href="social.link" target="_blank" class="social-link" :title="social.icon">
-            {{ getSocialIcon(social.icon) }}
-          </a>
-        </div> -->
 
         <div class="footer-links">
           <a href="/informatii/about">Despre</a>
@@ -59,6 +53,18 @@
           <p>© 2024 wildfire.ro - Toate drepturile rezervate</p>
           <p class="footer-message">mulțumim comunității pentru sprijinul continuu</p>
           <p class="footer-stats">📊 {{ totalPages }} pagini • {{ totalSections }} secțiuni</p>
+          
+          <!-- MADE BY IANNC (MOV) & TRAPI (ROSU) -->
+          <div class="made-by-wrapper">
+            <div class="made-by-content">
+              <span class="made-by-label">Made by</span>
+              <div class="made-by-names">
+                <span class="name-iannc">iannC</span>
+                <span class="name-amp">&</span>
+                <span class="name-trapi">Trapi</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -66,26 +72,37 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useData } from 'vitepress'
 
 const { page, theme } = useData()
 
-// Doar pe home page
+const timeOfDay = ref(getTimeOfDay())
+
+function getTimeOfDay() {
+  const hour = new Date().getHours()
+  if (hour < 12) return 'dimineață'
+  if (hour < 18) return 'după-amiază'
+  return 'seară'
+}
+
+onMounted(() => {
+  console.log('%c🔥 Wildfire Footer - Made by iannC (mov) & Trapi (roșu) 🔥', 
+    'background: linear-gradient(135deg, #8b5cf6, #ff0000); color: white; font-size: 14px; padding: 6px; border-radius: 6px;')
+  console.log(`%c🕐 ${timeOfDay.value}`, 'color: #8b5cf6; font-size: 12px;')
+})
+
 const isHomePage = computed(() => {
   return page.value.relativePath === 'index.md'
 })
 
-// Extrage textul curat fără HTML și iconițe
 const cleanText = (htmlString) => {
   if (!htmlString) return ''
-  // Elimină tag-urile HTML și păstrează doar textul
   const div = document.createElement('div')
   div.innerHTML = htmlString
   return div.textContent || div.innerText || ''
 }
 
-// Extrage sidebar-ul DIN CONFIG
 const sidebarSections = computed(() => {
   const sidebar = theme.value?.sidebar || []
   
@@ -102,7 +119,6 @@ const sidebarSections = computed(() => {
   return []
 })
 
-// Extrage item-uri recursiv
 const extractItems = (items) => {
   return items.map(item => {
     const cleanItemText = cleanText(item.text)
@@ -122,12 +138,6 @@ const extractItems = (items) => {
   })
 }
 
-// Social links din config
-const socialLinks = computed(() => {
-  return theme.value?.socialLinks || []
-})
-
-// Total pagini
 const totalPages = computed(() => {
   let count = 0
   const countItems = (items) => {
@@ -140,30 +150,17 @@ const totalPages = computed(() => {
   return count
 })
 
-// Total secțiuni
 const totalSections = computed(() => sidebarSections.value.length)
 
-// Iconițe pentru social media
-const getSocialIcon = (icon) => {
-  const icons = {
-    discord: '💬',
-    steam: '🎮',
-    tiktok: '🎵',
-    github: '🐙',
-    youtube: '📺'
-  }
-  return icons[icon] || '🔗'
-}
-
-// Culoare dinamică pentru fiecare secțiune
+// 🔴 CULORI CORECTE PENTRU SECȚIUNI
 const getCategoryStyle = (text) => {
   const t = text?.toLowerCase() || ''
-  let color = '#ff4500'
+  let color = '#ff8c00' // Portocaliu pentru Sisteme (default)
   
-  if (t.includes('informații')) color = '#3b82f6'
-  if (t.includes('sisteme')) color = '#ff4500'
-  if (t.includes('shop')) color = '#8b5cf6'
-  if (t.includes('premium')) color = '#8b5cf6'
+  if (t.includes('informații')) color = '#3b82f6' // ALBASTRU
+  if (t.includes('sisteme')) color = '#ff8c00' // PORTOCALIU
+  if (t.includes('shop')) color = '#8b5cf6' // MOV
+  if (t.includes('premium')) color = '#8b5cf6' // MOV
   
   return {
     color: color,
@@ -171,7 +168,7 @@ const getCategoryStyle = (text) => {
   }
 }
 
-// Dot class pentru fiecare secțiune
+// 🔴 DOT-URI CU CULORILE CORECTE
 const getDotClass = (text) => {
   const t = text?.toLowerCase() || ''
   if (t.includes('informații')) return 'dot-blue'
@@ -186,7 +183,7 @@ const getDotClass = (text) => {
 .footer-sitemap-wrapper {
   background: #f3f4f6 !important;
   width: 100%;
-  border-top: 2px solid #ff4500 !important;
+  border-top: 2px solid #ff8c00 !important;
   margin-top: 60px;
   padding: 48px 0 32px;
   position: relative;
@@ -198,7 +195,7 @@ const getDotClass = (text) => {
 
 .dark .footer-sitemap-wrapper {
   background: #111111 !important;
-  border-top: 2px solid #ff4500 !important;
+  border-top: 2px solid #ff8c00 !important;
 }
 
 .footer-sitemap {
@@ -240,9 +237,10 @@ const getDotClass = (text) => {
   box-shadow: 0 0 6px currentColor;
 }
 
-.dot-blue { background: #3b82f6; }
-.dot-orange { background: #ff4500; }
-.dot-purple { background: #8b5cf6; }
+/* 🔴 DOT-URI CU CULORI */
+.dot-blue { background: #3b82f6; }      /* ALBASTRU */
+.dot-orange { background: #ff8c00; }    /* PORTOCALIU */
+.dot-purple { background: #8b5cf6; }    /* MOV */
 .dot-gray { background: #64748b; }
 
 .col-list {
@@ -268,7 +266,7 @@ const getDotClass = (text) => {
 }
 
 .col-link:hover {
-  color: #ff4500 !important;
+  color: #ff8c00 !important;
   transform: translateX(4px);
 }
 
@@ -315,7 +313,7 @@ const getDotClass = (text) => {
   flex-direction: column;
   align-items: center;
   padding-top: 32px;
-  border-top: 1px solid rgba(255, 69, 0, 0.2);
+  border-top: 1px solid rgba(255, 140, 0, 0.2);
 }
 
 .footer-brand {
@@ -342,48 +340,18 @@ const getDotClass = (text) => {
   color: white;
 }
 
-.footer-info h4 span {
-  background: linear-gradient(135deg, #ff4500, #ff8c00);
+/* .ro ORANGE */
+.footer-info h4 .dot-ro {
+  background: linear-gradient(135deg, #ff8c00, #ff4500);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .footer-info p {
   font-size: 13px;
   color: #6b7280;
   margin: 0;
-}
-
-.footer-social {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 24px;
-}
-
-.social-link {
-  font-size: 22px;
-  color: #6b7280;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.8);
-}
-
-.dark .social-link {
-  background: rgba(255, 255, 255, 0.05);
-  color: #9ca3af;
-}
-
-.social-link:hover {
-  color: #ff4500;
-  transform: translateY(-3px);
-  background: white;
-  box-shadow: 0 4px 12px rgba(255, 69, 0, 0.2);
 }
 
 .footer-links {
@@ -402,7 +370,7 @@ const getDotClass = (text) => {
 }
 
 .footer-links a:hover {
-  color: #ff4500;
+  color: #ff8c00;
 }
 
 .separator {
@@ -429,6 +397,103 @@ const getDotClass = (text) => {
   margin-top: 8px;
 }
 
+/* ===== MADE BY IANNC (MOV) & TRAPI (ROSU) ===== */
+.made-by-wrapper {
+  position: relative;
+  display: inline-flex;
+  margin-top: 16px;
+  padding: 4px 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 30px;
+  backdrop-filter: blur(4px);
+  border: 1px solid #ff8c00;
+  box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.dark .made-by-wrapper {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #ff8c00;
+  box-shadow: 0 0 15px rgba(255, 140, 0, 0.4);
+}
+
+.made-by-wrapper:hover {
+  transform: translateY(-2px);
+  border-color: #ff8c00;
+  box-shadow: 0 0 25px rgba(255, 140, 0, 0.7);
+}
+
+.made-by-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.made-by-label {
+  color: #9ca3af;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 400;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.made-by-wrapper:hover .made-by-label {
+  color: #ff8c00;
+  opacity: 1;
+}
+
+.made-by-names {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+}
+
+/* iannC - MOV cu GLOW */
+.name-iannc {
+  font-size: 13px;
+  background: linear-gradient(135deg, #8b5cf6, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.6));
+  transition: all 0.3s ease;
+}
+
+/* Trapi - ROSU cu GLOW */
+.name-trapi {
+  font-size: 13px;
+  background: linear-gradient(135deg, #ff0000, #cc0000);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+  filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.6));
+  transition: all 0.3s ease;
+}
+
+.name-amp {
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 300;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.made-by-wrapper:hover .name-amp {
+  color: #ff8c00;
+  opacity: 1;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .footer-sitemap {
@@ -447,6 +512,66 @@ const getDotClass = (text) => {
   
   .footer-links {
     gap: 12px;
+  }
+  
+  .made-by-wrapper {
+    padding: 3px 10px;
+  }
+  
+  .made-by-content {
+    gap: 4px;
+    font-size: 12px;
+  }
+  
+  .name-iannc, .name-trapi {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-sitemap {
+    padding: 0 16px;
+  }
+  
+  .footer-logo {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .footer-info h4 {
+    font-size: 18px;
+  }
+  
+  .footer-info p {
+    font-size: 12px;
+  }
+  
+  .footer-links {
+    gap: 8px;
+  }
+  
+  .footer-links a {
+    font-size: 12px;
+  }
+  
+  .made-by-wrapper {
+    padding: 2px 8px;
+  }
+  
+  .made-by-content {
+    gap: 3px;
+  }
+  
+  .made-by-label {
+    font-size: 9px;
+  }
+  
+  .name-iannc, .name-trapi {
+    font-size: 11px;
+  }
+  
+  .name-amp {
+    font-size: 10px;
   }
 }
 </style>
