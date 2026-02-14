@@ -17,7 +17,6 @@ import GithubPopout from './components/GithubPopout.vue'
     function init() {
         console.log('✅ Popout initializat')
         
-        // Când mouse-ul intră pe trigger
         document.querySelectorAll('.github-profile').forEach(trigger => {
             trigger.addEventListener('mouseenter', function(e) {
                 handleTriggerEnter(this)
@@ -28,7 +27,6 @@ import GithubPopout from './components/GithubPopout.vue'
             })
         })
 
-        // Observăm pentru elemente noi
         const observer = new MutationObserver(() => {
             document.querySelectorAll('.github-profile').forEach(trigger => {
                 if (!trigger.hasListener) {
@@ -88,8 +86,7 @@ import GithubPopout from './components/GithubPopout.vue'
             popoutInstance.instance.username = username
             popoutInstance.instance.targetElement = trigger
             popoutInstance.instance.fetchUserData()
-            popoutInstance.instance.fetchUserContributions() // Asta se apelează automat în mounted, dar dacă vrei să forțezi reîncărcarea:
-            // popoutInstance.instance.fetchUserContributions()
+            popoutInstance.instance.fetchUserContributions()
             popoutInstance.instance.show()
             return
         }
@@ -146,7 +143,7 @@ import GithubPopout from './components/GithubPopout.vue'
                 }, 200)
             }
             hideTimeout = null
-        }, 500) // 500 milisecunde = 0.5 secunde
+        }, 500)
     }
 
     function destroyPopout() {

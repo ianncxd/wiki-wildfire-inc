@@ -370,33 +370,62 @@ export default {
     },
     
     positionPopout() {
-      this.$nextTick(() => {
-        if (!this.targetElement || !this.$refs.popout) return
-        
-        const targetRect = this.targetElement.getBoundingClientRect()
-        const popoutRect = this.$refs.popout.getBoundingClientRect()
-        
-        let left = targetRect.left + (targetRect.width / 2) - (popoutRect.width / 2)
-        let top = targetRect.top - popoutRect.height - 15
-        
-        if (left < 20) left = 20
-        if (left + popoutRect.width > window.innerWidth - 20) {
-          left = window.innerWidth - popoutRect.width - 20
-        }
-        
-        if (top < 20) {
-          top = targetRect.bottom + 15
-          this.isBelow = true
-        } else {
-          this.isBelow = false
-        }
-        
-        this.popoutStyle = {
-          left: left + 'px',
-          top: top + window.scrollY + 'px'
-        }
-      })
-    },
+  this.$nextTick(() => {
+    if (!this.targetElement || !this.$refs.popout) return
+    
+    // Obținem poziția relativă la viewport
+    const targetRect = this.targetElement.getBoundingClientRect()
+    const popoutRect = this.$refs.popout.getBoundingClientRect()
+    
+    // Găsim cel mai apropiat element cu position: relative
+    let offsetParent = this.targetElement.offsetParent
+    let offsetX = 0
+    let offsetY = 0
+    
+    // Dacă există un părinte cu position: relative, calculăm offset-ul
+    while (offsetParent && offsetParent !== document.body) {
+      const parentRect = offsetParent.getBoundingClientRect()
+      offsetX += parentRect.left
+      offsetY += parentRect.top
+      offsetParent = offsetParent.offsetParent
+    }
+    
+    // Calculăm poziția absolută în document
+    const scrollY = window.scrollY
+    const scrollX = window.scrollX
+    
+    // Poziția targetului în document (ținând cont de părinții cu position: relative)
+    const targetAbsoluteTop = targetRect.top + scrollY
+    const targetAbsoluteLeft = targetRect.left + scrollX
+    
+    // Calculăm left - centrat sub/deasupra targetului
+    let left = targetAbsoluteLeft + (targetRect.width / 2) - (popoutRect.width / 2)
+    
+    // Verificăm dacă iese în stânga/dreapta
+    if (left < scrollX + 10) left = scrollX + 10
+    if (left + popoutRect.width > window.innerWidth + scrollX - 10) {
+      left = window.innerWidth + scrollX - popoutRect.width - 10
+    }
+    
+    // Încercăm MAI ÎNTÂI DEDESUBT (săgeata în sus)
+    let top = targetAbsoluteTop + targetRect.height + 15
+    this.isBelow = true
+    
+    // Verificăm dacă iese în jos
+    if (top + popoutRect.height > window.innerHeight + scrollY - 20) {
+      // Dacă iese, punem deasupra
+      top = targetAbsoluteTop - popoutRect.height - 15
+      this.isBelow = false
+    }
+    
+    this.popoutStyle = {
+      left: left + 'px',
+      top: top + 'px'
+    }
+    
+    console.log('Popout poziționat:', this.popoutStyle, 'below:', this.isBelow)
+  })
+},
     
     show() {
       this.isVisible = true

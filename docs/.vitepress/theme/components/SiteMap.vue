@@ -10,7 +10,6 @@
           <div class="hero-particle particle-4"></div>
         </div>
         <div class="hero-text-wrapper">
-          <div class="hero-glitch">WILDFIRE.RO</div>
           <div class="hero-glow"></div>
         </div>
         <div class="hero-divider">
@@ -258,7 +257,7 @@ const getCategoryColor = (text) => {
 }
 
 /* ===== HERO SECTION ===== */
-.wildfire-hero {
+/* .wildfire-hero {
   position: relative;
   height: 150px;
   margin-bottom: 60px;
@@ -371,7 +370,7 @@ const getCategoryColor = (text) => {
 @keyframes flameWidth {
   0%, 100% { opacity: 0.5; width: 40px; }
   50% { opacity: 1; width: 100px; }
-}
+} */
 
 /* ===== SITEMAP GRID ===== */
 .sitemap-grid {
