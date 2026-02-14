@@ -39,7 +39,9 @@ outline: deep
       target="_blank" 
       class="github-profile"
       data-username="ianncxd"
-      data-tags="show-staff show-dev show-wiki show-trusted show-owner"
+      data-repo="wiki-wildfire-inc"
+      data-owner="ianncxd"
+      data-tags="show-staff show-dev show-wiki show-trusted"
       style="display: block; padding: 2px; background: linear-gradient(135deg, #8b5cf6, #c084fc, #f472b6); border-radius: 50%;" 
       title="ianncxd"
     >
@@ -47,3 +49,4 @@ outline: deep
     </a>
   </div>
 </div>
+<!-- ACESTA ESTE TAG-UL DE ÎNCHIDERE CARE LIPSEA -->

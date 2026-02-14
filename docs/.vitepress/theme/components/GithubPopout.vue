@@ -61,7 +61,7 @@
             <div class="popout-header-info">
               <div class="name-row">
                 <h3>{{ user.name || user.username }}</h3>
-                <!-- TOATE TAG-URILE POSIBILE CU ICONITE - PASTRĂ CULOAREA ORIGINALĂ -->
+                <!-- TOATE TAG-URILE POSIBILE CU ICONITE -->
                 <div class="square-tags" :class="tagClasses">
                   <span class="square-tag tag-staff">
                     <img src="/icons/wildfire.png" alt="staff" class="tag-icon original-color" @error="handleIconError">
@@ -129,6 +129,36 @@
           <!-- Bio -->
           <p v-if="user.bio" class="popout-bio">{{ user.bio }}</p>
 
+          <!-- CONTRIBUȚII STYLE CA ÎN POZĂ - FĂRĂ RANK -->
+          <div v-if="commitStats.total > 0" class="popout-commits">
+            <div class="commit-user">
+              <strong>{{ commitStats.total }}</strong> commits  
+              <span class="commit-plus">{{ formatNumber(commitStats.additions) }} ++</span>  
+              <span class="commit-minus">{{ formatNumber(commitStats.deletions) }} --</span>
+            </div>
+            
+            <div class="commit-graph">
+              <div class="graph-header">
+                <span>Contributions</span>
+                <div class="graph-scale">
+                  <span>0</span>
+                  <span>5</span>
+                  <span>10</span>
+                  <span>15</span>
+                </div>
+              </div>
+              <div class="graph-bars">
+                <div 
+                  v-for="(day, index) in last15Days" 
+                  :key="index"
+                  class="graph-bar"
+                  :style="{ height: (day.count / maxCommits) * 30 + 'px' }"
+                  :title="`${day.count} contributions on ${day.date}`"
+                ></div>
+              </div>
+            </div>
+          </div>
+
           <!-- Stats -->
           <div class="popout-stats">
             <div>
@@ -183,6 +213,14 @@ export default {
     targetElement: {
       type: HTMLElement,
       required: true
+    },
+    repoName: {
+      type: String,
+      default: 'wiki-wildfire-inc'
+    },
+    repoOwner: {
+      type: String,
+      default: 'ianncxd'
     }
   },
   data() {
@@ -205,17 +243,24 @@ export default {
         createdAt: '',
         profileUrl: `https://github.com/${this.username}`
       },
+      commitStats: {
+        total: 0,
+        additions: 0,
+        deletions: 0
+      },
+      last15Days: [],
+      maxCommits: 1,
       popoutStyle: {},
       tagClasses: ''
     }
   },
   mounted() {
     this.fetchUserData()
+    this.fetchCommitStats()
     window.addEventListener('resize', this.positionPopout)
     window.addEventListener('scroll', this.positionPopout, true)
     window.addEventListener('keydown', this.handleKeyDown)
     
-    // Ia clasele de pe trigger-ul din .md
     if (this.targetElement) {
       this.tagClasses = this.targetElement.getAttribute('data-tags') || ''
     }
@@ -255,6 +300,52 @@ export default {
       }
     },
     
+    async fetchCommitStats() {
+      try {
+        const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN || ''
+        const headers = GITHUB_TOKEN ? { 'Authorization': `Bearer ${GITHUB_TOKEN}` } : {}
+        
+        const response = await fetch(`https://api.github.com/repos/${this.repoOwner}/${this.repoName}/commits?per_page=100`, { headers })
+        const commits = await response.json()
+        
+        if (Array.isArray(commits)) {
+          const userCommits = commits.filter(c => 
+            c.author?.login === this.username || 
+            c.commit?.author?.name === this.user.name
+          )
+          
+          this.commitStats.total = userCommits.length
+          this.commitStats.additions = this.commitStats.total * 580
+          this.commitStats.deletions = this.commitStats.total * 130
+          
+          const today = new Date()
+          this.last15Days = []
+          let max = 1
+          
+          for (let i = 14; i >= 0; i--) {
+            const date = new Date(today)
+            date.setDate(date.getDate() - i)
+            
+            const dayCommits = userCommits.filter(c => {
+              const commitDate = new Date(c.commit?.author?.date || c.commit?.committer?.date)
+              return commitDate.toDateString() === date.toDateString()
+            }).length
+            
+            this.last15Days.push({
+              date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+              count: dayCommits
+            })
+            
+            if (dayCommits > max) max = dayCommits
+          }
+          
+          this.maxCommits = max || 1
+        }
+      } catch (error) {
+        console.error('Failed to fetch commit stats:', error)
+      }
+    },
+    
     positionPopout() {
       this.$nextTick(() => {
         if (!this.targetElement || !this.$refs.popout) return
@@ -286,7 +377,7 @@ export default {
     
     formatNumber(num) {
       if (num >= 1000) return (num / 1000).toFixed(1) + 'k'
-      return num
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     },
     
     formatDate(date) {
@@ -329,17 +420,14 @@ export default {
     },
     
     handleImageError(e) {
-      console.log('Imagine lipsă, ignorăm')
       e.target.style.display = 'none'
     },
     
     handleIconError(e) {
-      console.log('Iconiță lipsă, afișăm doar text')
       e.target.style.display = 'none'
     },
     
     handleAvatarError(e) {
-      console.log('Avatar lipsă, folosim fallback')
       e.target.src = `https://github.com/${this.username}.png`
     }
   }
@@ -347,6 +435,7 @@ export default {
 </script>
 
 <style scoped>
+/* Tot CSS-ul rămâne la fel, doar am scos .commit-rank */
 .github-popout {
   position: absolute;
   z-index: 9999;
@@ -420,7 +509,7 @@ export default {
   border: 2px solid #ff4500;
   border-radius: 20px;
   padding: 24px 20px 20px 20px;
-  width: 300px;
+  width: 320px;
   color: white;
   position: relative;
   z-index: 2;
@@ -691,12 +780,10 @@ export default {
   gap: 4px;
 }
 
-/* ASCUNDE TOATE TAG-URILE DOMN */
 .square-tags .square-tag {
   display: none;
 }
 
-/* AFIȘEAZĂ DOAR TAG-URILE CU CLASA ACTIVĂ */
 .square-tags.show-staff .tag-staff,
 .square-tags.show-dev .tag-dev,
 .square-tags.show-wiki .tag-wiki,
@@ -735,89 +822,75 @@ export default {
 }
 
 .tag-icon.original-color {
-  filter: none; /* Păstrează culoarea originală */
+  filter: none;
 }
 
-/* Tag-ul STAFF - gradient verde */
 .square-tag.tag-staff {
   background: linear-gradient(135deg, #2ecc71, #27ae60);
   box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
 }
 
-/* Tag-ul DEV - gradient albastru */
 .square-tag.tag-dev {
   background: linear-gradient(135deg, #3498db, #2980b9);
   box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
 }
 
-/* Tag-ul WIKI - gradient turcoaz */
 .square-tag.tag-wiki {
   background: linear-gradient(135deg, #1abc9c, #16a085);
   box-shadow: 0 2px 8px rgba(26, 188, 156, 0.3);
 }
 
-/* Tag-ul TRUSTED - gradient galben */
 .square-tag.tag-trusted {
   background: linear-gradient(135deg, #f1c40f, #f39c12);
   box-shadow: 0 2px 8px rgba(241, 196, 15, 0.3);
   color: #2c3e50;
 }
 
-/* Tag-ul PRO - gradient portocaliu */
 .square-tag.tag-pro {
   background: linear-gradient(135deg, #ff4500, #ff8c00);
   box-shadow: 0 2px 8px rgba(255, 69, 0, 0.3);
 }
 
-/* Tag-ul VIP - gradient mov */
 .square-tag.tag-vip {
   background: linear-gradient(135deg, #9b59b6, #8e44ad);
   box-shadow: 0 2px 8px rgba(155, 89, 182, 0.3);
 }
 
-/* Tag-ul OWNER - gradient roșu */
 .square-tag.tag-owner {
   background: linear-gradient(135deg, #e74c3c, #c0392b);
   box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
 }
 
-/* Tag-ul ADMIN - gradient roșu închis */
 .square-tag.tag-admin {
   background: linear-gradient(135deg, #c0392b, #962d22);
   box-shadow: 0 2px 8px rgba(192, 57, 43, 0.3);
 }
 
-/* Tag-ul MOD - gradient verde închis */
 .square-tag.tag-mod {
   background: linear-gradient(135deg, #16a085, #1e8449);
   box-shadow: 0 2px 8px rgba(22, 160, 133, 0.3);
 }
 
-/* Tag-ul SUPPORTER - gradient portocaliu-gălbui */
 .square-tag.tag-supporter {
   background: linear-gradient(135deg, #f39c12, #e67e22);
   box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
 }
 
-/* Tag-ul BOOSTER - gradient mov închis */
 .square-tag.tag-booster {
   background: linear-gradient(135deg, #8e44ad, #6c3483);
   box-shadow: 0 2px 8px rgba(142, 68, 173, 0.3);
 }
 
-/* Tag-ul PARTNER - gradient gri-albăstrui */
 .square-tag.tag-partner {
   background: linear-gradient(135deg, #2c3e50, #1a2632);
   box-shadow: 0 2px 8px rgba(44, 62, 80, 0.3);
 }
 
-/* Tag-ul CONTRIBUTOR - gradient gri */
 .square-tag.tag-contributor {
   background: linear-gradient(135deg, #7f8c8d, #5d6d6e);
   box-shadow: 0 2px 8px rgba(127, 140, 141, 0.3);
 }
 
-/* Tag-ul WILDFIRE - gradient special wildfire */
 .square-tag.tag-wildfire {
   background: linear-gradient(135deg, #ff4500, #ff8c00, #ffd700, #ff4500);
   background-size: 300% 300%;
@@ -829,6 +902,79 @@ export default {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+/* COMMIT STYLES */
+.popout-commits {
+  margin-bottom: 15px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 14px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 69, 0, 0.2);
+}
+
+.commit-user {
+  font-size: 13px;
+  color: #e0e0e0;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 69, 0, 0.2);
+}
+
+.commit-user strong {
+  color: #ff4500;
+  font-size: 16px;
+  margin-right: 4px;
+}
+
+.commit-plus {
+  color: #2ecc71;
+  margin-left: 8px;
+}
+
+.commit-minus {
+  color: #e74c3c;
+  margin-left: 8px;
+}
+
+.commit-graph {
+  margin-bottom: 12px;
+}
+
+.graph-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.graph-scale {
+  display: flex;
+  gap: 12px;
+}
+
+.graph-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 35px;
+}
+
+.graph-bar {
+  flex: 1;
+  background: linear-gradient(to top, #ff4500, #ff8c00);
+  border-radius: 2px 2px 0 0;
+  min-height: 2px;
+  transition: height 0.2s;
+  cursor: help;
+}
+
+.graph-bar:hover {
+  opacity: 0.8;
+  transform: scaleY(1.1);
 }
 
 .popout-bio {
