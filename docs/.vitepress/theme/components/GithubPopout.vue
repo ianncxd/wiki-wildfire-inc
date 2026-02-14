@@ -54,78 +54,105 @@
         </div>
 
         <!-- Profile -->
-        <template v-else>
-          <!-- Header cu POZA si INFO -->
-          <div class="popout-header">
-            <div class="avatar-column">
-              <img :src="user.avatar" :alt="user.username" class="popout-avatar" @error="handleAvatarError">
-              <a :href="user.profileUrl" target="_blank" rel="noopener noreferrer" @click.stop class="username-link">@{{ user.username }}</a>
-            </div>
-            
-            <div class="info-column">
-              <div class="name-row">
-                <h3>{{ user.name || user.username }}</h3>
-              </div>
-              <div class="square-tags" :class="tagClasses">
-                <span class="square-tag tag-staff">
-                  <img src="/icons/wildfire.png" alt="staff" class="tag-icon original-color" @error="handleIconError">
-                  <span>STAFF</span>
-                </span>
-                <span class="square-tag tag-dev">
-                  <img src="/icons/wildfire.png" alt="dev" class="tag-icon original-color" @error="handleIconError">
-                  <span>DEV</span>
-                </span>
-                <span class="square-tag tag-wiki">
-                  <img src="/icons/wildfire.png" alt="wiki" class="tag-icon original-color" @error="handleIconError">
-                  <span>WIKI</span>
-                </span>
-                <span class="square-tag tag-trusted">
-                  <img src="/icons/wildfire.png" alt="trusted" class="tag-icon original-color" @error="handleIconError">
-                  <span>TRUSTED</span>
-                </span>
-                <span class="square-tag tag-pro">
-                  <img src="/icons/wildfire.png" alt="pro" class="tag-icon original-color" @error="handleIconError">
-                  <span>PRO</span>
-                </span>
-                <span class="square-tag tag-vip">
-                  <img src="/icons/wildfire.png" alt="vip" class="tag-icon original-color" @error="handleIconError">
-                  <span>VIP</span>
-                </span>
-                <span class="square-tag tag-owner">
-                  <img src="/icons/wildfire.png" alt="owner" class="tag-icon original-color" @error="handleIconError">
-                  <span>OWNER</span>
-                </span>
-                <span class="square-tag tag-admin">
-                  <img src="/icons/wildfire.png" alt="admin" class="tag-icon original-color" @error="handleIconError">
-                  <span>ADMIN</span>
-                </span>
-                <span class="square-tag tag-mod">
-                  <img src="/icons/wildfire.png" alt="mod" class="tag-icon original-color" @error="handleIconError">
-                  <span>MOD</span>
-                </span>
-                <span class="square-tag tag-supporter">
-                  <img src="/icons/wildfire.png" alt="supporter" class="tag-icon original-color" @error="handleIconError">
-                  <span>SUPPORTER</span>
-                </span>
-                <span class="square-tag tag-booster">
-                  <img src="/icons/wildfire.png" alt="booster" class="tag-icon original-color" @error="handleIconError">
-                  <span>BOOSTER</span>
-                </span>
-                <span class="square-tag tag-partner">
-                  <img src="/icons/wildfire.png" alt="partner" class="tag-icon original-color" @error="handleIconError">
-                  <span>PARTNER</span>
-                </span>
-                <span class="square-tag tag-contributor">
-                  <img src="/icons/wildfire.png" alt="contributor" class="tag-icon original-color" @error="handleIconError">
-                  <span>CONTRIBUTOR</span>
-                </span>
-                <span class="square-tag tag-wildfire">
-                  <img src="/icons/wildfire.png" alt="wildfire" class="tag-icon original-color" @error="handleIconError">
-                  <span>WILDFIRE</span>
-                </span>
-              </div>
-            </div>
-          </div>
+<template v-else>
+  <!-- Header cu POZA si INFO -->
+  <div class="popout-header">
+    <div class="avatar-column">
+      <img :src="user.avatar" :alt="user.username" class="popout-avatar" @error="handleAvatarError">
+      <a :href="user.profileUrl" target="_blank" rel="noopener noreferrer" @click.stop class="username-link">@{{ user.username }}</a>
+    </div>
+    
+    <div class="info-column">
+      <div class="name-row">
+        <h3>{{ user.name || user.username }}</h3>
+      </div>
+      <div class="square-tags" :class="tagClasses">
+        <!-- 1. WILDFIRE -->
+        <span class="square-tag tag-wildfire">
+          <img src="/icons/wildfire.png" alt="wildfire" class="tag-icon original-color" @error="handleIconError">
+          <span>WILDFIRE</span>
+        </span>
+        
+        <!-- 2. FOUNDER -->
+        <span class="square-tag tag-founder">
+          <img src="/icons/wildfire.png" alt="founder" class="tag-icon original-color" @error="handleIconError">
+          <span>FOUNDER</span>
+        </span>
+        
+        <!-- 3. DEV -->
+        <span class="square-tag tag-dev">
+          <img src="/icons/vsc.svg" alt="dev" class="tag-icon original-color" @error="handleIconError">
+          <span>DEV</span>
+        </span>
+        
+        <!-- 4. STAFF -->
+        <span class="square-tag tag-staff">
+          <img src="/icons/wildfire.png" alt="staff" class="tag-icon original-color" @error="handleIconError">
+          <span>STAFF</span>
+        </span>
+        
+        <!-- 5. ADMIN -->
+        <span class="square-tag tag-admin">
+          <img src="/icons/admin.svg" alt="admin" class="tag-icon original-color" @error="handleIconError">
+          <span>ADMIN</span>
+        </span>
+        
+        <!-- 6. MOD -->
+        <span class="square-tag tag-mod">
+          <img src="/icons/mod.svg" alt="mod" class="tag-icon original-color" @error="handleIconError">
+          <span>MOD</span>
+        </span>
+        
+        <!-- 7. SUPPORTER -->
+        <span class="square-tag tag-supporter">
+          <img src="/icons/supporter.svg" alt="supporter" class="tag-icon original-color" @error="handleIconError">
+          <span>SUPPORTER</span>
+        </span>
+        
+        <!-- 8. BOOSTER -->
+        <span class="square-tag tag-booster">
+          <img src="/icons/booster.svg" alt="booster" class="tag-icon original-color" @error="handleIconError">
+          <span>BOOSTER</span>
+        </span>
+        
+        <!-- 9. PARTNER -->
+        <span class="square-tag tag-partner">
+          <img src="/icons/partner.svg" alt="partner" class="tag-icon original-color" @error="handleIconError">
+          <span>PARTNER</span>
+        </span>
+        
+        <!-- 10. CONTRIBUTOR -->
+        <span class="square-tag tag-contributor">
+          <img src="/icons/contributor.svg" alt="contributor" class="tag-icon original-color" @error="handleIconError">
+          <span>CONTRIBUTOR</span>
+        </span>
+        
+        <!-- 11. WIKI -->
+        <span class="square-tag tag-wiki">
+          <img src="/icons/vue.svg" alt="wiki" class="tag-icon original-color" @error="handleIconError">
+          <span>WIKI</span>
+        </span>
+        
+        <!-- 12. TRUSTED -->
+        <span class="square-tag tag-trusted">
+          <img src="/icons/wildfire.png" alt="trusted" class="tag-icon original-color" @error="handleIconError">
+          <span>TRUSTED</span>
+        </span>
+        
+        <!-- 13. PRO -->
+        <span class="square-tag tag-pro">
+          <img src="/icons/wildfire.png" alt="pro" class="tag-icon original-color" @error="handleIconError">
+          <span>PRO</span>
+        </span>
+        
+        <!-- 14. VIP -->
+        <span class="square-tag tag-vip">
+          <img src="/icons/wildfire.png" alt="vip" class="tag-icon original-color" @error="handleIconError">
+          <span>VIP</span>
+        </span>
+      </div>
+    </div>
+  </div>
 
           <!-- Bio -->
           <p v-if="user.bio" class="popout-bio">{{ user.bio }}</p>
@@ -779,11 +806,12 @@ export default {
   line-height: 1.2;
 }
 
-/* ===== TAGS ===== */
+
+/* ===== TAGS - FORME WILDFIRE CU EFECT DE FOC LENT ȘI ELEGANT ===== */
 .square-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 5px;
 }
 
 .square-tags .square-tag {
@@ -796,7 +824,7 @@ export default {
 .square-tags.show-trusted .tag-trusted,
 .square-tags.show-pro .tag-pro,
 .square-tags.show-vip .tag-vip,
-.square-tags.show-owner .tag-owner,
+.square-tags.show-founder .tag-founder,
 .square-tags.show-admin .tag-admin,
 .square-tags.show-mod .tag-mod,
 .square-tags.show-supporter .tag-supporter,
@@ -807,94 +835,329 @@ export default {
   display: inline-flex !important;
 }
 
+/* Stil de bază pentru toate tag-urile */
 .square-tag {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 3px 6px;
-  border-radius: 4px;
+  gap: 4px;
+  padding: 4px 10px 4px 8px;
+  border-radius: 14px 4px 14px 4px;
   font-size: 8px;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.3px;
   line-height: 1;
   color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  
+  border: 1px solid;
+  transition: all 0.3s ease;
+  position: relative;
+  background-clip: padding-box;
+  /* Efect de bază foarte subtil */
+  box-shadow: 0 0 3px currentColor;
 }
 
-.tag-icon {
-  width: 10px;
-  height: 10px;
+/* Un singur strat de efect, foarte lent și elegant */
+.square-tag::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 16px 6px 16px 6px;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    currentColor 20%,
+    transparent 40%,
+    currentColor 60%,
+    transparent 80%
+  );
+  background-size: 200% 200%;
+  opacity: 0.25;
+  animation: slowEmber 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(1px);
 }
 
-.tag-icon.original-color {
-  filter: none;
+/* Animație foarte lentă - 8 secunde pentru un ciclu complet */
+@keyframes slowEmber {
+  0% {
+    background-position: 0% 0%;
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  25% {
+    background-position: 50% 25%;
+    opacity: 0.3;
+  }
+  50% {
+    background-position: 100% 50%;
+    opacity: 0.25;
+  }
+  75% {
+    background-position: 50% 75%;
+    opacity: 0.3;
+  }
+  100% {
+    background-position: 0% 100%;
+    opacity: 0.2;
+    transform: scale(1);
+  }
 }
 
+/* La hover - efectul devine puțin mai vizibil, dar tot foarte lent */
+.square-tag:hover::before {
+  animation: slowEmberHover 6s ease-in-out infinite;
+  opacity: 0.4;
+  filter: blur(1.5px);
+}
+
+@keyframes slowEmberHover {
+  0% {
+    background-position: 0% 0%;
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  25% {
+    background-position: 60% 30%;
+    opacity: 0.5;
+  }
+  50% {
+    background-position: 100% 60%;
+    opacity: 0.4;
+  }
+  75% {
+    background-position: 40% 80%;
+    opacity: 0.5;
+  }
+  100% {
+    background-position: 0% 100%;
+    opacity: 0.3;
+    transform: scale(1);
+  }
+}
+
+/* Fiecare tag cu culoarea lui */
 .square-tag.tag-staff {
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  background: rgba(46, 204, 113, 0.2);
+  border-color: #2ecc71;
+  color: #2ecc71;
+}
+.square-tag.tag-staff:hover {
+  background: rgba(46, 204, 113, 0.25);
 }
 
 .square-tag.tag-dev {
-  background: linear-gradient(135deg, #3498db, #2980b9);
+  background: rgba(52, 152, 219, 0.2);
+  border-color: #3498db;
+  color: #3498db;
+}
+.square-tag.tag-dev:hover {
+  background: rgba(52, 152, 219, 0.25);
 }
 
 .square-tag.tag-wiki {
-  background: linear-gradient(135deg, #1abc9c, #16a085);
+  background: rgba(26, 188, 156, 0.2);
+  border-color: #1abc9c;
+  color: #1abc9c;
+}
+.square-tag.tag-wiki:hover {
+  background: rgba(26, 188, 156, 0.25);
 }
 
 .square-tag.tag-trusted {
-  background: linear-gradient(135deg, #f1c40f, #f39c12);
-  color: #2c3e50;
+  background: rgba(241, 196, 15, 0.2);
+  border-color: #f1c40f;
+  color: #f1c40f;
+}
+.square-tag.tag-trusted:hover {
+  background: rgba(241, 196, 15, 0.25);
 }
 
 .square-tag.tag-pro {
-  background: linear-gradient(135deg, #ff4500, #ff8c00);
+  background: rgba(255, 69, 0, 0.2);
+  border-color: #ff4500;
+  color: #ff4500;
+}
+.square-tag.tag-pro:hover {
+  background: rgba(255, 69, 0, 0.25);
 }
 
 .square-tag.tag-vip {
-  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+  background: rgba(155, 89, 182, 0.2);
+  border-color: #9b59b6;
+  color: #9b59b6;
+}
+.square-tag.tag-vip:hover {
+  background: rgba(155, 89, 182, 0.25);
 }
 
-.square-tag.tag-owner {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
+.square-tag.tag-founder {
+  background: rgba(231, 76, 60, 0.2);
+  border-color: #e74c3c;
+  color: #e74c3c;
+}
+.square-tag.tag-founder:hover {
+  background: rgba(231, 76, 60, 0.25);
 }
 
 .square-tag.tag-admin {
-  background: linear-gradient(135deg, #c0392b, #962d22);
+  background: rgba(192, 57, 43, 0.2);
+  border-color: #c0392b;
+  color: #c0392b;
+}
+.square-tag.tag-admin:hover {
+  background: rgba(192, 57, 43, 0.25);
 }
 
 .square-tag.tag-mod {
-  background: linear-gradient(135deg, #16a085, #1e8449);
+  background: rgba(22, 160, 133, 0.2);
+  border-color: #16a085;
+  color: #16a085;
+}
+.square-tag.tag-mod:hover {
+  background: rgba(22, 160, 133, 0.25);
 }
 
 .square-tag.tag-supporter {
-  background: linear-gradient(135deg, #f39c12, #e67e22);
+  background: rgba(243, 156, 18, 0.2);
+  border-color: #f39c12;
+  color: #f39c12;
+}
+.square-tag.tag-supporter:hover {
+  background: rgba(243, 156, 18, 0.25);
 }
 
 .square-tag.tag-booster {
-  background: linear-gradient(135deg, #8e44ad, #6c3483);
+  background: rgba(142, 68, 173, 0.2);
+  border-color: #8e44ad;
+  color: #8e44ad;
+}
+.square-tag.tag-booster:hover {
+  background: rgba(142, 68, 173, 0.25);
 }
 
 .square-tag.tag-partner {
-  background: linear-gradient(135deg, #2c3e50, #1a2632);
+  background: rgba(44, 62, 80, 0.2);
+  border-color: #2c3e50;
+  color: #2c3e50;
+}
+.square-tag.tag-partner:hover {
+  background: rgba(44, 62, 80, 0.25);
 }
 
 .square-tag.tag-contributor {
-  background: linear-gradient(135deg, #7f8c8d, #5d6d6e);
+  background: rgba(127, 140, 141, 0.2);
+  border-color: #7f8c8d;
+  color: #7f8c8d;
+}
+.square-tag.tag-contributor:hover {
+  background: rgba(127, 140, 141, 0.25);
 }
 
+/* Tag-ul WILDFIRE - efect special, dar tot foarte lent */
 .square-tag.tag-wildfire {
-  background: linear-gradient(135deg, #ff4500, #ff8c00, #ffd700, #ff4500);
-  background-size: 300% 300%;
-  animation: wildfireGradient 3s ease infinite;
+  background: linear-gradient(135deg, rgba(255, 69, 0, 0.25), rgba(255, 140, 0, 0.25));
+  border-color: #ff8c00;
+  border-width: 2px;
+  color: #ff8c00;
+  box-shadow: 0 0 5px #ff8c00;
 }
 
-@keyframes wildfireGradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+.square-tag.tag-wildfire::before {
+  background: linear-gradient(
+    120deg,
+    transparent,
+    #ff4500 15%,
+    #ff8c00 30%,
+    transparent 45%,
+    #ff4500 60%,
+    #ff8c00 75%,
+    transparent 90%
+  );
+  background-size: 300% 300%;
+  opacity: 0.35;
+  filter: blur(1.5px);
+  animation: slowWildfire 10s ease-in-out infinite;
 }
+
+@keyframes slowWildfire {
+  0% {
+    background-position: 0% 0%;
+    opacity: 0.3;
+  }
+  20% {
+    background-position: 40% 20%;
+    opacity: 0.5;
+  }
+  40% {
+    background-position: 80% 40%;
+    opacity: 0.4;
+  }
+  60% {
+    background-position: 60% 60%;
+    opacity: 0.5;
+  }
+  80% {
+    background-position: 20% 80%;
+    opacity: 0.4;
+  }
+  100% {
+    background-position: 0% 100%;
+    opacity: 0.3;
+  }
+}
+
+.square-tag.tag-wildfire:hover::before {
+  animation: slowWildfireHover 8s ease-in-out infinite;
+  opacity: 0.5;
+  filter: blur(2px);
+}
+
+@keyframes slowWildfireHover {
+  0% {
+    background-position: 0% 0%;
+    opacity: 0.4;
+  }
+  20% {
+    background-position: 50% 20%;
+    opacity: 0.7;
+  }
+  40% {
+    background-position: 100% 40%;
+    opacity: 0.5;
+  }
+  60% {
+    background-position: 70% 70%;
+    opacity: 0.7;
+  }
+  80% {
+    background-position: 30% 80%;
+    opacity: 0.6;
+  }
+  100% {
+    background-position: 0% 100%;
+    opacity: 0.4;
+  }
+}
+
+.tag-icon {
+  width: 9px;
+  height: 9px;
+  transition: all 0.3s ease;
+  filter: brightness(1.1);
+  position: relative;
+  z-index: 1;
+}
+
+.square-tag:hover .tag-icon {
+  transform: scale(1.05);
+}
+
+
 
 .popout-bio {
   font-size: 12px;
@@ -1195,24 +1458,26 @@ export default {
 
 /* ===== DETAILS MINIMAL ===== */
 .popout-details-minimal {
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   position: relative;
   z-index: 1;
   pointer-events: auto;
   background: rgba(0, 0, 0, 0.15);
-  border-radius: 12px;
-  padding: 6px 10px;
+  border-radius: 10px;
+  padding: 4px 8px;
   border: 1px solid rgba(255, 69, 0, 0.1);
   backdrop-filter: blur(5px);
+  width: fit-content;
+  max-width: 100%;
 }
 
 .detail-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 5px 0;
+  gap: 6px;
+  padding: 3px 0;
   color: #ccc;
-  font-size: 11px;
+  font-size: 10px;
   border-bottom: 1px dashed rgba(255, 69, 0, 0.1);
 }
 
@@ -1221,9 +1486,9 @@ export default {
 }
 
 .detail-icon {
-  width: 18px;
+  width: 16px;
   color: #ff4500;
-  font-size: 12px;
+  font-size: 11px;
   text-align: center;
   filter: drop-shadow(0 0 3px #ff4500);
 }
