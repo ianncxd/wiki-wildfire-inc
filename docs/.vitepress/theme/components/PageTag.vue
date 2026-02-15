@@ -63,83 +63,92 @@ const formatDate = (dateStr) => {
   padding: 2px 10px;
   border-radius: 16px;
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
   text-transform: uppercase;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e0e0e0 !important;
   line-height: 1.4;
+  backdrop-filter: blur(2px);
+  transition: all 0.2s ease;
 }
 
-/* TAG-URI COLORATE - toate definite explicit */
+/* TAG-URI COLORATE - gradienturi mai subtile */
 .tag-blue {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.15));
 }
 
 .tag-orange {
-  background: linear-gradient(135deg, #ff4500, #ff8c00);
+  background: linear-gradient(135deg, rgba(255, 69, 0, 0.15), rgba(255, 140, 0, 0.15));
 }
 
 .tag-purple {
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(124, 58, 237, 0.15));
 }
 
 .tag-green {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.15));
 }
 
 .tag-yellow {
-  background: linear-gradient(135deg, #eab308, #ca8a04);
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.15), rgba(202, 138, 4, 0.15));
 }
 
 .tag-gray {
-  background: linear-gradient(135deg, #64748b, #475569);
+  background: linear-gradient(135deg, rgba(100, 116, 139, 0.15), rgba(71, 85, 105, 0.15));
 }
 
-/* Dots */
+/* Dots - mai subtile */
 .tag-dot {
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   display: inline-block;
 }
 
 .dot-blue {
   background: #3b82f6;
-  box-shadow: 0 0 5px #3b82f6;
+  box-shadow: 0 0 2px #3b82f6;
 }
 
 .dot-orange {
   background: #ff4500;
-  box-shadow: 0 0 5px #ff4500;
+  box-shadow: 0 0 2px #ff4500;
 }
 
 .dot-purple {
   background: #8b5cf6;
-  box-shadow: 0 0 5px #8b5cf6;
+  box-shadow: 0 0 2px #8b5cf6;
 }
 
 .dot-green {
   background: #10b981;
-  box-shadow: 0 0 5px #10b981;
+  box-shadow: 0 0 2px #10b981;
 }
 
 .dot-yellow {
   background: #eab308;
-  box-shadow: 0 0 5px #eab308;
+  box-shadow: 0 0 2px #eab308;
 }
 
 .dot-gray {
   background: #64748b;
-  box-shadow: 0 0 5px #64748b;
+  box-shadow: 0 0 2px #64748b;
 }
 
 .tag-date {
   font-size: 9px;
   font-weight: 400;
   text-transform: none;
-  opacity: 0.9;
-  color: white;
+  opacity: 0.7;
+  color: #aaa;
   margin-left: 2px;
+}
+
+/* Hover efect subtil */
+.page-tag:hover {
+  border-color: currentColor;
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.02);
 }
 </style>

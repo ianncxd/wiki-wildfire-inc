@@ -10,6 +10,7 @@ import LastUpdates from './components/LastUpdates.vue'
 import NavSearch from './components/NavSearch.vue'
 import WildfireTag from './components/WildfireTag.vue'
 import SiteMap from './components/SiteMap.vue'
+import PageNotFound from './components/PageNotFound.vue'
 
 // Import popout
 import './popout.js'
@@ -35,9 +36,14 @@ export default {
   
   Layout: () => {
     return h(DefaultTheme.Layout, null, {
+      // Home page
       'home-hero-before': () => h(WikiHome),
+      // Navbar
       'nav-bar-title-after': () => h(NavSearch),
-      'layout-bottom': () => h(SiteMap)
+      // Footer
+      'layout-bottom': () => h(SiteMap),
+      // Not Found Page - ASTA E CHEIA
+      'not-found': () => h(PageNotFound)
     })
   },
   
@@ -48,6 +54,7 @@ export default {
     app.component('NavSearch', NavSearch)
     app.component('WildfireTag', WildfireTag)
     app.component('SiteMap', SiteMap)
+    app.component('PageNotFound', PageNotFound)
     
     // Toate tag-urile
     app.component('PageTagBlue', PageTagBlue)

@@ -48,55 +48,51 @@ const dotClass = computed(() => tagData.value.dot)
 .wildfire-tag {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
+  gap: 5px;
+  padding: 4px 12px;
   border-radius: 30px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
   text-transform: uppercase;
-  background: #2a2a2a !important;
-  color: white !important;
-  border: 1px solid #404040 !important;
+  background: #1a1a1a !important;
+  color: #e0e0e0 !important;
+  border: 1px solid #333333 !important;
   line-height: 1.4;
   white-space: nowrap;
+  transition: all 0.2s ease;
 }
 
 .dark .wildfire-tag {
-  background: #1a1a1a !important;
-  border: 1px solid #333333 !important;
+  background: #151515 !important;
+  border: 1px solid #2a2a2a !important;
 }
 
-:not(.dark) .wildfire-tag {
-  background: #161616 !important;
-  border: 1px solid #161616 !important;
-}
-
-/* ===== DOT CU ANIMAȚIE ===== */
+/* ===== DOT CU ANIMAȚIE SUBTILĂ ===== */
 .tag-dot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   display: inline-block;
-  box-shadow: 0 0 6px currentColor;
-  animation: pulse-dot 2s ease-in-out infinite;
+  box-shadow: 0 0 3px currentColor;
+  animation: pulse-dot 3s ease-in-out infinite;
 }
 
 @keyframes pulse-dot {
   0% {
-    opacity: 0.8;
+    opacity: 0.6;
     transform: scale(1);
-    box-shadow: 0 0 5px currentColor;
+    box-shadow: 0 0 2px currentColor;
   }
   50% {
     opacity: 1;
-    transform: scale(1.2);
-    box-shadow: 0 0 12px currentColor;
+    transform: scale(1.1);
+    box-shadow: 0 0 4px currentColor;
   }
   100% {
-    opacity: 0.8;
+    opacity: 0.6;
     transform: scale(1);
-    box-shadow: 0 0 5px currentColor;
+    box-shadow: 0 0 2px currentColor;
   }
 }
 
@@ -116,62 +112,46 @@ const dotClass = computed(() => tagData.value.dot)
 .tag-amber .tag-dot { background: #f59e0b; }
 .tag-gray .tag-dot { background: #64748b; }
 
-/* TEXT COLORAT */
-.tag-blue { color: #3b82f6 !important; }
-.tag-orange { color: #ff4500 !important; }
-.tag-purple { color: #8b5cf6 !important; }
-.tag-green { color: #10b981 !important; }
-.tag-pink { color: #ec4899 !important; }
-.tag-red { color: #ef4444 !important; }
-.tag-indigo { color: #6366f1 !important; }
-.tag-yellow { color: #eab308 !important; }
-.tag-teal { color: #14b8a6 !important; }
-.tag-cyan { color: #06b6d4 !important; }
-.tag-fuchsia { color: #d946ef !important; }
-.tag-emerald { color: #10b981 !important; }
-.tag-amber { color: #f59e0b !important; }
-.tag-gray { color: #64748b !important; }
+/* TEXT COLORAT - MAI SUBTIL */
+.tag-blue { color: #60a5fa !important; }
+.tag-orange { color: #ff8c00 !important; }
+.tag-purple { color: #a78bfa !important; }
+.tag-green { color: #34d399 !important; }
+.tag-pink { color: #f472b6 !important; }
+.tag-red { color: #f87171 !important; }
+.tag-indigo { color: #818cf8 !important; }
+.tag-yellow { color: #fbbf24 !important; }
+.tag-teal { color: #2dd4bf !important; }
+.tag-cyan { color: #22d3ee !important; }
+.tag-fuchsia { color: #e879f9 !important; }
+.tag-emerald { color: #34d399 !important; }
+.tag-amber { color: #fbbf24 !important; }
+.tag-gray { color: #9ca3af !important; }
 
-/* DARK MODE - TEXT MAI DESCHIS */
-.dark .tag-blue { color: #60a5fa !important; }
-.dark .tag-orange { color: #ff8c00 !important; }
-.dark .tag-purple { color: #a78bfa !important; }
-.dark .tag-green { color: #34d399 !important; }
-.dark .tag-pink { color: #f472b6 !important; }
-.dark .tag-red { color: #f87171 !important; }
-.dark .tag-indigo { color: #818cf8 !important; }
-.dark .tag-yellow { color: #fbbf24 !important; }
-.dark .tag-teal { color: #2dd4bf !important; }
-.dark .tag-cyan { color: #22d3ee !important; }
-.dark .tag-fuchsia { color: #e879f9 !important; }
-.dark .tag-emerald { color: #34d399 !important; }
-.dark .tag-amber { color: #fbbf24 !important; }
-.dark .tag-gray { color: #9ca3af !important; }
-
-/* HOVER EFFECT */
+/* HOVER EFFECT - SUBTIL */
 .wildfire-tag:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
   border-color: currentColor !important;
+  background: #222 !important;
+  transition: all 0.2s ease;
 }
 
 .wildfire-tag:hover .tag-dot {
-  animation: pulse-dot-hover 1s ease-in-out infinite;
+  animation: pulse-dot-hover 2s ease-in-out infinite;
 }
 
 @keyframes pulse-dot-hover {
   0% {
     transform: scale(1);
-    box-shadow: 0 0 8px currentColor;
+    box-shadow: 0 0 3px currentColor;
   }
   50% {
-    transform: scale(1.3);
-    box-shadow: 0 0 15px currentColor;
+    transform: scale(1.15);
+    box-shadow: 0 0 6px currentColor;
   }
   100% {
     transform: scale(1);
-    box-shadow: 0 0 8px currentColor;
+    box-shadow: 0 0 3px currentColor;
   }
 }
 </style>

@@ -69,85 +69,85 @@
       <div class="square-tags" :class="tagClasses">
         <!-- 1. WILDFIRE -->
         <span class="square-tag tag-wildfire">
-          <img src="/icons/wildfire.png" alt="wildfire" class="tag-icon original-color" @error="handleIconError">
+          <img src="/icons/wildfire.png" alt="wildfire" class="tag-icon" @error="handleIconError">
           <span>WILDFIRE</span>
         </span>
         
         <!-- 2. FOUNDER -->
         <span class="square-tag tag-founder">
-          <img src="/icons/wildfire.png" alt="founder" class="tag-icon original-color" @error="handleIconError">
+          <img src="/icons/wildfire.png" alt="founder" class="tag-icon" @error="handleIconError">
           <span>FOUNDER</span>
         </span>
         
         <!-- 3. DEV -->
         <span class="square-tag tag-dev">
-          <img src="/icons/vsc.svg" alt="dev" class="tag-icon original-color" @error="handleIconError">
+          <img src="/icons/vsc.svg" alt="dev" class="tag-icon" @error="handleIconError">
           <span>DEV</span>
         </span>
         
         <!-- 4. STAFF -->
         <span class="square-tag tag-staff">
-          <img src="/icons/wildfire.png" alt="staff" class="tag-icon original-color" @error="handleIconError">
+          <img src="/icons/wildfire.png" alt="staff" class="tag-icon" @error="handleIconError">
           <span>STAFF</span>
         </span>
         
         <!-- 5. ADMIN -->
         <span class="square-tag tag-admin">
-          <img src="/icons/admin.svg" alt="admin" class="tag-icon original-color" @error="handleIconError">
+          <img src="/icons/admin.svg" alt="admin" class="tag-icon" @error="handleIconError">
           <span>ADMIN</span>
         </span>
         
         <!-- 6. MOD -->
         <span class="square-tag tag-mod">
-          <img src="/icons/mod.svg" alt="mod" class="tag-icon original-color" @error="handleIconError">
+          <img src="/icons/mod.svg" alt="mod" class="tag-icon" @error="handleIconError">
           <span>MOD</span>
         </span>
         
         <!-- 7. SUPPORTER -->
         <span class="square-tag tag-supporter">
-          <img src="/icons/supporter.svg" alt="supporter" class="tag-icon original-color" @error="handleIconError">
+          <img src="/icons/supporter.svg" alt="supporter" class="tag-icon" @error="handleIconError">
           <span>SUPPORTER</span>
         </span>
         
         <!-- 8. BOOSTER -->
         <span class="square-tag tag-booster">
-          <img src="/icons/booster.svg" alt="booster" class="tag-icon original-color" @error="handleIconError">
+          <img src="/icons/booster.svg" alt="booster" class="tag-icon" @error="handleIconError">
           <span>BOOSTER</span>
         </span>
         
         <!-- 9. PARTNER -->
         <span class="square-tag tag-partner">
-          <img src="/icons/partner.svg" alt="partner" class="tag-icon original-color" @error="handleIconError">
+          <img src="/icons/partner.svg" alt="partner" class="tag-icon" @error="handleIconError">
           <span>PARTNER</span>
         </span>
         
         <!-- 10. CONTRIBUTOR -->
         <span class="square-tag tag-contributor">
-          <img src="/icons/contributor.svg" alt="contributor" class="tag-icon original-color" @error="handleIconError">
+          <img src="/icons/contributor.svg" alt="contributor" class="tag-icon" @error="handleIconError">
           <span>CONTRIBUTOR</span>
         </span>
         
         <!-- 11. WIKI -->
         <span class="square-tag tag-wiki">
-          <img src="/icons/vue.svg" alt="wiki" class="tag-icon original-color" @error="handleIconError">
+          <img src="/icons/vue.svg" alt="wiki" class="tag-icon" @error="handleIconError">
           <span>WIKI</span>
         </span>
         
         <!-- 12. TRUSTED -->
         <span class="square-tag tag-trusted">
-          <img src="/icons/wildfire.png" alt="trusted" class="tag-icon original-color" @error="handleIconError">
+          <img src="/icons/wildfire.png" alt="trusted" class="tag-icon" @error="handleIconError">
           <span>TRUSTED</span>
         </span>
         
         <!-- 13. PRO -->
         <span class="square-tag tag-pro">
-          <img src="/icons/wildfire.png" alt="pro" class="tag-icon original-color" @error="handleIconError">
+          <img src="/icons/wildfire.png" alt="pro" class="tag-icon" @error="handleIconError">
           <span>PRO</span>
         </span>
         
         <!-- 14. VIP -->
         <span class="square-tag tag-vip">
-          <img src="/icons/wildfire.png" alt="vip" class="tag-icon original-color" @error="handleIconError">
+          <img src="/icons/wildfire.png" alt="vip" class="tag-icon" @error="handleIconError">
           <span>VIP</span>
         </span>
       </div>
@@ -173,28 +173,17 @@
             </div>
           </div>
 
-          <!-- SECȚIUNE CONTRIBUȚII - INCENDIARĂ -->
-          <div class="contributions-fiery" v-if="user.contributions !== null">
-            <!-- Fire glow care apare la hover -->
-            <div class="fiery-glow" :class="getFieryGlowClass(user.contributions)"></div>
-            
-            <!-- Particule de foc pentru贡献i mari -->
-            <div v-if="user.contributions >= 10" class="fiery-sparks">
-              <div class="spark" v-for="n in 6" :key="n" :style="{ animationDelay: n * 0.2 + 's', left: (n * 15) + '%' }"></div>
-            </div>
-            
-            <div class="fiery-row">
-              <div class="fiery-badge" :class="getFieryBadgeClass(user.contributions)">
-                <span class="fiery-icon">{{ getFieryIcon(user.contributions) }}</span>
-                <span class="fiery-count">{{ formatNumber(user.contributions) }}</span>
-                <span class="fiery-label">commit{{ user.contributions !== 1 ? 's' : '' }}</span>
-                
-                <!-- Efect de flacără la hover pentru贡献i mari -->
-                <div v-if="user.contributions >= 20" class="fiery-flame"></div>
+          <!-- SECȚIUNE CONTRIBUȚII - simplificată -->
+          <div class="contributions-simple" v-if="user.contributions !== null">
+            <div class="simple-row">
+              <div class="simple-badge">
+                <span class="simple-icon">📊</span>
+                <span class="simple-count">{{ formatNumber(user.contributions) }}</span>
+                <span class="simple-label">commit{{ user.contributions !== 1 ? 's' : '' }}</span>
               </div>
               
-              <div class="fiery-repo">
-                <svg class="fiery-repo-icon" width="10" height="10" viewBox="0 0 16 16" fill="currentColor">
+              <div class="simple-repo">
+                <svg class="simple-repo-icon" width="10" height="10" viewBox="0 0 16 16" fill="currentColor">
                   <path d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"/>
                 </svg>
                 <a href="https://github.com/ianncxd/wiki-wildfire-inc" target="_blank" rel="noopener noreferrer">
@@ -216,9 +205,10 @@
             </div>
           </div>
 
-          <!-- Button -->
+          <!-- Button cu efect subtil -->
           <a :href="user.profileUrl" target="_blank" rel="noopener noreferrer" class="popout-button" @click.stop>
-            View GitHub Profile →
+            <span class="button-text">View GitHub Profile</span>
+            <span class="button-arrow">→</span>
           </a>
         </template>
       </div>
@@ -331,34 +321,6 @@ export default {
       }
     },
     
-    getFieryBadgeClass(contributions) {
-      if (contributions >= 100) return 'badge-inferno'
-      if (contributions >= 50) return 'badge-blaze'
-      if (contributions >= 20) return 'badge-fire'
-      if (contributions >= 10) return 'badge-flame'
-      if (contributions >= 5) return 'badge-spark'
-      if (contributions >= 1) return 'badge-ember'
-      return 'badge-ash'
-    },
-    
-    getFieryGlowClass(contributions) {
-      if (contributions >= 100) return 'glow-inferno'
-      if (contributions >= 50) return 'glow-blaze'
-      if (contributions >= 20) return 'glow-fire'
-      if (contributions >= 10) return 'glow-flame'
-      return 'glow-none'
-    },
-    
-    getFieryIcon(contributions) {
-      if (contributions >= 100) return '🔥🔥'
-      if (contributions >= 50) return '🔥'
-      if (contributions >= 20) return '⚡'
-      if (contributions >= 10) return '✨'
-      if (contributions >= 5) return '📌'
-      if (contributions >= 1) return '🌱'
-      return '○'
-    },
-    
     formatNumber(num) {
       if (num >= 1000) return (num / 1000).toFixed(1) + 'k'
       return num
@@ -370,62 +332,34 @@ export default {
     },
     
     positionPopout() {
-  this.$nextTick(() => {
-    if (!this.targetElement || !this.$refs.popout) return
-    
-    // Obținem poziția relativă la viewport
-    const targetRect = this.targetElement.getBoundingClientRect()
-    const popoutRect = this.$refs.popout.getBoundingClientRect()
-    
-    // Găsim cel mai apropiat element cu position: relative
-    let offsetParent = this.targetElement.offsetParent
-    let offsetX = 0
-    let offsetY = 0
-    
-    // Dacă există un părinte cu position: relative, calculăm offset-ul
-    while (offsetParent && offsetParent !== document.body) {
-      const parentRect = offsetParent.getBoundingClientRect()
-      offsetX += parentRect.left
-      offsetY += parentRect.top
-      offsetParent = offsetParent.offsetParent
-    }
-    
-    // Calculăm poziția absolută în document
-    const scrollY = window.scrollY
-    const scrollX = window.scrollX
-    
-    // Poziția targetului în document (ținând cont de părinții cu position: relative)
-    const targetAbsoluteTop = targetRect.top + scrollY
-    const targetAbsoluteLeft = targetRect.left + scrollX
-    
-    // Calculăm left - centrat sub/deasupra targetului
-    let left = targetAbsoluteLeft + (targetRect.width / 2) - (popoutRect.width / 2)
-    
-    // Verificăm dacă iese în stânga/dreapta
-    if (left < scrollX + 10) left = scrollX + 10
-    if (left + popoutRect.width > window.innerWidth + scrollX - 10) {
-      left = window.innerWidth + scrollX - popoutRect.width - 10
-    }
-    
-    // Încercăm MAI ÎNTÂI DEDESUBT (săgeata în sus)
-    let top = targetAbsoluteTop + targetRect.height + 15
-    this.isBelow = true
-    
-    // Verificăm dacă iese în jos
-    if (top + popoutRect.height > window.innerHeight + scrollY - 20) {
-      // Dacă iese, punem deasupra
-      top = targetAbsoluteTop - popoutRect.height - 15
-      this.isBelow = false
-    }
-    
-    this.popoutStyle = {
-      left: left + 'px',
-      top: top + 'px'
-    }
-    
-    console.log('Popout poziționat:', this.popoutStyle, 'below:', this.isBelow)
-  })
-},
+      this.$nextTick(() => {
+        if (!this.targetElement || !this.$refs.popout) return
+        
+        const targetRect = this.targetElement.getBoundingClientRect()
+        const popoutRect = this.$refs.popout.getBoundingClientRect()
+        
+        let left = targetRect.left + (targetRect.width / 2) - (popoutRect.width / 2)
+        
+        if (left < 10) left = 10
+        if (left + popoutRect.width > window.innerWidth - 10) {
+          left = window.innerWidth - popoutRect.width - 10
+        }
+        
+        let top = targetRect.bottom + 15
+        this.isBelow = true
+        
+        if (top + popoutRect.height > window.innerHeight - 20) {
+          top = targetRect.top - popoutRect.height - 15
+          this.isBelow = false
+        }
+        
+        this.popoutStyle = {
+          left: left + 'px',
+          top: top + 'px',
+          position: 'fixed'
+        }
+      })
+    },
     
     show() {
       this.isVisible = true
@@ -477,21 +411,21 @@ export default {
 .github-popout {
   position: absolute;
   z-index: 9999;
-  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
   pointer-events: none;
 }
 
 .popout-arrow {
   position: absolute;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   background: #1a1a1a;
   transform: rotate(45deg);
-  bottom: -8px;
+  bottom: -7px;
   left: 50%;
-  margin-left: -8px;
-  border-bottom: 2px solid #ff4500;
-  border-right: 2px solid #ff4500;
+  margin-left: -7px;
+  border-bottom: 2px solid #ff8c00;
+  border-right: 2px solid #ff8c00;
   border-radius: 2px;
   z-index: 1;
   opacity: 0;
@@ -499,11 +433,11 @@ export default {
 }
 
 .popout-arrow.below {
-  top: -8px;
+  top: -7px;
   bottom: auto;
   transform: rotate(45deg);
-  border-top: 2px solid #ff4500;
-  border-left: 2px solid #ff4500;
+  border-top: 2px solid #ff8c00;
+  border-left: 2px solid #ff8c00;
   border-bottom: none;
   border-right: none;
 }
@@ -513,41 +447,29 @@ export default {
 }
 
 .popout-enter-active {
-  animation: fadeInScale 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInScale 0.2s ease;
 }
 
 .popout-leave-active {
-  animation: fadeOutScale 0.2s cubic-bezier(0.4, 0, 1, 1);
+  animation: fadeOutScale 0.15s ease;
 }
 
 @keyframes fadeInScale {
-  0% {
-    opacity: 0;
-    transform: scale(0.95) translateY(-5px);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+  0% { opacity: 0; transform: scale(0.95) translateY(-5px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 @keyframes fadeOutScale {
-  0% {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(0.95) translateY(5px);
-  }
+  0% { opacity: 1; transform: scale(1) translateY(0); }
+  100% { opacity: 0; transform: scale(0.95) translateY(5px); }
 }
 
 .popout-content {
   background: linear-gradient(135deg, #1a0f0a, #2a150a, #1f0f05);
   border: 2px solid #ff4500;
   border-radius: 20px;
-  padding: 20px 16px 16px 16px;
-  width: 280px;
+  padding: 16px 14px 14px 14px;
+  width: 260px;
   color: white;
   position: relative;
   z-index: 2;
@@ -557,7 +479,7 @@ export default {
   will-change: transform, opacity;
   overflow: hidden;
   pointer-events: auto;
-  box-shadow: 0 0 30px rgba(255, 69, 0, 0.4);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .popout-content::before {
@@ -567,16 +489,16 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 69, 0, 0.25), transparent 70%),
-              radial-gradient(circle at 70% 80%, rgba(255, 140, 0, 0.2), transparent 70%);
+  background: radial-gradient(circle at 30% 30%, rgba(255, 69, 0, 0.15), transparent 70%),
+              radial-gradient(circle at 70% 80%, rgba(255, 140, 0, 0.1), transparent 70%);
   pointer-events: none;
   z-index: -1;
   animation: fireGlow 3s ease-in-out infinite;
 }
 
 @keyframes fireGlow {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 1; }
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.7; }
 }
 
 .popout-background {
@@ -592,52 +514,52 @@ export default {
 
 .background-logo {
   position: absolute;
-  width: 120px;
-  height: 120px;
-  opacity: 0.12;
-  filter: brightness(0) invert(1) drop-shadow(0 0 5px #ff4500);
-  animation: floatWildfire 10s ease-in-out infinite;
+  width: 100px;
+  height: 100px;
+  opacity: 0.08;
+  filter: brightness(0) invert(1) drop-shadow(0 0 3px #ff4500);
+  animation: floatWildfire 12s ease-in-out infinite;
 }
 
 .background-logo.main {
   bottom: -10px;
   right: -10px;
-  width: 150px;
-  height: 150px;
-  opacity: 0.15;
+  width: 130px;
+  height: 130px;
+  opacity: 0.1;
   transform: rotate(5deg);
-  animation: floatMain 12s ease-in-out infinite;
+  animation: floatMain 15s ease-in-out infinite;
 }
 
 .background-logo.secondary {
   top: -20px;
   left: -20px;
-  width: 130px;
-  height: 130px;
-  opacity: 0.1;
+  width: 110px;
+  height: 110px;
+  opacity: 0.06;
   transform: rotate(-8deg);
-  animation: floatSecondary 15s ease-in-out infinite;
+  animation: floatSecondary 18s ease-in-out infinite;
 }
 
 .background-logo.tertiary {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(15deg);
-  width: 180px;
-  height: 180px;
-  opacity: 0.05;
-  filter: blur(4px) brightness(0) invert(1);
-  animation: floatTertiary 20s ease-in-out infinite;
+  width: 150px;
+  height: 150px;
+  opacity: 0.03;
+  filter: blur(3px) brightness(0) invert(1);
+  animation: floatTertiary 25s ease-in-out infinite;
 }
 
 @keyframes floatMain {
   0%, 100% { transform: rotate(5deg) translateY(0); }
-  50% { transform: rotate(8deg) translateY(-10px); }
+  50% { transform: rotate(8deg) translateY(-8px); }
 }
 
 @keyframes floatSecondary {
   0%, 100% { transform: rotate(-8deg) translateY(0); }
-  50% { transform: rotate(-12deg) translateY(10px); }
+  50% { transform: rotate(-12deg) translateY(8px); }
 }
 
 @keyframes floatTertiary {
@@ -653,24 +575,25 @@ export default {
   bottom: 0;
   pointer-events: none;
   z-index: -1;
+  opacity: 0.4;
 }
 
 .particle {
   position: absolute;
-  width: 4px;
-  height: 4px;
-  background: #ff4500;
+  width: 3px;
+  height: 3px;
+  background: #ff8c00;
   border-radius: 50%;
-  filter: blur(2px);
+  filter: blur(1px);
   opacity: 0;
-  animation: particleFloat 3s ease-in-out infinite;
+  animation: particleFloat 4s ease-in-out infinite;
 }
 
 .particle:nth-child(1) { left: 20%; top: 30%; animation-delay: 0s; }
-.particle:nth-child(2) { left: 70%; top: 60%; animation-delay: 0.5s; }
-.particle:nth-child(3) { left: 40%; top: 80%; animation-delay: 1s; }
-.particle:nth-child(4) { left: 85%; top: 20%; animation-delay: 1.5s; }
-.particle:nth-child(5) { left: 15%; top: 70%; animation-delay: 2s; }
+.particle:nth-child(2) { left: 70%; top: 60%; animation-delay: 0.7s; }
+.particle:nth-child(3) { left: 40%; top: 80%; animation-delay: 1.3s; }
+.particle:nth-child(4) { left: 85%; top: 20%; animation-delay: 2s; }
+.particle:nth-child(5) { left: 15%; top: 70%; animation-delay: 2.7s; }
 
 @keyframes particleFloat {
   0% {
@@ -678,31 +601,31 @@ export default {
     opacity: 0;
   }
   25% {
-    opacity: 0.6;
+    opacity: 0.3;
   }
   50% {
-    transform: translateY(-30px) scale(2);
-    opacity: 0.4;
-  }
-  75% {
+    transform: translateY(-20px) scale(1.5);
     opacity: 0.2;
   }
+  75% {
+    opacity: 0.1;
+  }
   100% {
-    transform: translateY(-60px) scale(1);
+    transform: translateY(-40px) scale(1);
     opacity: 0;
   }
 }
 
 .popout-close {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 28px;
-  height: 28px;
+  top: 10px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: rgba(255, 69, 0, 0.2);
-  border: 1px solid #ff4500;
-  color: #ff4500;
+  background: rgba(255, 69, 0, 0.15);
+  border: 1px solid #ff8c00;
+  color: #ff8c00;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -714,26 +637,25 @@ export default {
 }
 
 .popout-close:hover {
-  background: #ff4500;
-  border-color: #ff4500;
+  background: rgba(255, 69, 0, 0.3);
   color: white;
   transform: rotate(90deg);
-  box-shadow: 0 0 15px #ff4500;
+  box-shadow: 0 0 10px #ff8c00;
 }
 
 .popout-loading {
   text-align: center;
-  padding: 30px;
+  padding: 20px;
 }
 
 .spinner {
-  width: 36px;
-  height: 36px;
-  border: 3px solid rgba(255, 69, 0, 0.1);
-  border-top-color: #ff4500;
+  width: 30px;
+  height: 30px;
+  border: 2px solid rgba(255, 140, 0, 0.1);
+  border-top-color: #ff8c00;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-  margin: 0 auto 12px;
+  margin: 0 auto 10px;
 }
 
 @keyframes spin {
@@ -742,23 +664,21 @@ export default {
 
 .popout-error {
   text-align: center;
-  padding: 30px;
+  padding: 20px;
   color: #ff6b6b;
 }
 
 .error-icon {
-  font-size: 32px;
-  margin-bottom: 10px;
+  font-size: 28px;
+  margin-bottom: 8px;
   display: block;
 }
 
 /* ===== HEADER ===== */
 .popout-header {
   display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
-  position: relative;
-  z-index: 1;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .avatar-column {
@@ -766,81 +686,61 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  width: 70px;
+  width: 60px;
 }
 
 .popout-avatar {
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  border: 2px solid #ff4500;
-  box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
+  border: 2px solid #ff8c00;
+  box-shadow: 0 0 8px rgba(255, 140, 0, 0.2);
   transition: transform 0.2s;
-  position: relative;
-  pointer-events: auto;
 }
 
 .popout-avatar:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px #ff4500;
+  transform: scale(1.03);
+  box-shadow: 0 0 12px #ff8c00;
 }
 
 .username-link {
-  color: #ff4500;
+  color: #ff8c00;
   text-decoration: none;
-  font-size: 11px;
-  font-weight: 500;
-  transition: all 0.2s;
+  font-size: 10px;
   text-align: center;
-  max-width: 100%;
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 2px 6px;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 69, 0, 0.2);
-  backdrop-filter: blur(5px);
-  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 4px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 140, 0, 0.2);
 }
 
 .username-link:hover {
-  color: #ff8c00;
-  border-color: #ff8c00;
-  background: rgba(0, 0, 0, 0.5);
+  color: #ffaa33;
+  border-color: #ffaa33;
 }
 
 .info-column {
   flex: 1;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.name-row {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 4px;
 }
 
 .name-row h3 {
-  margin: 0;
-  font-size: 16px;
+  margin: 0 0 6px 0;
+  font-size: 15px;
   font-weight: 600;
   color: white;
-  text-shadow: 0 0 8px rgba(255, 69, 0, 0.5);
   line-height: 1.2;
 }
 
-
-/* ===== TAGS - FORME WILDFIRE CU EFECT DE FOC LENT ȘI ELEGANT ===== */
+/* ===== TAGS - MAI MARI, CU LUMINĂ SUBTILĂ ===== */
 .square-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 6px;
 }
 
 .square-tags .square-tag {
@@ -864,7 +764,6 @@ export default {
   display: inline-flex !important;
 }
 
-/* Stil de bază pentru toate tag-urile */
 .square-tag {
   display: inline-flex;
   align-items: center;
@@ -876,331 +775,125 @@ export default {
   text-transform: uppercase;
   letter-spacing: 0.3px;
   line-height: 1;
-  color: white;
+  color: #e0e0e0;
   
-  border: 1px solid;
-  transition: all 0.3s ease;
-  position: relative;
-  background-clip: padding-box;
-  /* Efect de bază foarte subtil */
-  box-shadow: 0 0 3px currentColor;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(25, 25, 25, 0.6);
+  box-shadow: 0 0 5px rgba(255, 140, 0, 0.1);
+  transition: all 0.2s ease;
 }
 
-/* Un singur strat de efect, foarte lent și elegant */
-.square-tag::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  border-radius: 16px 6px 16px 6px;
-  background: linear-gradient(
-    120deg,
-    transparent,
-    currentColor 20%,
-    transparent 40%,
-    currentColor 60%,
-    transparent 80%
-  );
-  background-size: 200% 200%;
-  opacity: 0.25;
-  animation: slowEmber 8s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 0;
-  filter: blur(1px);
+/* Lumini subtile pentru fiecare tag */
+.square-tag.tag-staff { 
+  border-color: rgba(46, 204, 113, 0.3); 
+  box-shadow: 0 0 5px rgba(46, 204, 113, 0.1);
 }
+.square-tag.tag-staff:hover { border-color: rgba(46, 204, 113, 0.5); }
 
-/* Animație foarte lentă - 8 secunde pentru un ciclu complet */
-@keyframes slowEmber {
-  0% {
-    background-position: 0% 0%;
-    opacity: 0.2;
-    transform: scale(1);
-  }
-  25% {
-    background-position: 50% 25%;
-    opacity: 0.3;
-  }
-  50% {
-    background-position: 100% 50%;
-    opacity: 0.25;
-  }
-  75% {
-    background-position: 50% 75%;
-    opacity: 0.3;
-  }
-  100% {
-    background-position: 0% 100%;
-    opacity: 0.2;
-    transform: scale(1);
-  }
+.square-tag.tag-dev { 
+  border-color: rgba(52, 152, 219, 0.3);
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.1);
 }
+.square-tag.tag-dev:hover { border-color: rgba(52, 152, 219, 0.5); }
 
-/* La hover - efectul devine puțin mai vizibil, dar tot foarte lent */
-.square-tag:hover::before {
-  animation: slowEmberHover 6s ease-in-out infinite;
-  opacity: 0.4;
-  filter: blur(1.5px);
+.square-tag.tag-wiki { 
+  border-color: rgba(26, 188, 156, 0.3);
+  box-shadow: 0 0 5px rgba(26, 188, 156, 0.1);
 }
+.square-tag.tag-wiki:hover { border-color: rgba(26, 188, 156, 0.5); }
 
-@keyframes slowEmberHover {
-  0% {
-    background-position: 0% 0%;
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  25% {
-    background-position: 60% 30%;
-    opacity: 0.5;
-  }
-  50% {
-    background-position: 100% 60%;
-    opacity: 0.4;
-  }
-  75% {
-    background-position: 40% 80%;
-    opacity: 0.5;
-  }
-  100% {
-    background-position: 0% 100%;
-    opacity: 0.3;
-    transform: scale(1);
-  }
-}
-
-/* Fiecare tag cu culoarea lui */
-.square-tag.tag-staff {
-  background: rgba(46, 204, 113, 0.2);
-  border-color: #2ecc71;
-  color: #2ecc71;
-}
-.square-tag.tag-staff:hover {
-  background: rgba(46, 204, 113, 0.25);
-}
-
-.square-tag.tag-dev {
-  background: rgba(52, 152, 219, 0.2);
-  border-color: #3498db;
-  color: #3498db;
-}
-.square-tag.tag-dev:hover {
-  background: rgba(52, 152, 219, 0.25);
-}
-
-.square-tag.tag-wiki {
-  background: rgba(26, 188, 156, 0.2);
-  border-color: #1abc9c;
-  color: #1abc9c;
-}
-.square-tag.tag-wiki:hover {
-  background: rgba(26, 188, 156, 0.25);
-}
-
-.square-tag.tag-trusted {
-  background: rgba(241, 196, 15, 0.2);
-  border-color: #f1c40f;
+.square-tag.tag-trusted { 
+  border-color: rgba(241, 196, 15, 0.3); 
   color: #f1c40f;
+  box-shadow: 0 0 5px rgba(241, 196, 15, 0.1);
 }
-.square-tag.tag-trusted:hover {
-  background: rgba(241, 196, 15, 0.25);
-}
+.square-tag.tag-trusted:hover { border-color: rgba(241, 196, 15, 0.5); }
 
-.square-tag.tag-pro {
-  background: rgba(255, 69, 0, 0.2);
-  border-color: #ff4500;
-  color: #ff4500;
+.square-tag.tag-pro { 
+  border-color: rgba(255, 69, 0, 0.3);
+  box-shadow: 0 0 5px rgba(255, 69, 0, 0.1);
 }
-.square-tag.tag-pro:hover {
-  background: rgba(255, 69, 0, 0.25);
-}
+.square-tag.tag-pro:hover { border-color: rgba(255, 69, 0, 0.5); }
 
-.square-tag.tag-vip {
-  background: rgba(155, 89, 182, 0.2);
-  border-color: #9b59b6;
-  color: #9b59b6;
+.square-tag.tag-vip { 
+  border-color: rgba(155, 89, 182, 0.3);
+  box-shadow: 0 0 5px rgba(155, 89, 182, 0.1);
 }
-.square-tag.tag-vip:hover {
-  background: rgba(155, 89, 182, 0.25);
-}
+.square-tag.tag-vip:hover { border-color: rgba(155, 89, 182, 0.5); }
 
-.square-tag.tag-founder {
-  background: rgba(231, 76, 60, 0.2);
-  border-color: #e74c3c;
-  color: #e74c3c;
+.square-tag.tag-founder { 
+  border-color: rgba(231, 76, 60, 0.3);
+  box-shadow: 0 0 5px rgba(231, 76, 60, 0.1);
 }
-.square-tag.tag-founder:hover {
-  background: rgba(231, 76, 60, 0.25);
-}
+.square-tag.tag-founder:hover { border-color: rgba(231, 76, 60, 0.5); }
 
-.square-tag.tag-admin {
-  background: rgba(192, 57, 43, 0.2);
-  border-color: #c0392b;
-  color: #c0392b;
+.square-tag.tag-admin { 
+  border-color: rgba(192, 57, 43, 0.3);
+  box-shadow: 0 0 5px rgba(192, 57, 43, 0.1);
 }
-.square-tag.tag-admin:hover {
-  background: rgba(192, 57, 43, 0.25);
-}
+.square-tag.tag-admin:hover { border-color: rgba(192, 57, 43, 0.5); }
 
-.square-tag.tag-mod {
-  background: rgba(22, 160, 133, 0.2);
-  border-color: #16a085;
-  color: #16a085;
+.square-tag.tag-mod { 
+  border-color: rgba(22, 160, 133, 0.3);
+  box-shadow: 0 0 5px rgba(22, 160, 133, 0.1);
 }
-.square-tag.tag-mod:hover {
-  background: rgba(22, 160, 133, 0.25);
-}
+.square-tag.tag-mod:hover { border-color: rgba(22, 160, 133, 0.5); }
 
-.square-tag.tag-supporter {
-  background: rgba(243, 156, 18, 0.2);
-  border-color: #f39c12;
-  color: #f39c12;
+.square-tag.tag-supporter { 
+  border-color: rgba(243, 156, 18, 0.3);
+  box-shadow: 0 0 5px rgba(243, 156, 18, 0.1);
 }
-.square-tag.tag-supporter:hover {
-  background: rgba(243, 156, 18, 0.25);
-}
+.square-tag.tag-supporter:hover { border-color: rgba(243, 156, 18, 0.5); }
 
-.square-tag.tag-booster {
-  background: rgba(142, 68, 173, 0.2);
-  border-color: #8e44ad;
-  color: #8e44ad;
+.square-tag.tag-booster { 
+  border-color: rgba(142, 68, 173, 0.3);
+  box-shadow: 0 0 5px rgba(142, 68, 173, 0.1);
 }
-.square-tag.tag-booster:hover {
-  background: rgba(142, 68, 173, 0.25);
-}
+.square-tag.tag-booster:hover { border-color: rgba(142, 68, 173, 0.5); }
 
-.square-tag.tag-partner {
-  background: rgba(44, 62, 80, 0.2);
-  border-color: #2c3e50;
-  color: #2c3e50;
+.square-tag.tag-partner { 
+  border-color: rgba(44, 62, 80, 0.3);
+  box-shadow: 0 0 5px rgba(44, 62, 80, 0.1);
 }
-.square-tag.tag-partner:hover {
-  background: rgba(44, 62, 80, 0.25);
-}
+.square-tag.tag-partner:hover { border-color: rgba(44, 62, 80, 0.5); }
 
-.square-tag.tag-contributor {
-  background: rgba(127, 140, 141, 0.2);
-  border-color: #7f8c8d;
-  color: #7f8c8d;
+.square-tag.tag-contributor { 
+  border-color: rgba(127, 140, 141, 0.3);
+  box-shadow: 0 0 5px rgba(127, 140, 141, 0.1);
 }
-.square-tag.tag-contributor:hover {
-  background: rgba(127, 140, 141, 0.25);
-}
+.square-tag.tag-contributor:hover { border-color: rgba(127, 140, 141, 0.5); }
 
-/* Tag-ul WILDFIRE - efect special, dar tot foarte lent */
-.square-tag.tag-wildfire {
-  background: linear-gradient(135deg, rgba(255, 69, 0, 0.25), rgba(255, 140, 0, 0.25));
-  border-color: #ff8c00;
-  border-width: 2px;
-  color: #ff8c00;
-  box-shadow: 0 0 5px #ff8c00;
+.square-tag.tag-wildfire { 
+  border-color: rgba(255, 140, 0, 0.5); 
+  color: #ffaa33;
+  box-shadow: 0 0 8px rgba(255, 140, 0, 0.15);
 }
-
-.square-tag.tag-wildfire::before {
-  background: linear-gradient(
-    120deg,
-    transparent,
-    #ff4500 15%,
-    #ff8c00 30%,
-    transparent 45%,
-    #ff4500 60%,
-    #ff8c00 75%,
-    transparent 90%
-  );
-  background-size: 300% 300%;
-  opacity: 0.35;
-  filter: blur(1.5px);
-  animation: slowWildfire 10s ease-in-out infinite;
-}
-
-@keyframes slowWildfire {
-  0% {
-    background-position: 0% 0%;
-    opacity: 0.3;
-  }
-  20% {
-    background-position: 40% 20%;
-    opacity: 0.5;
-  }
-  40% {
-    background-position: 80% 40%;
-    opacity: 0.4;
-  }
-  60% {
-    background-position: 60% 60%;
-    opacity: 0.5;
-  }
-  80% {
-    background-position: 20% 80%;
-    opacity: 0.4;
-  }
-  100% {
-    background-position: 0% 100%;
-    opacity: 0.3;
-  }
-}
-
-.square-tag.tag-wildfire:hover::before {
-  animation: slowWildfireHover 8s ease-in-out infinite;
-  opacity: 0.5;
-  filter: blur(2px);
-}
-
-@keyframes slowWildfireHover {
-  0% {
-    background-position: 0% 0%;
-    opacity: 0.4;
-  }
-  20% {
-    background-position: 50% 20%;
-    opacity: 0.7;
-  }
-  40% {
-    background-position: 100% 40%;
-    opacity: 0.5;
-  }
-  60% {
-    background-position: 70% 70%;
-    opacity: 0.7;
-  }
-  80% {
-    background-position: 30% 80%;
-    opacity: 0.6;
-  }
-  100% {
-    background-position: 0% 100%;
-    opacity: 0.4;
-  }
+.square-tag.tag-wildfire:hover { 
+  border-color: rgba(255, 140, 0, 0.7);
+  box-shadow: 0 0 10px rgba(255, 140, 0, 0.2);
 }
 
 .tag-icon {
-  width: 9px;
-  height: 9px;
-  transition: all 0.3s ease;
-  filter: brightness(1.1);
-  position: relative;
-  z-index: 1;
+  width: 8px;
+  height: 8px;
+  opacity: 0.6;
+  transition: all 0.2s ease;
 }
 
 .square-tag:hover .tag-icon {
-  transform: scale(1.05);
+  opacity: 0.8;
 }
 
-
-
+/* ===== BIO ȘI STATS ===== */
 .popout-bio {
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.4;
-  color: #e0e0e0;
+  color: #bbb;
   margin-bottom: 12px;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-  border-left: 2px solid #ff4500;
-  backdrop-filter: blur(5px);
-  position: relative;
-  z-index: 1;
-  pointer-events: auto;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border-left: 2px solid #ff8c00;
 }
 
 .popout-stats {
@@ -1208,294 +901,106 @@ export default {
   grid-template-columns: repeat(3, 1fr);
   gap: 6px;
   margin-bottom: 12px;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 69, 0, 0.2);
-  position: relative;
-  z-index: 1;
-  pointer-events: auto;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 140, 0, 0.1);
 }
 
 .popout-stats div {
   text-align: center;
-  transition: transform 0.2s;
-  pointer-events: auto;
-}
-
-.popout-stats div:hover {
-  transform: translateY(-1px);
 }
 
 .popout-stats strong {
   display: block;
-  color: #ff4500;
-  font-size: 16px;
-  font-weight: 700;
+  color: #ffaa33;
+  font-size: 15px;
+  font-weight: 600;
   margin-bottom: 2px;
-  text-shadow: 0 0 8px rgba(255, 69, 0, 0.5);
 }
 
 .popout-stats span {
-  font-size: 9px;
+  font-size: 8px;
   color: #888;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
 }
 
-/* ===== CONTRIBUȚII INCENDIARE ===== */
-.contributions-fiery {
+/* ===== CONTRIBUȚII SIMPLE ===== */
+.contributions-simple {
   margin: 8px 0 12px 0;
   padding: 6px 8px;
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: 30px;
-  border: 1px solid rgba(255, 69, 0, 0.2);
-  backdrop-filter: blur(5px);
-  position: relative;
-  z-index: 2;
-  pointer-events: auto;
-  overflow: hidden;
-  transition: all 0.3s ease;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 140, 0, 0.1);
 }
 
-.contributions-fiery:hover {
-  border-color: #ff4500;
-  box-shadow: 0 0 15px rgba(255, 69, 0, 0.3);
-}
-
-/* Glow de foc la hover */
-.fiery-glow {
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.contributions-fiery:hover .fiery-glow {
-  opacity: 0.4;
-}
-
-.glow-inferno {
-  background: radial-gradient(circle, #ff4500 0%, #ff8c00 30%, transparent 70%);
-  animation: rotateSlow 8s linear infinite;
-}
-
-.glow-blaze {
-  background: radial-gradient(circle, #ff8c00 0%, #ffaa33 30%, transparent 70%);
-  animation: rotateSlow 10s linear infinite;
-}
-
-.glow-fire {
-  background: radial-gradient(circle, #ffaa33 0%, #ffbb55 30%, transparent 70%);
-  animation: rotateSlow 12s linear infinite;
-}
-
-.glow-flame {
-  background: radial-gradient(circle, #ffbb55 0%, #ffcc99 30%, transparent 70%);
-  animation: rotateSlow 15s linear infinite;
-}
-
-@keyframes rotateSlow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-/* Scântei pentru贡献i peste 10 */
-.fiery-sparks {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.spark {
-  position: absolute;
-  bottom: 0;
-  width: 2px;
-  height: 8px;
-  background: linear-gradient(to top, #ff4500, transparent);
-  border-radius: 1px;
-  opacity: 0;
-  animation: sparkRise 1.5s ease-out infinite;
-}
-
-@keyframes sparkRise {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 0.6;
-  }
-  100% {
-    transform: translateY(-30px) scale(0.3);
-    opacity: 0;
-  }
-}
-
-.fiery-row {
+.simple-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  position: relative;
-  z-index: 2;
+  gap: 6px;
 }
 
-.fiery-badge {
+.simple-badge {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 10px 4px 6px;
-  border-radius: 30px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  color: #ccc;
+}
+
+.simple-icon {
   font-size: 11px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
+  opacity: 0.7;
 }
 
-/* Efect de flacără la hover pentru贡献i peste 20 */
-.fiery-flame {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, transparent, rgba(255, 69, 0, 0.3), transparent);
-  opacity: 0;
-  animation: flameFlicker 1s ease-in-out infinite;
-  pointer-events: none;
-}
-
-.fiery-badge:hover .fiery-flame {
-  opacity: 1;
-}
-
-@keyframes flameFlicker {
-  0%, 100% { transform: scale(1); opacity: 0.3; }
-  50% { transform: scale(1.1); opacity: 0.6; }
-}
-
-/* Badge colors - INCENDIARE */
-.badge-inferno {
-  background: linear-gradient(135deg, rgba(255, 69, 0, 0.25), rgba(255, 140, 0, 0.25));
-  color: #ff8c00;
-  border: 1px solid #ff4500;
-  box-shadow: 0 0 10px rgba(255, 69, 0, 0.3);
-}
-
-.badge-inferno .fiery-icon {
-  animation: firePulse 1s ease-in-out infinite;
-}
-
-.badge-blaze {
-  background: linear-gradient(135deg, rgba(255, 140, 0, 0.2), rgba(255, 170, 51, 0.2));
-  color: #ffaa33;
-  border: 1px solid #ff8c00;
-}
-
-.badge-fire {
-  background: linear-gradient(135deg, rgba(255, 170, 51, 0.2), rgba(255, 187, 85, 0.2));
-  color: #ffbb55;
-  border: 1px solid #ffaa33;
-}
-
-.badge-flame {
-  background: linear-gradient(135deg, rgba(255, 187, 85, 0.2), rgba(255, 204, 153, 0.2));
-  color: #ffcc99;
-  border: 1px solid #ffbb55;
-}
-
-.badge-spark {
-  background: rgba(224, 224, 224, 0.1);
-  color: #e0e0e0;
-  border: 1px solid rgba(255, 170, 51, 0.3);
-}
-
-.badge-ember {
-  background: rgba(255, 255, 255, 0.05);
-  color: #aaa;
-  border: 1px solid rgba(255, 140, 0, 0.2);
-}
-
-.badge-ash {
-  background: rgba(255, 255, 255, 0.03);
-  color: #666;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-@keyframes firePulse {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px #ff4500); }
-  50% { transform: scale(1.2); filter: drop-shadow(0 0 5px #ff8c00); }
-}
-
-.fiery-icon {
-  font-size: 12px;
-}
-
-.fiery-count {
+.simple-count {
   font-weight: 600;
+  color: #ffaa33;
 }
 
-.fiery-label {
+.simple-label {
   font-size: 8px;
-  opacity: 0.8;
+  opacity: 0.6;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
 }
 
-.fiery-repo {
+.simple-repo {
   display: flex;
   align-items: center;
   gap: 4px;
   color: #888;
-  font-size: 9px;
-  transition: all 0.2s ease;
+  font-size: 8px;
 }
 
-.fiery-repo-icon {
+.simple-repo-icon {
   color: #ff8c00;
-  opacity: 0.6;
-  transition: all 0.2s ease;
+  opacity: 0.5;
 }
 
-.fiery-repo:hover .fiery-repo-icon {
-  opacity: 1;
-  transform: scale(1.1);
-}
-
-.fiery-repo a {
+.simple-repo a {
   color: #888;
   text-decoration: none;
   transition: color 0.2s;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 110px;
+  max-width: 100px;
 }
 
-.fiery-repo a:hover {
-  color: #ff8c00;
+.simple-repo a:hover {
+  color: #ffaa33;
 }
 
-/* ===== DETAILS MINIMAL ===== */
+/* ===== DETAILS ===== */
 .popout-details-minimal {
   margin-bottom: 10px;
-  position: relative;
-  z-index: 1;
-  pointer-events: auto;
   background: rgba(0, 0, 0, 0.15);
-  border-radius: 10px;
+  border-radius: 8px;
   padding: 4px 8px;
-  border: 1px solid rgba(255, 69, 0, 0.1);
-  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 140, 0, 0.1);
   width: fit-content;
   max-width: 100%;
 }
@@ -1505,9 +1010,9 @@ export default {
   align-items: center;
   gap: 6px;
   padding: 3px 0;
-  color: #ccc;
-  font-size: 10px;
-  border-bottom: 1px dashed rgba(255, 69, 0, 0.1);
+  color: #aaa;
+  font-size: 9px;
+  border-bottom: 1px dashed rgba(255, 140, 0, 0.1);
 }
 
 .detail-item:last-child {
@@ -1516,39 +1021,77 @@ export default {
 
 .detail-icon {
   width: 16px;
-  color: #ff4500;
-  font-size: 11px;
-  text-align: center;
-  filter: drop-shadow(0 0 3px #ff4500);
+  color: #ff8c00;
+  font-size: 10px;
+  opacity: 0.7;
 }
 
 .detail-text {
-  color: #e0e0e0;
-  font-weight: 400;
+  color: #ccc;
 }
 
-/* ===== BUTTON ===== */
+/* ===== BUTTON CU EFECT SUBTIL ===== */
 .popout-button {
-  display: block;
-  text-align: center;
-  padding: 8px;
-  background: linear-gradient(135deg, #ff4500, #ff8c00);
-  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  background: #252525;
+  color: #ffaa33;
   text-decoration: none;
   border-radius: 30px;
   font-weight: 500;
-  font-size: 12px;
-  transition: all 0.2s;
-  border: none;
+  font-size: 11px;
+  transition: all 0.25s ease;
+  border: 1px solid rgba(255, 140, 0, 0.2);
   position: relative;
+  overflow: hidden;
+}
+
+.button-text {
+  position: relative;
+  z-index: 2;
+  transition: transform 0.25s ease;
+}
+
+.button-arrow {
+  position: relative;
+  z-index: 2;
+  font-size: 14px;
+  transition: transform 0.25s ease;
+}
+
+/* Efect de lumină subtilă la hover */
+.popout-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 140, 0, 0.2), transparent);
+  transition: left 0.5s ease;
   z-index: 1;
-  pointer-events: auto;
-  cursor: pointer;
-  box-shadow: 0 0 15px rgba(255, 69, 0, 0.3);
 }
 
 .popout-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(255, 69, 0, 0.5);
+  background: #2a2a2a;
+  border-color: rgba(255, 140, 0, 0.4);
+  color: #ffbb55;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+}
+
+.popout-button:hover::before {
+  left: 100%;
+}
+
+.popout-button:hover .button-arrow {
+  transform: translateX(3px);
+}
+
+.popout-button:active {
+  transform: translateY(0);
 }
 </style>

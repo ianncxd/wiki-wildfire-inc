@@ -25,37 +25,15 @@
   </div>
 </div>
 
-<!-- RÂND 1 - logo și titlu -->
+<!-- RÂND 1 - logo și titlu - PORTOCALIU -->
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
   <img src="https://wildfire.ro/public/images/logo-sv22.png" alt="Wildfire.ro" width="60" style="margin: 0;">
   
-  <!-- TITLU CU GRADIENT DINAMIC (dimensiune originală) -->
-  <h1 style="font-size: 32px; margin: 0; 
-    background: linear-gradient(135deg, 
-      #ffd700 0%, 
-      #ff8c00 20%, 
-      #ff4500 40%, 
-      #ff8c00 60%, 
-      #ffd700 80%, 
-      #ffffff 100%);
-    background-size: 300% 300%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 800;
-    text-shadow: 0 0 15px rgba(255,69,0,0.4);
-    animation: wildfireGradient 5s ease infinite;">
+  <!-- TITLU PORTOCALIU -->
+  <h1 style="font-size: 32px; margin: 0; color: #ff8c00; font-weight: 700;">
     Intrebari frecvente
   </h1>
 </div>
-
-<!-- CSS pentru animație -->
-<style>
-@keyframes wildfireGradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-</style>
 
 <!-- RÂND 2 - tags și updated by JOS, pe același rând -->
 <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; border-top: 1px solid rgba(255,69,0,0.2); padding-top: 15px; margin-top: 5px;">
