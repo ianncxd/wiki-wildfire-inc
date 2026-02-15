@@ -68,34 +68,58 @@
         <!-- Last Updates Component -->
         <LastUpdates />
 
-        <!-- Carduri -->
-        <div class="wildfire-grid">
-          <div class="wildfire-card">
-            <div class="wildfire-card-icon">🏛️</div>
-            <h3>Seriozitate</h3>
-            <p>6+ ani de experiență, administrare profesionistă, zero toleranță pentru abuzuri.</p>
-            <a href="/informatii/despre" class="wildfire-card-link">Află mai multe →</a>
+        <!-- CARDURI CU POZE -->
+        <div class="cards-grid">
+          <!-- Card 1 - Seriozitate -->
+          <div class="feature-card">
+            <div class="card-image">
+              <img src="/wallpaper/da.jpg" alt="Seriozitate" class="card-img">
+              <div class="card-icon-overlay">🏛️</div>
+            </div>
+            <div class="card-content">
+              <h3 class="card-title">Seriozitate</h3>
+              <p class="card-description">6+ ani de experiență, administrare profesionistă, zero toleranță pentru abuzuri.</p>
+              <a href="/informatii/despre" class="card-link">Află mai multe →</a>
+            </div>
           </div>
           
-          <div class="wildfire-card">
-            <div class="wildfire-card-icon">👑</div>
-            <h3>Staff matur</h3>
-            <p>Oameni serioși, fair-play, mereu pregătiți să ajute comunitatea.</p>
-            <a href="/informatii/staff" class="wildfire-card-link">Cunoaște echipa →</a>
+          <!-- Card 2 - Staff matur -->
+          <div class="feature-card">
+            <div class="card-image">
+              <img src="/wallpaper/da.jpg" alt="Staff matur" class="card-img">
+              <div class="card-icon-overlay">👑</div>
+            </div>
+            <div class="card-content">
+              <h3 class="card-title">Staff matur</h3>
+              <p class="card-description">Oameni serioși, fair-play, mereu pregătiți să ajute comunitatea.</p>
+              <a href="/informatii/staff" class="card-link">Cunoaște echipa →</a>
+            </div>
           </div>
           
-          <div class="wildfire-card">
-            <div class="wildfire-card-icon">🤝</div>
-            <h3>Respect</h3>
-            <p>Fără toxicitate, fără favoritisme, fără pay-to-win. Doar CS2 curat.</p>
-            <a href="/informatii/regulament" class="wildfire-card-link">Vezi regulamentul →</a>
+          <!-- Card 3 - Respect -->
+          <div class="feature-card">
+            <div class="card-image">
+              <img src="/wallpaper/da.jpg" alt="Respect" class="card-img">
+              <div class="card-icon-overlay">🤝</div>
+            </div>
+            <div class="card-content">
+              <h3 class="card-title">Respect</h3>
+              <p class="card-description">Fără toxicitate, fără favoritisme, fără pay-to-win. Doar CS2 curat.</p>
+              <a href="/informatii/regulament" class="card-link">Vezi regulamentul →</a>
+            </div>
           </div>
           
-          <div class="wildfire-card">
-            <div class="wildfire-card-icon">⚡</div>
-            <h3>Comunitate</h3>
-            <p>Peste 2300 de membri activi, evenimente săptămânale, turnee cu premii.</p>
-            <a href="/comunitate/discord" class="wildfire-card-link">Alătură-te →</a>
+          <!-- Card 4 - Comunitate -->
+          <div class="feature-card">
+            <div class="card-image">
+              <img src="/wallpaper/da.jpg" alt="Comunitate" class="card-img">
+              <div class="card-icon-overlay">⚡</div>
+            </div>
+            <div class="card-content">
+              <h3 class="card-title">Comunitate</h3>
+              <p class="card-description">Peste 2300 de membri activi, evenimente săptămânale, turnee cu premii.</p>
+              <a href="/comunitate/discord" class="card-link">Alătură-te →</a>
+            </div>
           </div>
         </div>
       </div>
@@ -688,7 +712,7 @@ onMounted(() => {
   justify-content: space-between;
   width: 100%;
   max-width: 500px;
-  padding: 18px 28px;  /* <-- 🔴 14px → 18px (mai mult padding sus-jos) */
+  padding: 18px 28px;
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 40px;
@@ -697,7 +721,7 @@ onMounted(() => {
   cursor: pointer;
   transition: all 0.5s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  height: 56px;        /* <-- 🔴 48px → 56px (mai înalt) */
+  height: 56px;
 }
 
 .dark .wildfire-home .home-search-button {
@@ -773,109 +797,196 @@ onMounted(() => {
   color: white;
 }
 
-/* Grid carduri */
-.wildfire-home .wildfire-grid {
+/* ===== CARDURI CU POZE - CLASE SEPARATE ===== */
+.cards-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 28px;
+  gap: 24px;
+  margin-top: 40px;
   position: relative;
   z-index: 20;
 }
 
 @media (max-width: 768px) {
-  .wildfire-home .wildfire-grid {
+  .cards-grid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 20px;
   }
 }
 
-.wildfire-home .wildfire-card {
-  padding: 28px;
+.feature-card {
   background: white;
-  border: 1px solid #edf2f7;
   border-radius: 20px;
-  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-  position: relative;
   overflow: hidden;
-}
-
-.dark .wildfire-home .wildfire-card {
-  background: #111111;
-  border-color: #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.wildfire-home .wildfire-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 0;
-  background: linear-gradient(to bottom, #ff4500, #ff8c00);
-  transition: height 0.6s ease;
-}
-
-.wildfire-home .wildfire-card:hover::before {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 69, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.wildfire-home .wildfire-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 24px 32px -12px rgba(255, 69, 0, 0.2);
+.dark .feature-card {
+  background: #111;
+  border-color: rgba(255, 69, 0, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.card-image {
+  position: relative;
+  height: 160px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ff4500, #ff8c00);
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.feature-card:hover .card-img {
+  transform: scale(1.1);
+}
+
+.card-icon-overlay {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.dark .card-icon-overlay {
+  background: rgba(0, 0, 0, 0.7);
   border-color: rgba(255, 69, 0, 0.3);
 }
 
-.wildfire-home .wildfire-card-icon {
-  font-size: 34px;
-  margin-bottom: 18px;
-  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+.feature-card:hover .card-icon-overlay {
+  transform: scale(1.1) rotate(5deg);
 }
 
-.wildfire-home .wildfire-card:hover .wildfire-card-icon {
-  transform: scale(1.15);
+.card-content {
+  padding: 20px 20px 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.wildfire-home .wildfire-card h3 {
+.card-title {
   font-size: 22px;
   font-weight: 700;
-  margin: 0 0 14px 0;
-  color: #111827;
-  letter-spacing: -0.01em;
-  transition: color 0.3s ease;
+  margin: 0 0 12px 0;
+  color: #111;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
 }
 
-.dark .wildfire-home .wildfire-card h3 {
-  color: white;
+.dark .card-title {
+  color: #fff;
 }
 
-.wildfire-home .wildfire-card p {
-  font-size: 15px;
-  color: #6b7280;
-  margin: 0 0 22px 0;
-  line-height: 1.7;
-  transition: color 0.3s ease;
+.card-description {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 20px 0;
+  line-height: 1.6;
+  flex: 1;
 }
 
-.dark .wildfire-home .wildfire-card p {
-  color: #9ca3af;
+.dark .card-description {
+  color: #999;
 }
 
-.wildfire-home .wildfire-card-link {
-  color: #ff4500;
-  text-decoration: none;
-  font-size: 15px;
-  font-weight: 600;
-  transition: all 0.5s ease;
+.card-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  color: #ff4500;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  padding: 8px 0;
+  border-top: 1px solid rgba(255, 69, 0, 0.1);
+  margin-top: auto;
 }
 
-.wildfire-home .wildfire-card-link:hover {
+.dark .card-link {
+  border-top-color: rgba(255, 69, 0, 0.2);
+}
+
+.card-link:hover {
   color: #ff8c00;
-  gap: 15px;
+  gap: 12px;
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 30px -10px rgba(255, 69, 0, 0.2);
+  border-color: rgba(255, 69, 0, 0.2);
+}
+
+.dark .feature-card:hover {
+  box-shadow: 0 20px 30px -8px rgba(255, 69, 0, 0.25);
+}
+
+/* ===== RESPONSIVE PENTRU CARDURI ===== */
+@media (max-width: 1024px) {
+  .cards-grid {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .card-image {
+    height: 140px;
+  }
+  
+  .card-content {
+    padding: 16px 16px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-image {
+    height: 120px;
+  }
+  
+  .card-icon-overlay {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+  
+  .card-title {
+    font-size: 20px;
+  }
+  
+  .card-description {
+    font-size: 13px;
+  }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+  .cards-grid {
+    gap: 16px;
+  }
+  
+  .card-image {
+    height: 120px;
+  }
 }
 
 /* ===== RESPONSIVE ===== */
@@ -899,7 +1010,7 @@ onMounted(() => {
     padding: 0 20px;
   }
   
-  .wildfire-home .wildfire-grid {
+  .cards-grid {
     gap: 20px;
   }
 }
@@ -943,19 +1054,23 @@ onMounted(() => {
     font-size: 14px;
   }
   
-  .wildfire-home .wildfire-grid {
+  .cards-grid {
     gap: 16px;
   }
   
-  .wildfire-home .wildfire-card {
-    padding: 24px;
+  .card-image {
+    height: 140px;
   }
   
-  .wildfire-home .wildfire-card h3 {
+  .card-content {
+    padding: 16px 16px 20px;
+  }
+  
+  .card-title {
     font-size: 20px;
   }
   
-  .wildfire-home .wildfire-card p {
+  .card-description {
     font-size: 14px;
   }
 }
@@ -1009,15 +1124,21 @@ onMounted(() => {
     margin-right: 0;
   }
   
-  .wildfire-home .wildfire-card {
-    padding: 20px;
+  .card-image {
+    height: 120px;
   }
   
-  .wildfire-home .wildfire-card h3 {
+  .card-icon-overlay {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
+  }
+  
+  .card-title {
     font-size: 18px;
   }
   
-  .wildfire-home .wildfire-card p {
+  .card-description {
     font-size: 13px;
   }
 }
@@ -1047,6 +1168,14 @@ onMounted(() => {
   
   .wildfire-home .wildfire-description {
     margin-bottom: 20px;
+  }
+  
+  .cards-grid {
+    gap: 16px;
+  }
+  
+  .card-image {
+    height: 120px;
   }
 }
 </style>
