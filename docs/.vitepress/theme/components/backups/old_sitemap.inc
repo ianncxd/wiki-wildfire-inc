@@ -54,7 +54,7 @@
         <div class="brand-section">
           <div class="brand-logo-wrapper">
             <div class="brand-logo">
-              <img src="https://wildfire.ro/public/images/logo-sv22.png" alt="Wildfire.ro" class="logo-img">
+              <img src="/icons/wildfire.webp" alt="Wildfire.ro" class="logo-img">
             </div>
             <div class="logo-ring"></div>
           </div>

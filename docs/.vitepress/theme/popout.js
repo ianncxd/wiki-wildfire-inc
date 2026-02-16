@@ -15,8 +15,6 @@ import GithubPopout from './components/GithubPopout.vue'
     let mountPoint = null
 
     function init() {
-        console.log('✅ Popout initializat')
-        
         document.querySelectorAll('.github-profile').forEach(trigger => {
             trigger.addEventListener('mouseenter', function(e) {
                 handleTriggerEnter(this)
@@ -45,8 +43,6 @@ import GithubPopout from './components/GithubPopout.vue'
     }
 
     function handleTriggerEnter(trigger) {
-        console.log('🐭 Mouse pe trigger')
-        
         if (popoutInstance && currentTrigger !== trigger) {
             destroyPopout()
         }
@@ -68,7 +64,6 @@ import GithubPopout from './components/GithubPopout.vue'
     }
 
     function handleTriggerLeave() {
-        console.log('👋 Mouse a părăsit triggerul')
         startHideTimer()
     }
 
@@ -107,14 +102,12 @@ import GithubPopout from './components/GithubPopout.vue'
             username: username,
             targetElement: trigger,
             onPopoutEnter: () => {
-                console.log('📦 Mouse pe popout')
                 if (hideTimeout) {
                     clearTimeout(hideTimeout)
                     hideTimeout = null
                 }
             },
             onPopoutLeave: () => {
-                console.log('📦 Mouse a părăsit popout')
                 startHideTimer()
             },
             onClose: () => {
@@ -133,9 +126,7 @@ import GithubPopout from './components/GithubPopout.vue'
     function startHideTimer() {
         if (hideTimeout) return
         
-        console.log('⏰ Pornesc timer 500ms...')
         hideTimeout = setTimeout(() => {
-            console.log('👋 Ascund popout')
             if (popoutInstance) {
                 popoutInstance.instance.hide()
                 setTimeout(() => {
@@ -151,7 +142,6 @@ import GithubPopout from './components/GithubPopout.vue'
             popoutInstance.app.unmount()
             popoutInstance = null
             currentTrigger = null
-            console.log('🗑️ Popout distrus')
         }
         
         if (hideTimeout) {

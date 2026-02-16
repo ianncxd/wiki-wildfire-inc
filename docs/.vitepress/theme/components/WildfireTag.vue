@@ -45,6 +45,13 @@ const dotClass = computed(() => tagData.value.dot)
 </script>
 
 <style scoped>
+/* ACCELERARE HARDWARE */
+.wildfire-tag,
+.tag-dot {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
 .wildfire-tag {
   display: inline-flex;
   align-items: center;
@@ -60,7 +67,7 @@ const dotClass = computed(() => tagData.value.dot)
   border: 1px solid #333333 !important;
   line-height: 1.4;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .dark .wildfire-tag {
@@ -68,32 +75,13 @@ const dotClass = computed(() => tagData.value.dot)
   border: 1px solid #2a2a2a !important;
 }
 
-/* ===== DOT CU ANIMAȚIE SUBTILĂ ===== */
+/* ===== DOT FĂRĂ ANIMAȚIE (box-shadow eliminat pentru performanță) ===== */
 .tag-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
   display: inline-block;
-  box-shadow: 0 0 3px currentColor;
-  animation: pulse-dot 3s ease-in-out infinite;
-}
-
-@keyframes pulse-dot {
-  0% {
-    opacity: 0.6;
-    transform: scale(1);
-    box-shadow: 0 0 2px currentColor;
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-    box-shadow: 0 0 4px currentColor;
-  }
-  100% {
-    opacity: 0.6;
-    transform: scale(1);
-    box-shadow: 0 0 2px currentColor;
-  }
+  /* FĂRĂ box-shadow, fără animație */
 }
 
 /* CULORI DOT */
@@ -112,7 +100,7 @@ const dotClass = computed(() => tagData.value.dot)
 .tag-amber .tag-dot { background: #f59e0b; }
 .tag-gray .tag-dot { background: #64748b; }
 
-/* TEXT COLORAT - MAI SUBTIL */
+/* TEXT COLORAT */
 .tag-blue { color: #60a5fa !important; }
 .tag-orange { color: #ff8c00 !important; }
 .tag-purple { color: #a78bfa !important; }
@@ -128,30 +116,9 @@ const dotClass = computed(() => tagData.value.dot)
 .tag-amber { color: #fbbf24 !important; }
 .tag-gray { color: #9ca3af !important; }
 
-/* HOVER EFFECT - SUBTIL */
+/* HOVER EFFECT - SIMPLIFICAT */
 .wildfire-tag:hover {
-  transform: translateY(-1px);
   border-color: currentColor !important;
   background: #222 !important;
-  transition: all 0.2s ease;
-}
-
-.wildfire-tag:hover .tag-dot {
-  animation: pulse-dot-hover 2s ease-in-out infinite;
-}
-
-@keyframes pulse-dot-hover {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 3px currentColor;
-  }
-  50% {
-    transform: scale(1.15);
-    box-shadow: 0 0 6px currentColor;
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 3px currentColor;
-  }
 }
 </style>

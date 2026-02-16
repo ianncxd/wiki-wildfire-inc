@@ -10,7 +10,7 @@ author: Echipa Wildfire
 
 <!-- BANNER -->
 <div align="center" style="margin-bottom: 30px;">
-  <img src="https://wildfire.ro/public/images/logo-sv22.png" alt="Wildfire.ro" width="100" style="margin-bottom: 10px;">
+  <img src="/icons/wildfire.webp" alt="Wildfire.ro" width="100" style="margin-bottom: 10px;">
   <h1 style="font-size: 42px; margin: 0; background: linear-gradient(135deg, #ff4500, #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block;"> Regulament AWP</h1>
   <p style="font-size: 16px; color: #6b7280; margin-top: 8px;">Serverul #2 • AWP Arena</p>
 </div>

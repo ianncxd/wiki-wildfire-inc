@@ -3,7 +3,7 @@
 
 <!-- Background image layer cu BLUR și PARALLAX -->
 <div style="position: absolute; top: -20px; left: -20px; right: -20px; bottom: -20px; z-index: 0; filter: blur(5px) brightness(0.7); transform: scale(1.1);">
-  <img src="/wallpaper/backgroundwf.png" alt="background" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.4;">
+  <img src="/wallpaper/backgroundwf.webp" alt="background" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.4;">
 </div>
 
 <!-- Content layer -->
@@ -27,7 +27,7 @@
 
 <!-- RÂND 1 - logo și titlu -->
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-  <img src="https://wildfire.ro/public/images/logo-sv22.png" alt="Wildfire.ro" width="60" style="margin: 0;">
+  <img src="/icons/wildfire.webp" alt="Wildfire.ro" width="60" style="margin: 0;">
   
   <!-- TITLU CU GRADIENT DINAMIC (dimensiune originală) -->
   <h1 style="font-size: 32px; margin: 0; 

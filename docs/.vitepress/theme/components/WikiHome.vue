@@ -1,14 +1,38 @@
 <template>
   <div class="wildfire-home">
-    <!-- Background imagine cu efect de fade-in -->
-    <div 
-      class="wildfire-wallpaper" 
+    <!-- Background imagine principală - mutată în HTML pentru control -->
+    <img 
+      src="/wallpaper/poza102.webp"
+      alt=""
+      class="wildfire-wallpaper"
       :class="{ 
         'wildfire-wallpaper-hover': isHovered,
         'wildfire-wallpaper-loaded': isLoaded 
       }"
       :style="{ opacity: isLoaded ? 1 : 0 }"
-    ></div>
+      width="1920"
+      height="1080"
+      fetchpriority="low"
+      loading="lazy"
+      decoding="async"
+      role="presentation"
+    />
+    
+    <!-- A doua imagine de background (overlay) -->
+    <img 
+      src="/wallpaper/da.webp"
+      alt=""
+      class="wildfire-wallpaper-overlay"
+      :class="{ 
+        'wildfire-wallpaper-overlay-loaded': isOverlayLoaded && isHovered 
+      }"
+      width="1920"
+      height="1080"
+      fetchpriority="low"
+      loading="lazy"
+      decoding="async"
+      role="presentation"
+    />
     
     <!-- Background CS2 Style (overlay) - apare instant -->
     <div class="wildfire-bg">
@@ -20,15 +44,19 @@
       <div class="wildfire-spotlight-br"></div>
     </div>
     
-    <div class="wildfire-hero">
+    <main class="wildfire-hero"></main>
       <div class="wildfire-container">
         <!-- Logo cu hover si efect de float -->
         <div class="wildfire-logo-container">
           <div class="wildfire-logo-glow"></div>
           <img 
-            src="https://wildfire.ro/public/images/logo-sv22.png" 
+            src="/icons/wildfire.webp" 
             alt="Wildfire.ro" 
             class="wildfire-logo"
+            width="220"
+            height="220"
+            fetchpriority="high"
+            decoding="sync"
             @mouseenter="isHovered = true"
             @mouseleave="isHovered = false"
           >
@@ -56,10 +84,18 @@
           </a>
         </div>
 
-        <!-- Home Searchbar - FIXED ACUM -->
+        <!-- Home Searchbar -->
         <div class="home-search">
           <button class="home-search-button" @click="openSearch" type="button">
-            <img src="/icons/searchbutton.svg" class="search-icon" alt="search">
+            <img 
+              src="/icons/searchbutton.svg" 
+              class="search-icon" 
+              alt="search" 
+              width="18" 
+              height="18"
+              loading="lazy"
+              decoding="async"
+            >
             <span class="home-search-text">Caută în documentație...</span>
             <span class="home-search-shortcut">Ctrl K</span>
           </button>
@@ -67,64 +103,8 @@
 
         <!-- Last Updates Component -->
         <LastUpdates />
-
-        <!-- CARDURI CU POZE -->
-        <div class="cards-grid">
-          <!-- Card 1 - Seriozitate -->
-          <div class="feature-card">
-            <div class="card-image">
-              <img src="/wallpaper/da.jpg" alt="Seriozitate" class="card-img">
-              <div class="card-icon-overlay">🏛️</div>
-            </div>
-            <div class="card-content">
-              <h3 class="card-title">Seriozitate</h3>
-              <p class="card-description">6+ ani de experiență, administrare profesionistă, zero toleranță pentru abuzuri.</p>
-              <a href="/informatii/despre" class="card-link">Află mai multe →</a>
-            </div>
-          </div>
-          
-          <!-- Card 2 - Staff matur -->
-          <div class="feature-card">
-            <div class="card-image">
-              <img src="/wallpaper/da.jpg" alt="Staff matur" class="card-img">
-              <div class="card-icon-overlay">👑</div>
-            </div>
-            <div class="card-content">
-              <h3 class="card-title">Staff matur</h3>
-              <p class="card-description">Oameni serioși, fair-play, mereu pregătiți să ajute comunitatea.</p>
-              <a href="/informatii/staff" class="card-link">Cunoaște echipa →</a>
-            </div>
-          </div>
-          
-          <!-- Card 3 - Respect -->
-          <div class="feature-card">
-            <div class="card-image">
-              <img src="/wallpaper/da.jpg" alt="Respect" class="card-img">
-              <div class="card-icon-overlay">🤝</div>
-            </div>
-            <div class="card-content">
-              <h3 class="card-title">Respect</h3>
-              <p class="card-description">Fără toxicitate, fără favoritisme, fără pay-to-win. Doar CS2 curat.</p>
-              <a href="/informatii/regulament" class="card-link">Vezi regulamentul →</a>
-            </div>
-          </div>
-          
-          <!-- Card 4 - Comunitate -->
-          <div class="feature-card">
-            <div class="card-image">
-              <img src="/wallpaper/da.jpg" alt="Comunitate" class="card-img">
-              <div class="card-icon-overlay">⚡</div>
-            </div>
-            <div class="card-content">
-              <h3 class="card-title">Comunitate</h3>
-              <p class="card-description">Peste 2300 de membri activi, evenimente săptămânale, turnee cu premii.</p>
-              <a href="/comunitate/discord" class="card-link">Alătură-te →</a>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -133,32 +113,30 @@ import LastUpdates from './LastUpdates.vue'
 
 const isHovered = ref(false)
 const isLoaded = ref(false)
+const isOverlayLoaded = ref(false)
 
-// 🔴 FUNCȚIA CORECTĂ PENTRU SEARCH - exact ca în NavSearch.vue
+// Funcția pentru search
 const openSearch = (e: MouseEvent) => {
   e.preventDefault()
   e.stopPropagation()
   
-  console.log('Search clicked') // Pentru debug
+  console.log('Search clicked')
   
-  // Metoda 1: Caută butonul DocSearch
   const searchButton = document.querySelector('.DocSearch-Button')
   if (searchButton) {
     ;(searchButton as HTMLElement).click()
     return
   }
   
-  // Metoda 2: Emite shortcut-ul corect (Ctrl+K)
   const event = new KeyboardEvent('keydown', {
     key: 'k',
     ctrlKey: true,
-    metaKey: true, // Pentru Mac
+    metaKey: true,
     bubbles: true,
     cancelable: true
   })
   window.dispatchEvent(event)
   
-  // Metoda 3: Fallback - caută inputul
   setTimeout(() => {
     const searchInput = document.querySelector('input[type="search"]')
     if (searchInput) {
@@ -167,17 +145,24 @@ const openSearch = (e: MouseEvent) => {
   }, 100)
 }
 
-// La montare, facem fade-in după un mic delay
+// Preîncărcare inteligentă
 onMounted(() => {
-  // Preîncărcăm imaginea
-  const img = new Image()
-  img.src = '/wallpaper/poza2.jpg'
-  img.onload = () => {
-    // 🔴 MODIFICI AICI VITEZA BACKGROUND-ULUI
-    // 🔴 Timpul în milisecunde până apare background-ul
+  // Imaginea principală
+  const mainImg = new Image()
+  mainImg.src = '/wallpaper/poza102.webp'
+  mainImg.fetchPriority = 'low'
+  mainImg.onload = () => {
     setTimeout(() => {
       isLoaded.value = true
-    }, 100) // <-- 🔴 100ms = 0.1 secunde
+    }, 100)
+  }
+  
+  // Imaginea overlay - o încărcăm doar după ce apare hover-ul
+  const overlayImg = new Image()
+  overlayImg.src = '/wallpaper/da.webp'
+  overlayImg.fetchPriority = 'low'
+  overlayImg.onload = () => {
+    isOverlayLoaded.value = true
   }
 })
 </script>
@@ -191,66 +176,53 @@ onMounted(() => {
   min-height: 100vh;
 }
 
-/* ===== BACKGROUND IMAGINE ===== */
-.wildfire-wallpaper {
+/* ===== BACKGROUND IMAGINI ===== */
+.wildfire-wallpaper,
+.wildfire-wallpaper-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: -2;
-  background-image: url('/wallpaper/poza102.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  
-  /* 🔴 MODIFICI AICI VITEZA FADE-IN-ULUI */
-  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1),  /* <-- 🔴 1.2 secunde */
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1),
               transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1),
               filter 0.9s cubic-bezier(0.4, 0, 0.2, 1);
   
-  /* Opacitate inițială 0 pentru fade-in */
   opacity: 0;
   
-  /* Strat pentru poza3 la hover */
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('/wallpaper/da.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    opacity: 0;
-    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-  }
+  /* ACCELERARE HARDWARE */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  
+  /* Previne selecția */
+  user-select: none;
+  pointer-events: none;
+}
+
+.wildfire-wallpaper-overlay {
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .wildfire-wallpaper-loaded {
   opacity: 1 !important;
 }
 
-.wildfire-wallpaper-hover {
-  transform: scale(1.08) !important;
-  filter: brightness(1.08) contrast(1.08) saturate(1.1);
-  
-  &::before {
-    opacity: 1;
-  }
-  
-  /* Tranziție mai lină la hover */
-  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1),
-              filter 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+.wildfire-wallpaper-overlay-loaded {
+  opacity: 1 !important;
 }
 
-/* ===== BACKGROUND CS2 (OVERLAY) - apare instant ===== */
+.wildfire-wallpaper-hover {
+  transform: scale(1.08) translateZ(0) !important;
+  filter: brightness(1.08) contrast(1.08) saturate(1.1);
+}
+
+/* ===== BACKGROUND CS2 (OVERLAY) ===== */
 .wildfire-home .wildfire-bg {
   position: fixed;
   top: 0;
@@ -259,6 +231,9 @@ onMounted(() => {
   bottom: 0;
   z-index: -1;
   pointer-events: none;
+  
+  /* ACCELERARE HARDWARE */
+  transform: translateZ(0);
 }
 
 /* LIGHT MODE - Overlay alb */
@@ -273,9 +248,16 @@ onMounted(() => {
   background: linear-gradient(to bottom, rgba(220, 38, 38, 0.06), rgba(249, 115, 22, 0.03), rgba(255, 255, 255, 0.7));
 }
 
-:not(.dark) .wildfire-home .wildfire-grid-primary {
+/* ===== GRID-URI - FĂRĂ ANIMAȚIE IMPLICITĂ ===== */
+.wildfire-home .wildfire-grid-primary,
+.wildfire-home .wildfire-grid-secondary,
+.wildfire-home .wildfire-scanlines {
   position: absolute;
   inset: 0;
+  pointer-events: none;
+}
+
+:not(.dark) .wildfire-home .wildfire-grid-primary {
   opacity: 0.08;
   background-image: 
     linear-gradient(to right, rgba(255, 69, 0, 0.1) 1px, transparent 1px),
@@ -284,8 +266,6 @@ onMounted(() => {
 }
 
 :not(.dark) .wildfire-home .wildfire-grid-secondary {
-  position: absolute;
-  inset: 0;
   opacity: 0.05;
   background-image: 
     linear-gradient(to right, rgba(255, 140, 0, 0.07) 1px, transparent 1px),
@@ -294,36 +274,37 @@ onMounted(() => {
 }
 
 :not(.dark) .wildfire-home .wildfire-scanlines {
-  position: absolute;
-  inset: 0;
   opacity: 0.02;
   background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 2px);
   background-size: 100% 2px;
 }
 
-:not(.dark) .wildfire-home .wildfire-spotlight-tl {
+/* ===== SPOTLIGHT-URI - ASCUNSE IMPLICIT ===== */
+.wildfire-home .wildfire-spotlight-tl,
+.wildfire-home .wildfire-spotlight-br {
   position: absolute;
-  top: 0;
-  left: 25%;
   width: 384px;
   height: 384px;
-  background: rgba(220, 38, 38, 0.06);
   border-radius: 50%;
   filter: blur(48px);
-  animation: pulse-cs2-light 8s infinite;
+  opacity: 0; /* ASCUNSE IMPLICIT */
+  transition: opacity 0.3s ease;
+  
+  /* ACCELERARE HARDWARE */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+:not(.dark) .wildfire-home .wildfire-spotlight-tl {
+  top: 0;
+  left: 25%;
+  background: rgba(220, 38, 38, 0.06);
 }
 
 :not(.dark) .wildfire-home .wildfire-spotlight-br {
-  position: absolute;
   bottom: 0;
   right: 25%;
-  width: 384px;
-  height: 384px;
   background: rgba(249, 115, 22, 0.04);
-  border-radius: 50%;
-  filter: blur(48px);
-  animation: pulse-cs2-light 10s infinite;
-  animation-delay: 2s;
 }
 
 /* DARK MODE - Overlay negru */
@@ -339,8 +320,6 @@ onMounted(() => {
 }
 
 .dark .wildfire-home .wildfire-grid-primary {
-  position: absolute;
-  inset: 0;
   opacity: 0.15;
   background-image: 
     linear-gradient(to right, rgba(255, 69, 0, 0.2) 1px, transparent 1px),
@@ -349,8 +328,6 @@ onMounted(() => {
 }
 
 .dark .wildfire-home .wildfire-grid-secondary {
-  position: absolute;
-  inset: 0;
   opacity: 0.1;
   background-image: 
     linear-gradient(to right, rgba(255, 140, 0, 0.15) 1px, transparent 1px),
@@ -359,177 +336,116 @@ onMounted(() => {
 }
 
 .dark .wildfire-home .wildfire-scanlines {
-  position: absolute;
-  inset: 0;
   opacity: 0.05;
   background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.8) 0px, rgba(0,0,0,0.8) 1px, transparent 1px, transparent 2px);
   background-size: 100% 2px;
 }
 
 .dark .wildfire-home .wildfire-spotlight-tl {
-  position: absolute;
   top: 0;
   left: 25%;
-  width: 384px;
-  height: 384px;
   background: rgba(220, 38, 38, 0.2);
-  border-radius: 50%;
-  filter: blur(48px);
-  animation: pulse-cs2-dark 8s infinite;
 }
 
 .dark .wildfire-home .wildfire-spotlight-br {
-  position: absolute;
   bottom: 0;
   right: 25%;
-  width: 384px;
-  height: 384px;
   background: rgba(234, 88, 12, 0.2);
-  border-radius: 50%;
-  filter: blur(48px);
-  animation: pulse-cs2-dark 10s infinite;
-  animation-delay: 2s;
-}
-
-@keyframes pulse-cs2-light {
-  0%, 100% { opacity: 0.2; transform: scale(1); }
-  50% { opacity: 0.3; transform: scale(1.05); }
-}
-
-@keyframes pulse-cs2-dark {
-  0%, 100% { opacity: 0.2; transform: scale(1); }
-  50% { opacity: 0.35; transform: scale(1.05); }
 }
 
 /* ===== EFECTE CÂND HOVER ===== */
-.wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-grid-primary {
-  animation: grid-pulse 2s ease-in-out infinite !important;
-}
 
-.wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-grid-secondary {
-  animation: grid-pulse-slow 2.5s ease-in-out infinite !important;
-}
-
-.wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-spotlight-tl {
-  animation: spotlight-pulse 2.2s ease-in-out infinite !important;
+/* SPOTLIGHT-URI - APAR LA HOVER */
+.wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-spotlight-tl,
+.wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-spotlight-br {
+  opacity: 1;
+  animation: spotlight-pulse 2.2s ease-in-out infinite;
 }
 
 .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-spotlight-br {
-  animation: spotlight-pulse 2.2s ease-in-out infinite !important;
-  animation-delay: 0.3s !important;
+  animation-delay: 0.3s;
+}
+
+/* GRID-URI - PULSEAZĂ LA HOVER */
+.wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-grid-primary {
+  animation: grid-pulse 2s ease-in-out infinite;
+}
+
+.wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-grid-secondary {
+  animation: grid-pulse-slow 2.5s ease-in-out infinite;
 }
 
 /* LIGHT MODE - Animații grid */
 @keyframes grid-pulse {
-  0% {
-    opacity: 0.08;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.2;
-    transform: scale(1.02);
-  }
-  100% {
-    opacity: 0.08;
-    transform: scale(1);
-  }
+  0% { opacity: 0.08; }
+  50% { opacity: 0.2; }
+  100% { opacity: 0.08; }
 }
 
 @keyframes grid-pulse-slow {
-  0% {
-    opacity: 0.05;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.15;
-    transform: scale(1.03);
-  }
-  100% {
-    opacity: 0.05;
-    transform: scale(1);
-  }
+  0% { opacity: 0.05; }
+  50% { opacity: 0.15; }
+  100% { opacity: 0.05; }
 }
 
 @keyframes spotlight-pulse {
-  0% {
-    opacity: 0.2;
-    transform: scale(1);
+  0% { 
+    opacity: 0.2; 
+    transform: scale(1) translateZ(0);
     filter: blur(48px);
   }
-  50% {
-    opacity: 0.5;
-    transform: scale(1.2);
+  50% { 
+    opacity: 0.5; 
+    transform: scale(1.2) translateZ(0);
     filter: blur(52px);
   }
-  100% {
-    opacity: 0.2;
-    transform: scale(1);
+  100% { 
+    opacity: 0.2; 
+    transform: scale(1) translateZ(0);
     filter: blur(48px);
   }
 }
 
 /* DARK MODE - Animații grid */
 .dark .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-grid-primary {
-  animation: grid-pulse-dark 2s ease-in-out infinite !important;
+  animation: grid-pulse-dark 2s ease-in-out infinite;
 }
 
 .dark .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-grid-secondary {
-  animation: grid-pulse-slow-dark 2.5s ease-in-out infinite !important;
+  animation: grid-pulse-slow-dark 2.5s ease-in-out infinite;
 }
 
-.dark .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-spotlight-tl {
-  animation: spotlight-pulse-dark 2.2s ease-in-out infinite !important;
-}
-
+.dark .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-spotlight-tl,
 .dark .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-spotlight-br {
-  animation: spotlight-pulse-dark 2.2s ease-in-out infinite !important;
-  animation-delay: 0.3s !important;
+  animation: spotlight-pulse-dark 2.2s ease-in-out infinite;
 }
 
 @keyframes grid-pulse-dark {
-  0% {
-    opacity: 0.15;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.28;
-    transform: scale(1.02);
-  }
-  100% {
-    opacity: 0.15;
-    transform: scale(1);
-  }
+  0% { opacity: 0.15; }
+  50% { opacity: 0.28; }
+  100% { opacity: 0.15; }
 }
 
 @keyframes grid-pulse-slow-dark {
-  0% {
-    opacity: 0.1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.22;
-    transform: scale(1.03);
-  }
-  100% {
-    opacity: 0.1;
-    transform: scale(1);
-  }
+  0% { opacity: 0.1; }
+  50% { opacity: 0.22; }
+  100% { opacity: 0.1; }
 }
 
 @keyframes spotlight-pulse-dark {
-  0% {
-    opacity: 0.2;
-    transform: scale(1);
+  0% { 
+    opacity: 0.2; 
+    transform: scale(1) translateZ(0);
     filter: blur(48px);
   }
-  50% {
-    opacity: 0.6;
-    transform: scale(1.2);
+  50% { 
+    opacity: 0.6; 
+    transform: scale(1.2) translateZ(0);
     filter: blur(52px);
   }
-  100% {
-    opacity: 0.2;
-    transform: scale(1);
+  100% { 
+    opacity: 0.2; 
+    transform: scale(1) translateZ(0);
     filter: blur(48px);
   }
 }
@@ -539,6 +455,9 @@ onMounted(() => {
   position: relative;
   z-index: 10;
   width: 100%;
+  
+  /* ACCELERARE HARDWARE */
+  transform: translateZ(0);
 }
 
 .wildfire-home .wildfire-container {
@@ -568,9 +487,13 @@ onMounted(() => {
   transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
   z-index: 1;
+  
+  /* ACCELERARE HARDWARE */
+  transform: translateZ(0);
 }
 
 .wildfire-home .wildfire-logo {
+  aspect-ratio: 1 / 1;
   width: auto !important;
   height: auto !important;
   max-width: min(220px, 50vw) !important;
@@ -580,33 +503,28 @@ onMounted(() => {
   z-index: 2;
   cursor: pointer;
   
-  /* EFECT DE FLOAT - animație continuă smooth */
+  /* DIMENSIUNI PENTRU LCP */
+  width: 220px;
+  height: 220px;
+  
   animation: float 4s ease-in-out infinite;
+  
+  /* ACCELERARE HARDWARE */
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
-/* Animația de float - smooth și natural */
 @keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-  25% {
-    transform: translateY(-6px);
-  }
-  50% {
-    transform: translateY(0px);
-  }
-  75% {
-    transform: translateY(6px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
+  0% { transform: translateY(0px) translateZ(0); }
+  25% { transform: translateY(-6px) translateZ(0); }
+  50% { transform: translateY(0px) translateZ(0); }
+  75% { transform: translateY(6px) translateZ(0); }
+  100% { transform: translateY(0px) translateZ(0); }
 }
 
-/* La hover, float-ul se oprește ușor și logo-ul pulsează */
 .wildfire-home .wildfire-logo:hover {
   animation: none;
-  transform: scale(1.05);
+  transform: scale(1.05) translateZ(0);
   transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -614,7 +532,7 @@ onMounted(() => {
   opacity: 1;
 }
 
-/* Titlu */
+/* Titlu - CONTRAST ÎMBUNĂTĂȚIT */
 .wildfire-home .wildfire-title {
   font-size: 52px;
   font-weight: 700;
@@ -622,13 +540,13 @@ onMounted(() => {
   letter-spacing: -0.02em;
   line-height: 1.1;
   text-align: center;
-  color: #111827;
+  color: #000000; /* NEGRU PENTRU CONTRAST MAXIM */
   position: relative;
   z-index: 20;
 }
 
 .dark .wildfire-home .wildfire-title {
-  color: white;
+  color: #ffffff; /* ALB PUR */
 }
 
 .wildfire-home .wildfire-title-gradient {
@@ -639,10 +557,11 @@ onMounted(() => {
   display: inline-block;
 }
 
-/* Descriere */
+/* Descriere - CONTRAST ÎMBUNĂTĂȚIT */
 .wildfire-home .wildfire-description {
   font-size: 20px;
-  color: #6b7280;
+  color: #1f2937; /* GRI FOARTE ÎNCHIS */
+  font-weight: 600; /* BOLD PENTRU LIZIBILITATE */
   max-width: 700px;
   margin: 0 auto 32px;
   line-height: 1.6;
@@ -652,10 +571,11 @@ onMounted(() => {
 }
 
 .dark .wildfire-home .wildfire-description {
-  color: #9ca3af;
+  color: #ffffff; /* ALB PUR */
+  font-weight: 500;
 }
 
-/* Buton si wrapper */
+/* Buton si wrapper - CONTRAST ÎMBUNĂTĂȚIT */
 .wildfire-home .wildfire-button-wrapper {
   display: flex;
   justify-content: center;
@@ -668,36 +588,40 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  background: #ff4500;
-  color: white;
+  background: #c2410c; /* PORTOCALIU MAI ÎNCHIS */
+  color: #ffffff; /* ALB PUR */
   padding: 14px 32px;
   border-radius: 40px;
-  font-weight: 600;
+  font-weight: 700; /* BOLD */
   font-size: 18px;
   text-decoration: none;
   transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-  border: none;
-  box-shadow: 0 8px 20px rgba(255, 69, 0, 0.25);
+  border: 2px solid #000000; /* BORDER NEGRU */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* UMBRĂ MAI ÎNCHISĂ */
   cursor: pointer;
+  
+  /* ACCELERARE HARDWARE */
+  transform: translateZ(0);
 }
 
 .wildfire-home .wildfire-button:hover {
-  background: #ff8c00;
-  transform: scale(1.05);
-  box-shadow: 0 12px 28px rgba(255, 69, 0, 0.35);
+  background: #ff7b00; /* ROȘU-MARO PENTRU HOVER */
+  transform: scale(1.05) translateZ(0);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
   gap: 20px;
 }
 
 .wildfire-home .wildfire-button-arrow {
   font-size: 20px;
   transition: transform 0.5s ease;
+  color: #ffffff;
 }
 
 .wildfire-home .wildfire-button:hover .wildfire-button-arrow {
-  transform: translateX(8px);
+  transform: translateX(8px) translateZ(0);
 }
 
-/* HOME SEARCHBAR - FIXED ACUM */
+/* HOME SEARCHBAR */
 .wildfire-home .home-search {
   display: flex;
   justify-content: center;
@@ -714,47 +638,52 @@ onMounted(() => {
   max-width: 500px;
   padding: 18px 28px;
   background: white;
-  border: 1px solid #e5e7eb;
+  border: 2px solid #000000; /* BORDER MAI GROS ȘI MAI ÎNCHIS */
   border-radius: 40px;
-  color: #4b5563;
+  color: #1f2937; /* TEXT MAI ÎNCHIS */
   font-size: 16px;
+  font-weight: 600; /* BOLD */
   cursor: pointer;
   transition: all 0.5s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   height: 56px;
+  
+  /* ACCELERARE HARDWARE */
+  transform: translateZ(0);
 }
 
 .dark .wildfire-home .home-search-button {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 69, 0, 0.3);
-  color: white;
+  background: rgba(0, 0, 0, 0.7); /* FUNDAL MAI OPAC */
+  border: 2px solid #c2410c;
+  color: #ffffff; /* ALB PUR */
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .wildfire-home .home-search-button:hover {
-  border-color: #ff4500;
+  border-color: #b91c1c;
   background: white;
-  box-shadow: 0 8px 25px rgba(255, 69, 0, 0.1);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px) translateZ(0);
 }
 
 .dark .wildfire-home .home-search-button:hover {
-  background: rgba(255, 69, 0, 0.1);
-  border-color: #ff4500;
-  box-shadow: 0 8px 25px rgba(255, 69, 0, 0.2);
+  background: rgba(0, 0, 0, 0.8);
+  border-color: #b9681c;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
 }
 
 .wildfire-home .search-icon {
+  aspect-ratio: 1 / 1;
   width: 18px;
   height: 18px;
   margin-right: 8px;
-  filter: brightness(0) saturate(100%) invert(45%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(97%) contrast(92%);
+  filter: brightness(0); /* NEGRU */
   transition: filter 0.5s ease;
 }
 
 .dark .wildfire-home .search-icon {
-  filter: brightness(0) saturate(100%) invert(100%);
+  filter: brightness(0) invert(1); /* ALB */
 }
 
 .wildfire-home .home-search-text {
@@ -765,228 +694,38 @@ onMounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   transition: color 0.5s ease;
+  font-weight: 600;
 }
 
 :not(.dark) .wildfire-home .home-search-text {
-  color: #4b5563;
+  color: #1f2937; /* GRI ÎNCHIS */
 }
 
 .dark .wildfire-home .home-search-text {
-  color: white;
+  color: #ffffff; /* ALB */
 }
 
+/* HOME SEARCH SHORTCUT - CONTRAST MAXIM */
 .wildfire-home .home-search-shortcut {
   font-size: 12px;
-  font-weight: 500;
-  padding: 2px 6px;
-  border-radius: 4px;
+  font-weight: 700; /* BOLD */
+  padding: 4px 10px;
+  border-radius: 6px;
   margin-left: 8px;
   letter-spacing: 0.5px;
   transition: all 0.5s ease;
+  background: #c2410c; /* PORTOCALIU ÎNCHIS */
+  color: #ffffff; /* ALB PUR */
+  border: 2px solid #000000; /* BORDER NEGRU */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-:not(.dark) .wildfire-home .home-search-shortcut {
-  background: #f3f4f6;
-  border: 1px solid #e5e7eb;
-  color: #6b7280;
-}
-
+/* ACELAȘI STIL PENTRU AMBELE MODURI */
+:not(.dark) .wildfire-home .home-search-shortcut,
 .dark .wildfire-home .home-search-shortcut {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-}
-
-/* ===== CARDURI CU POZE - CLASE SEPARATE ===== */
-.cards-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  margin-top: 40px;
-  position: relative;
-  z-index: 20;
-}
-
-@media (max-width: 768px) {
-  .cards-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-}
-
-.feature-card {
-  background: white;
-  border-radius: 20px;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid rgba(255, 69, 0, 0.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.dark .feature-card {
-  background: #111;
-  border-color: rgba(255, 69, 0, 0.15);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-}
-
-.card-image {
-  position: relative;
-  height: 160px;
-  overflow: hidden;
-  background: linear-gradient(135deg, #ff4500, #ff8c00);
-}
-
-.card-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-}
-
-.feature-card:hover .card-img {
-  transform: scale(1.1);
-}
-
-.card-icon-overlay {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: transform 0.3s ease;
-}
-
-.dark .card-icon-overlay {
-  background: rgba(0, 0, 0, 0.7);
-  border-color: rgba(255, 69, 0, 0.3);
-}
-
-.feature-card:hover .card-icon-overlay {
-  transform: scale(1.1) rotate(5deg);
-}
-
-.card-content {
-  padding: 20px 20px 24px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.card-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 0 0 12px 0;
-  color: #111;
-  letter-spacing: -0.02em;
-  line-height: 1.3;
-}
-
-.dark .card-title {
-  color: #fff;
-}
-
-.card-description {
-  font-size: 14px;
-  color: #666;
-  margin: 0 0 20px 0;
-  line-height: 1.6;
-  flex: 1;
-}
-
-.dark .card-description {
-  color: #999;
-}
-
-.card-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: #ff4500;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  padding: 8px 0;
-  border-top: 1px solid rgba(255, 69, 0, 0.1);
-  margin-top: auto;
-}
-
-.dark .card-link {
-  border-top-color: rgba(255, 69, 0, 0.2);
-}
-
-.card-link:hover {
-  color: #ff8c00;
-  gap: 12px;
-}
-
-.feature-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 30px -10px rgba(255, 69, 0, 0.2);
-  border-color: rgba(255, 69, 0, 0.2);
-}
-
-.dark .feature-card:hover {
-  box-shadow: 0 20px 30px -8px rgba(255, 69, 0, 0.25);
-}
-
-/* ===== RESPONSIVE PENTRU CARDURI ===== */
-@media (max-width: 1024px) {
-  .cards-grid {
-    gap: 20px;
-  }
-}
-
-@media (max-width: 768px) {
-  .card-image {
-    height: 140px;
-  }
-  
-  .card-content {
-    padding: 16px 16px 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .card-image {
-    height: 120px;
-  }
-  
-  .card-icon-overlay {
-    width: 36px;
-    height: 36px;
-    font-size: 20px;
-  }
-  
-  .card-title {
-    font-size: 20px;
-  }
-  
-  .card-description {
-    font-size: 13px;
-  }
-}
-
-@media (max-height: 600px) and (orientation: landscape) {
-  .cards-grid {
-    gap: 16px;
-  }
-  
-  .card-image {
-    height: 120px;
-  }
+  background: #c2410c;
+  color: #ffffff;
+  border: 2px solid #000000;
 }
 
 /* ===== RESPONSIVE ===== */
@@ -994,6 +733,8 @@ onMounted(() => {
   .wildfire-home .wildfire-logo {
     max-width: 200px !important;
     max-height: 200px !important;
+    width: 200px;
+    height: 200px;
   }
   
   .wildfire-home .wildfire-logo-glow {
@@ -1009,10 +750,6 @@ onMounted(() => {
     font-size: 18px;
     padding: 0 20px;
   }
-  
-  .cards-grid {
-    gap: 20px;
-  }
 }
 
 @media (max-width: 768px) {
@@ -1023,6 +760,8 @@ onMounted(() => {
   .wildfire-home .wildfire-logo {
     max-width: 180px !important;
     max-height: 180px !important;
+    width: 180px;
+    height: 180px;
   }
   
   .wildfire-home .wildfire-logo-glow {
@@ -1053,26 +792,6 @@ onMounted(() => {
   .wildfire-home .home-search-text {
     font-size: 14px;
   }
-  
-  .cards-grid {
-    gap: 16px;
-  }
-  
-  .card-image {
-    height: 140px;
-  }
-  
-  .card-content {
-    padding: 16px 16px 20px;
-  }
-  
-  .card-title {
-    font-size: 20px;
-  }
-  
-  .card-description {
-    font-size: 14px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -1083,6 +802,8 @@ onMounted(() => {
   .wildfire-home .wildfire-logo {
     max-width: 150px !important;
     max-height: 150px !important;
+    width: 150px;
+    height: 150px;
   }
   
   .wildfire-home .wildfire-logo-glow {
@@ -1123,24 +844,6 @@ onMounted(() => {
   .wildfire-home .search-icon {
     margin-right: 0;
   }
-  
-  .card-image {
-    height: 120px;
-  }
-  
-  .card-icon-overlay {
-    width: 36px;
-    height: 36px;
-    font-size: 20px;
-  }
-  
-  .card-title {
-    font-size: 18px;
-  }
-  
-  .card-description {
-    font-size: 13px;
-  }
 }
 
 /* Landscape mode fix */
@@ -1153,6 +856,8 @@ onMounted(() => {
     max-width: 140px !important;
     max-height: 140px !important;
     margin-bottom: 16px;
+    width: 140px;
+    height: 140px;
   }
   
   .wildfire-home .wildfire-logo-glow {
@@ -1168,14 +873,6 @@ onMounted(() => {
   
   .wildfire-home .wildfire-description {
     margin-bottom: 20px;
-  }
-  
-  .cards-grid {
-    gap: 16px;
-  }
-  
-  .card-image {
-    height: 120px;
   }
 }
 </style>

@@ -9,7 +9,7 @@
       <!-- Informatii - Regulament -->
       <div class="update-card">
         <div class="card-category">
-          <span class="category-dot dot-blue"></span>
+          <span class="category-dot dot-blue" :style="{ animation: 'none' }"></span>
           <span class="category-name" style="color: #3b82f6;">Informații</span>
         </div>
         <h3 class="card-title">Regulament</h3>
@@ -31,7 +31,7 @@
       <!-- Sisteme - Crates -->
       <div class="update-card">
         <div class="card-category">
-          <span class="category-dot dot-orange"></span>
+          <span class="category-dot dot-orange" :style="{ animation: 'none' }"></span>
           <span class="category-name" style="color: #ff4500;">Sisteme</span>
         </div>
         <h3 class="card-title">Crates</h3>
@@ -53,7 +53,7 @@
       <!-- Informatii - FAQ -->
       <div class="update-card">
         <div class="card-category">
-          <span class="category-dot dot-blue"></span>
+          <span class="category-dot dot-blue" :style="{ animation: 'none' }"></span>
           <span class="category-name" style="color: #3b82f6;">Informații</span>
         </div>
         <h3 class="card-title">FAQ</h3>
@@ -75,7 +75,7 @@
       <!-- Shop - MVP Anthem -->
       <div class="update-card">
         <div class="card-category">
-          <span class="category-dot dot-purple"></span>
+          <span class="category-dot dot-purple" :style="{ animation: 'none' }"></span>
           <span class="category-name" style="color: #8b5cf6;">Premium</span>
         </div>
         <h3 class="card-title">MVP Anthem</h3>
@@ -97,7 +97,7 @@
       <!-- Gambling - Blackjack -->
       <div class="update-card">
         <div class="card-category">
-          <span class="category-dot dot-green"></span>
+          <span class="category-dot dot-green" :style="{ animation: 'none' }"></span>
           <span class="category-name" style="color: #10b981;">Evenimente</span>
         </div>
         <h3 class="card-title">Blackjack</h3>
@@ -119,7 +119,7 @@
       <!-- Anti-Cheat - Reports -->
       <div class="update-card">
         <div class="card-category">
-          <span class="category-dot dot-red"></span>
+          <span class="category-dot dot-red" :style="{ animation: 'none' }"></span>
           <span class="category-name" style="color: #ef4444;">Anti-Cheat</span>
         </div>
         <h3 class="card-title">Reports</h3>
@@ -153,12 +153,28 @@ import WildfireTag from './WildfireTag.vue'
 </script>
 
 <style scoped>
+/* ===== ACCELERARE HARDWARE ===== */
+.last-updates,
+.update-card,
+.category-dot,
+.card-button,
+.view-all-link,
+.wildfire-tag,
+.tag-dot {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
 .last-updates {
   max-width: 1100px;
   margin: 40px auto;
   padding: 0 24px;
   position: relative;
   z-index: 30;
+  /* PREVENIM LAYOUT SHIFT */
+  min-height: 400px;
+  width: 100%;
 }
 
 .updates-header {
@@ -176,6 +192,14 @@ import WildfireTag from './WildfireTag.vue'
   align-items: center;
   gap: 8px;
   color: #111827;
+}
+
+@media (max-width: 768px) {
+  .section-title { font-size: 22px; }
+}
+
+@media (max-width: 480px) {
+  .section-title { font-size: 20px; }
 }
 
 .dark .section-title {
@@ -207,11 +231,20 @@ import WildfireTag from './WildfireTag.vue'
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+@media (max-width: 768px) {
+  .updates-badge {
+    padding: 3px 14px;
+    font-size: 12px;
+  }
+}
+
 .updates-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-bottom: 28px;
+  /* PREVENIM LAYOUT SHIFT */
+  min-height: 250px;
 }
 
 @media (max-width: 1024px) {
@@ -233,13 +266,28 @@ import WildfireTag from './WildfireTag.vue'
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   padding: 18px;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
   display: flex;
   flex-direction: column;
   height: 100%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
   position: relative;
   overflow: hidden;
+  /* PREVENIM LAYOUT SHIFT */
+  min-height: 180px;
+}
+
+@media (max-width: 768px) {
+  .update-card {
+    padding: 16px;
+    min-height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  .update-card {
+    min-height: 150px;
+  }
 }
 
 .update-card::before {
@@ -252,6 +300,8 @@ import WildfireTag from './WildfireTag.vue'
   background: linear-gradient(90deg, #ff4500, #ff8c00, #ffd700);
   opacity: 0;
   transition: opacity 0.25s ease;
+  /* ACCELERARE HARDWARE */
+  transform: translateZ(0);
 }
 
 .update-card:hover::before {
@@ -289,25 +339,7 @@ import WildfireTag from './WildfireTag.vue'
   border-radius: 50%;
   display: inline-block;
   box-shadow: 0 0 8px currentColor;
-  animation: pulse-dot 2s ease-in-out infinite;
-}
-
-@keyframes pulse-dot {
-  0% {
-    opacity: 0.8;
-    transform: scale(1);
-    box-shadow: 0 0 5px currentColor;
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-    box-shadow: 0 0 12px currentColor;
-  }
-  100% {
-    opacity: 0.8;
-    transform: scale(1);
-    box-shadow: 0 0 5px currentColor;
-  }
+  /* ANIMAȚIA A FOST OPRITĂ (inline style) - PERFORMANȚĂ */
 }
 
 /* TOATE DOT-URILE */
@@ -331,6 +363,12 @@ import WildfireTag from './WildfireTag.vue'
   line-height: 1.3;
   color: #111827;
   letter-spacing: -0.01em;
+}
+
+@media (max-width: 768px) {
+  .card-title {
+    font-size: 16px;
+  }
 }
 
 .dark .card-title {
@@ -368,6 +406,13 @@ import WildfireTag from './WildfireTag.vue'
   gap: 8px;
 }
 
+@media (max-width: 480px) {
+  .card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 .card-tags {
   display: flex;
   gap: 4px;
@@ -398,7 +443,7 @@ import WildfireTag from './WildfireTag.vue'
   padding: 4px 10px;
   border-radius: 30px;
   background: rgba(255, 69, 0, 0.08);
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
   border: 1px solid transparent;
   white-space: nowrap;
   flex-shrink: 0;
@@ -422,6 +467,12 @@ import WildfireTag from './WildfireTag.vue'
   background: rgba(255, 69, 0, 0.25);
   color: #ffd700;
   border-color: rgba(255, 69, 0, 0.5);
+}
+
+@media (max-width: 480px) {
+  .card-button {
+    align-self: flex-end;
+  }
 }
 
 .button-arrow {
@@ -450,7 +501,7 @@ import WildfireTag from './WildfireTag.vue'
   padding: 10px 28px;
   border-radius: 30px;
   background: linear-gradient(135deg, #ff4500, #ff8c00);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: gap 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 12px rgba(255, 69, 0, 0.25);
   letter-spacing: 0.5px;
@@ -481,46 +532,14 @@ import WildfireTag from './WildfireTag.vue'
   .last-updates {
     margin: 32px auto;
     padding: 0 18px;
-  }
-  
-  .section-title {
-    font-size: 22px;
-  }
-  
-  .updates-badge {
-    padding: 3px 14px;
-    font-size: 12px;
-  }
-  
-  .update-card {
-    padding: 16px;
-  }
-  
-  .card-title {
-    font-size: 16px;
-  }
-  
-  .card-footer {
-    flex-wrap: wrap;
+    min-height: 350px;
   }
 }
 
 @media (max-width: 480px) {
   .last-updates {
     padding: 0 16px;
-  }
-  
-  .section-title {
-    font-size: 20px;
-  }
-  
-  .card-footer {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .card-button {
-    align-self: flex-end;
+    min-height: 300px;
   }
 }
 </style>

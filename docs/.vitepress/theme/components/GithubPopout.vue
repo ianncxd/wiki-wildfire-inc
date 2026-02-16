@@ -20,9 +20,9 @@
       <div v-if="isVisible" class="popout-content" @mouseenter.stop @mouseleave.stop>
         <!-- Background Logo Watermark -->
         <div class="popout-background">
-          <img src="/icons/wildfire.png" alt="Wildfire" class="background-logo main" @error="handleImageError">
-          <img src="/icons/wildfire.png" alt="Wildfire" class="background-logo secondary" @error="handleImageError">
-          <img src="/icons/wildfire.png" alt="Wildfire" class="background-logo tertiary" @error="handleImageError">
+          <img src="/icons/wildfire.webp" alt="Wildfire" class="background-logo main" @error="handleImageError">
+          <img src="/icons/wildfire.webp" alt="Wildfire" class="background-logo secondary" @error="handleImageError">
+          <img src="/icons/wildfire.webp" alt="Wildfire" class="background-logo tertiary" @error="handleImageError">
         </div>
 
         <!-- Fire Particles -->
@@ -69,13 +69,13 @@
       <div class="square-tags" :class="tagClasses">
         <!-- 1. WILDFIRE -->
         <span class="square-tag tag-wildfire">
-          <img src="/icons/wildfire.png" alt="wildfire" class="tag-icon" @error="handleIconError">
+          <img src="/icons/wildfire.webp" alt="wildfire" class="tag-icon" @error="handleIconError">
           <span>WILDFIRE</span>
         </span>
         
         <!-- 2. FOUNDER -->
         <span class="square-tag tag-founder">
-          <img src="/icons/wildfire.png" alt="founder" class="tag-icon" @error="handleIconError">
+          <img src="/icons/wildfire.webp" alt="founder" class="tag-icon" @error="handleIconError">
           <span>FOUNDER</span>
         </span>
         
@@ -87,7 +87,7 @@
         
         <!-- 4. STAFF -->
         <span class="square-tag tag-staff">
-          <img src="/icons/wildfire.png" alt="staff" class="tag-icon" @error="handleIconError">
+          <img src="/icons/wildfire.webp" alt="staff" class="tag-icon" @error="handleIconError">
           <span>STAFF</span>
         </span>
         
@@ -135,19 +135,19 @@
         
         <!-- 12. TRUSTED -->
         <span class="square-tag tag-trusted">
-          <img src="/icons/wildfire.png" alt="trusted" class="tag-icon" @error="handleIconError">
+          <img src="/icons/wildfire.webp" alt="trusted" class="tag-icon" @error="handleIconError">
           <span>TRUSTED</span>
         </span>
         
         <!-- 13. PRO -->
         <span class="square-tag tag-pro">
-          <img src="/icons/wildfire.png" alt="pro" class="tag-icon" @error="handleIconError">
+          <img src="/icons/wildfire.webp" alt="pro" class="tag-icon" @error="handleIconError">
           <span>PRO</span>
         </span>
         
         <!-- 14. VIP -->
         <span class="square-tag tag-vip">
-          <img src="/icons/wildfire.png" alt="vip" class="tag-icon" @error="handleIconError">
+          <img src="/icons/wildfire.webp" alt="vip" class="tag-icon" @error="handleIconError">
           <span>VIP</span>
         </span>
       </div>
