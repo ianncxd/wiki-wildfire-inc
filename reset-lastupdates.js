@@ -1,4 +1,10 @@
-<template>
+// reset-lastupdates.js
+const fs = require('fs')
+const path = require('path')
+
+const filePath = path.join(__dirname, 'docs/.vitepress/theme/components/LastUpdates.vue')
+
+const cleanTemplate = `<template>
   <div class="last-updates">
     <div class="updates-header">
       <h2 class="section-title"><span>Recently Updated</span></h2>
@@ -655,4 +661,10 @@ const activeCards = computed(() => {
     font-size: 13px;
   }
 }
-</style>
+</style>`
+
+// Scrie direct în fișier
+fs.writeFileSync(filePath, cleanTemplate, 'utf-8')
+
+console.log('✅ Reset complet! Toate cardurile sunt false și goale.')
+console.log('📦 Acum poți activa și completa manual cardurile în array-ul "cards"')

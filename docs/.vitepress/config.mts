@@ -228,7 +228,7 @@ export default defineConfig({
       text: '✏️ Editează această pagină pe GitHub'
     },
 
-    // SOCIAL LINKS - SVG INLINE (fără Iconify)
+    // SOCIAL LINKS - SVG INLINE
     socialLinks: [
       { 
         icon: { 
@@ -253,6 +253,7 @@ export default defineConfig({
       }
     ],
 
+    // ✅ SEARCH ACTIVAT
     search: {
       provider: 'local'
     },

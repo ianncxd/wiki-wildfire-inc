@@ -1,11 +1,5 @@
 ---
-title: Regulament AWP Wildfire
-description: Regulamentul oficial pentru serverul AWP Wildfire #2
-category: Informații
-tag: Regulament AWP
-tagColor: "#ff4500"
-date: 12.02.2026
-author: Echipa Wildfire
+outline: deep
 ---
 
 <!-- BANNER -->
@@ -45,4 +39,4 @@ author: Echipa Wildfire
 
 ---
 
-### test
+<LastUpdates/>

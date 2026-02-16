@@ -1,19 +1,17 @@
 <template>
   <div class="wildfire-home">
-    <!-- Background imagine principală - mutată în HTML pentru control -->
+    <!-- Background imagine principală -->
     <img 
       src="/wallpaper/poza102.webp"
       alt=""
       class="wildfire-wallpaper"
       :class="{ 
-        'wildfire-wallpaper-hover': isHovered,
-        'wildfire-wallpaper-loaded': isLoaded 
+        'wildfire-wallpaper-hover': isHovered
       }"
-      :style="{ opacity: isLoaded ? 1 : 0 }"
       width="1920"
       height="1080"
-      fetchpriority="low"
-      loading="lazy"
+      fetchpriority="high"
+      loading="eager"
       decoding="async"
       role="presentation"
     />
@@ -34,7 +32,7 @@
       role="presentation"
     />
     
-    <!-- Background CS2 Style (overlay) - apare instant -->
+    <!-- Background CS2 Style (overlay) -->
     <div class="wildfire-bg">
       <div class="wildfire-gradient"></div>
       <div class="wildfire-grid-primary"></div>
@@ -44,15 +42,16 @@
       <div class="wildfire-spotlight-br"></div>
     </div>
     
-    <main class="wildfire-hero"></main>
+    <main class="wildfire-hero">
       <div class="wildfire-container">
-        <!-- Logo cu hover si efect de float -->
+        <!-- Logo -->
         <div class="wildfire-logo-container">
           <div class="wildfire-logo-glow"></div>
           <img 
             src="/icons/wildfire.webp" 
             alt="Wildfire.ro" 
             class="wildfire-logo"
+            :class="{ 'animated': logoAnimated }"
             width="220"
             height="220"
             fetchpriority="high"
@@ -71,7 +70,7 @@
           Comunitatea #1 de CS2 din România. Seriozitate, respect, distracție.
         </p>
 
-        <!-- Buton cu hover -->
+        <!-- Buton -->
         <div class="wildfire-button-wrapper">
           <a 
             href="/informatii/about" 
@@ -93,7 +92,7 @@
               alt="search" 
               width="18" 
               height="18"
-              loading="lazy"
+              loading="eager"
               decoding="async"
             >
             <span class="home-search-text">Caută în documentație...</span>
@@ -104,7 +103,8 @@
         <!-- Last Updates Component -->
         <LastUpdates />
       </div>
-    </div>
+    </main>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -112,17 +112,14 @@ import { ref, onMounted } from 'vue'
 import LastUpdates from './LastUpdates.vue'
 
 const isHovered = ref(false)
-const isLoaded = ref(false)
 const isOverlayLoaded = ref(false)
+const logoAnimated = ref(false)
 
-// Funcția pentru search
 const openSearch = (e: MouseEvent) => {
   e.preventDefault()
   e.stopPropagation()
   
-  console.log('Search clicked')
-  
-  const searchButton = document.querySelector('.DocSearch-Button')
+  const searchButton = document.querySelector('.VPNavBarSearch button')
   if (searchButton) {
     ;(searchButton as HTMLElement).click()
     return
@@ -136,34 +133,23 @@ const openSearch = (e: MouseEvent) => {
     cancelable: true
   })
   window.dispatchEvent(event)
-  
-  setTimeout(() => {
-    const searchInput = document.querySelector('input[type="search"]')
-    if (searchInput) {
-      (searchInput as HTMLElement).focus()
-    }
-  }, 100)
 }
 
-// Preîncărcare inteligentă
 onMounted(() => {
-  // Imaginea principală
-  const mainImg = new Image()
-  mainImg.src = '/wallpaper/poza102.webp'
-  mainImg.fetchPriority = 'low'
-  mainImg.onload = () => {
-    setTimeout(() => {
-      isLoaded.value = true
-    }, 100)
-  }
+  setTimeout(() => {
+    const overlayImg = new Image()
+    overlayImg.src = '/wallpaper/da.webp'
+    overlayImg.fetchPriority = 'low'
+    overlayImg.onload = () => {
+      isOverlayLoaded.value = true
+    }
+  }, 2000)
   
-  // Imaginea overlay - o încărcăm doar după ce apare hover-ul
-  const overlayImg = new Image()
-  overlayImg.src = '/wallpaper/da.webp'
-  overlayImg.fetchPriority = 'low'
-  overlayImg.onload = () => {
-    isOverlayLoaded.value = true
-  }
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      logoAnimated.value = true
+    }, 100)
+  })
 })
 </script>
 
@@ -176,7 +162,6 @@ onMounted(() => {
   min-height: 100vh;
 }
 
-/* ===== BACKGROUND IMAGINI ===== */
 .wildfire-wallpaper,
 .wildfire-wallpaper-overlay {
   position: fixed;
@@ -191,14 +176,9 @@ onMounted(() => {
   transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1),
               transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1),
               filter 0.9s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  opacity: 0;
-  
-  /* ACCELERARE HARDWARE */
+  opacity: 1;
   transform: translateZ(0);
   backface-visibility: hidden;
-  
-  /* Previne selecția */
   user-select: none;
   pointer-events: none;
 }
@@ -207,10 +187,6 @@ onMounted(() => {
   z-index: -1;
   opacity: 0;
   transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.wildfire-wallpaper-loaded {
-  opacity: 1 !important;
 }
 
 .wildfire-wallpaper-overlay-loaded {
@@ -222,7 +198,6 @@ onMounted(() => {
   filter: brightness(1.08) contrast(1.08) saturate(1.1);
 }
 
-/* ===== BACKGROUND CS2 (OVERLAY) ===== */
 .wildfire-home .wildfire-bg {
   position: fixed;
   top: 0;
@@ -231,12 +206,9 @@ onMounted(() => {
   bottom: 0;
   z-index: -1;
   pointer-events: none;
-  
-  /* ACCELERARE HARDWARE */
   transform: translateZ(0);
 }
 
-/* LIGHT MODE - Overlay alb */
 :not(.dark) .wildfire-home .wildfire-bg {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(2px);
@@ -248,7 +220,6 @@ onMounted(() => {
   background: linear-gradient(to bottom, rgba(220, 38, 38, 0.06), rgba(249, 115, 22, 0.03), rgba(255, 255, 255, 0.7));
 }
 
-/* ===== GRID-URI - FĂRĂ ANIMAȚIE IMPLICITĂ ===== */
 .wildfire-home .wildfire-grid-primary,
 .wildfire-home .wildfire-grid-secondary,
 .wildfire-home .wildfire-scanlines {
@@ -279,7 +250,6 @@ onMounted(() => {
   background-size: 100% 2px;
 }
 
-/* ===== SPOTLIGHT-URI - ASCUNSE IMPLICIT ===== */
 .wildfire-home .wildfire-spotlight-tl,
 .wildfire-home .wildfire-spotlight-br {
   position: absolute;
@@ -287,10 +257,8 @@ onMounted(() => {
   height: 384px;
   border-radius: 50%;
   filter: blur(48px);
-  opacity: 0; /* ASCUNSE IMPLICIT */
+  opacity: 0;
   transition: opacity 0.3s ease;
-  
-  /* ACCELERARE HARDWARE */
   transform: translateZ(0);
   backface-visibility: hidden;
 }
@@ -307,7 +275,6 @@ onMounted(() => {
   background: rgba(249, 115, 22, 0.04);
 }
 
-/* DARK MODE - Overlay negru */
 .dark .wildfire-home .wildfire-bg {
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(2px);
@@ -353,9 +320,6 @@ onMounted(() => {
   background: rgba(234, 88, 12, 0.2);
 }
 
-/* ===== EFECTE CÂND HOVER ===== */
-
-/* SPOTLIGHT-URI - APAR LA HOVER */
 .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-spotlight-tl,
 .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-spotlight-br {
   opacity: 1;
@@ -366,7 +330,6 @@ onMounted(() => {
   animation-delay: 0.3s;
 }
 
-/* GRID-URI - PULSEAZĂ LA HOVER */
 .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-grid-primary {
   animation: grid-pulse 2s ease-in-out infinite;
 }
@@ -375,7 +338,6 @@ onMounted(() => {
   animation: grid-pulse-slow 2.5s ease-in-out infinite;
 }
 
-/* LIGHT MODE - Animații grid */
 @keyframes grid-pulse {
   0% { opacity: 0.08; }
   50% { opacity: 0.2; }
@@ -406,7 +368,6 @@ onMounted(() => {
   }
 }
 
-/* DARK MODE - Animații grid */
 .dark .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-grid-primary {
   animation: grid-pulse-dark 2s ease-in-out infinite;
 }
@@ -450,13 +411,10 @@ onMounted(() => {
   }
 }
 
-/* ===== HERO SECTION ===== */
 .wildfire-home .wildfire-hero {
   position: relative;
   z-index: 10;
   width: 100%;
-  
-  /* ACCELERARE HARDWARE */
   transform: translateZ(0);
 }
 
@@ -464,7 +422,6 @@ onMounted(() => {
   width: 100%;
 }
 
-/* Logo cu efect de FLOAT */
 .wildfire-home .wildfire-logo-container {
   position: relative;
   display: flex;
@@ -487,8 +444,6 @@ onMounted(() => {
   transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
   z-index: 1;
-  
-  /* ACCELERARE HARDWARE */
   transform: translateZ(0);
 }
 
@@ -502,16 +457,24 @@ onMounted(() => {
   position: relative;
   z-index: 2;
   cursor: pointer;
-  
-  /* DIMENSIUNI PENTRU LCP */
   width: 220px;
   height: 220px;
-  
-  animation: float 4s ease-in-out infinite;
-  
-  /* ACCELERARE HARDWARE */
   transform: translateZ(0);
   backface-visibility: hidden;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.wildfire-home .wildfire-logo.animated {
+  animation: float 4s ease-in-out infinite;
+}
+
+.wildfire-home .wildfire-logo:hover {
+  animation: none;
+  transform: scale(1.05) translateZ(0);
+}
+
+.wildfire-home .wildfire-logo:hover + .wildfire-logo-glow {
+  opacity: 1;
 }
 
 @keyframes float {
@@ -522,17 +485,6 @@ onMounted(() => {
   100% { transform: translateY(0px) translateZ(0); }
 }
 
-.wildfire-home .wildfire-logo:hover {
-  animation: none;
-  transform: scale(1.05) translateZ(0);
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.wildfire-home .wildfire-logo:hover + .wildfire-logo-glow {
-  opacity: 1;
-}
-
-/* Titlu - CONTRAST ÎMBUNĂTĂȚIT */
 .wildfire-home .wildfire-title {
   font-size: 52px;
   font-weight: 700;
@@ -540,13 +492,13 @@ onMounted(() => {
   letter-spacing: -0.02em;
   line-height: 1.1;
   text-align: center;
-  color: #000000; /* NEGRU PENTRU CONTRAST MAXIM */
+  color: #000000;
   position: relative;
   z-index: 20;
 }
 
 .dark .wildfire-home .wildfire-title {
-  color: #ffffff; /* ALB PUR */
+  color: #ffffff;
 }
 
 .wildfire-home .wildfire-title-gradient {
@@ -557,11 +509,10 @@ onMounted(() => {
   display: inline-block;
 }
 
-/* Descriere - CONTRAST ÎMBUNĂTĂȚIT */
 .wildfire-home .wildfire-description {
   font-size: 20px;
-  color: #1f2937; /* GRI FOARTE ÎNCHIS */
-  font-weight: 600; /* BOLD PENTRU LIZIBILITATE */
+  color: #1f2937;
+  font-weight: 600;
   max-width: 700px;
   margin: 0 auto 32px;
   line-height: 1.6;
@@ -571,11 +522,10 @@ onMounted(() => {
 }
 
 .dark .wildfire-home .wildfire-description {
-  color: #ffffff; /* ALB PUR */
+  color: #ffffff;
   font-weight: 500;
 }
 
-/* Buton si wrapper - CONTRAST ÎMBUNĂTĂȚIT */
 .wildfire-home .wildfire-button-wrapper {
   display: flex;
   justify-content: center;
@@ -588,27 +538,26 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  background: #c2410c; /* PORTOCALIU MAI ÎNCHIS */
-  color: #ffffff; /* ALB PUR */
+  background: #c2410c;
+  color: #ffffff;
   padding: 14px 32px;
   border-radius: 40px;
-  font-weight: 700; /* BOLD */
+  font-weight: 700;
   font-size: 18px;
   text-decoration: none;
   transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-  border: 2px solid #000000; /* BORDER NEGRU */
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* UMBRĂ MAI ÎNCHISĂ */
+  border: 2px solid #000000;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   cursor: pointer;
-  
-  /* ACCELERARE HARDWARE */
   transform: translateZ(0);
 }
 
 .wildfire-home .wildfire-button:hover {
-  background: #ff7b00; /* ROȘU-MARO PENTRU HOVER */
+  background: #ff7b00;
   transform: scale(1.05) translateZ(0);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
   gap: 20px;
+  border: 2px solid #000000;
 }
 
 .wildfire-home .wildfire-button-arrow {
@@ -621,7 +570,6 @@ onMounted(() => {
   transform: translateX(8px) translateZ(0);
 }
 
-/* HOME SEARCHBAR */
 .wildfire-home .home-search {
   display: flex;
   justify-content: center;
@@ -637,40 +585,36 @@ onMounted(() => {
   width: 100%;
   max-width: 500px;
   padding: 18px 28px;
-  background: white;
-  border: 2px solid #000000; /* BORDER MAI GROS ȘI MAI ÎNCHIS */
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
   border-radius: 40px;
-  color: #1f2937; /* TEXT MAI ÎNCHIS */
+  color: #1a1a1a;
   font-size: 16px;
-  font-weight: 600; /* BOLD */
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.5s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   height: 56px;
-  
-  /* ACCELERARE HARDWARE */
   transform: translateZ(0);
 }
 
 .dark .wildfire-home .home-search-button {
-  background: rgba(0, 0, 0, 0.7); /* FUNDAL MAI OPAC */
-  border: 2px solid #c2410c;
-  color: #ffffff; /* ALB PUR */
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  background: #000000;
+  border: 1px solid #1a1a1a;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
-
 .wildfire-home .home-search-button:hover {
-  border-color: #b91c1c;
-  background: white;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  background: #f5f5f5;
+  border-color: #ff4500;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px) translateZ(0);
 }
 
 .dark .wildfire-home .home-search-button:hover {
-  background: rgba(0, 0, 0, 0.8);
-  border-color: #b9681c;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  background: #1a1a1a;
+  border-color: #ff4500;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
 }
 
 .wildfire-home .search-icon {
@@ -678,12 +622,20 @@ onMounted(() => {
   width: 18px;
   height: 18px;
   margin-right: 8px;
-  filter: brightness(0); /* NEGRU */
-  transition: filter 0.5s ease;
+  filter: brightness(0.3);
+  transition: filter 0.3s ease;
 }
 
 .dark .wildfire-home .search-icon {
-  filter: brightness(0) invert(1); /* ALB */
+  filter: brightness(0) invert(1);
+}
+
+.wildfire-home .home-search-button:hover .search-icon {
+  filter: brightness(0.5);
+}
+
+.dark .wildfire-home .home-search-button:hover .search-icon {
+  filter: brightness(0) invert(1) drop-shadow(0 0 2px #ff4500);
 }
 
 .wildfire-home .home-search-text {
@@ -693,42 +645,44 @@ onMounted(() => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: color 0.5s ease;
+  transition: color 0.3s ease;
   font-weight: 600;
-}
-
-:not(.dark) .wildfire-home .home-search-text {
-  color: #1f2937; /* GRI ÎNCHIS */
+  color: #1a1a1a;
 }
 
 .dark .wildfire-home .home-search-text {
-  color: #ffffff; /* ALB */
+  color: #ffffff;
 }
 
-/* HOME SEARCH SHORTCUT - CONTRAST MAXIM */
 .wildfire-home .home-search-shortcut {
   font-size: 12px;
-  font-weight: 700; /* BOLD */
+  font-weight: 700;
   padding: 4px 10px;
   border-radius: 6px;
   margin-left: 8px;
   letter-spacing: 0.5px;
-  transition: all 0.5s ease;
-  background: #c2410c; /* PORTOCALIU ÎNCHIS */
-  color: #ffffff; /* ALB PUR */
-  border: 2px solid #000000; /* BORDER NEGRU */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  background: #f0f0f0;
+  color: #333333;
+  border: 1px solid #dddddd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-/* ACELAȘI STIL PENTRU AMBELE MODURI */
-:not(.dark) .wildfire-home .home-search-shortcut,
 .dark .wildfire-home .home-search-shortcut {
-  background: #c2410c;
+  background: #2a2a2a;
   color: #ffffff;
-  border: 2px solid #000000;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* ===== RESPONSIVE ===== */
+.wildfire-home .home-search-button:hover .home-search-shortcut {
+  background: #ff4500;
+  color: #ffffff;
+  border-color: #ff4500;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(255, 69, 0, 0.3);
+}
+
 @media (max-width: 1024px) {
   .wildfire-home .wildfire-logo {
     max-width: 200px !important;
@@ -846,7 +800,6 @@ onMounted(() => {
   }
 }
 
-/* Landscape mode fix */
 @media (max-height: 600px) and (orientation: landscape) {
   .wildfire-home {
     padding: 30px 24px 40px;
