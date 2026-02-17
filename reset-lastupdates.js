@@ -4,165 +4,165 @@ const path = require('path')
 
 const filePath = path.join(__dirname, 'docs/.vitepress/theme/components/LastUpdates.vue')
 
-const cleanTemplate = `<template>
+const resetTemplate = `<template>
   <div class="last-updates">
     <div class="updates-header">
       <h2 class="section-title"><span>Recently Updated</span></h2>
-      <span class="updates-badge">{{ activeCards }} noi</span>
+      <span class="updates-badge">0 noi</span>
     </div>
     
     <div class="updates-grid">
-      <!-- CARD 1 -->
-      <div v-if="cards[0].active" class="update-card">
+      <!-- SLOT 1 -->
+      <div v-if="card1.active" class="update-card">
         <div class="card-category">
-          <span class="category-dot" :class="cards[0].dotClass"></span>
-          <span class="category-name">{{ cards[0].category }}</span>
+          <span class="category-dot" :class="card1.dotClass"></span>
+          <span class="category-name">{{ card1.category }}</span>
         </div>
-        <h3 class="card-title">{{ cards[0].title }}</h3>
+        <h3 class="card-title">{{ card1.title }}</h3>
         <div class="card-meta">
-          <span class="meta-date">📅 {{ cards[0].date }}</span>
+          <span class="meta-date">📅 {{ card1.date }}</span>
           <div class="updated-by">
-            <img :src="cards[0].avatarUrl" class="github-avatar" :alt="cards[0].username">
-            <span>by <a :href="cards[0].profileUrl" target="_blank">{{ cards[0].username }}</a></span>
+            <img :src="card1.avatarUrl" class="github-avatar" :alt="card1.username">
+            <span>by <a :href="card1.profileUrl" target="_blank">{{ card1.username }}</a></span>
           </div>
         </div>
         <div class="card-footer">
           <div class="card-tags">
-            <WildfireTag :color="cards[0].tagColor" :text="cards[0].tag1" class="small-tag" />
-            <WildfireTag :color="cards[0].tagColor" :text="cards[0].tag2" class="small-tag" />
+            <WildfireTag :color="card1.tagColor" :text="card1.tag1" class="small-tag" />
+            <WildfireTag :color="card1.tagColor" :text="card1.tag2" class="small-tag" />
           </div>
-          <a :href="cards[0].link" class="card-button">
-            <span>{{ cards[0].buttonText }}</span>
+          <a :href="card1.link" class="card-button">
+            <span>{{ card1.buttonText }}</span>
             <span class="button-arrow">→</span>
           </a>
         </div>
       </div>
 
-      <!-- CARD 2 -->
-      <div v-if="cards[1].active" class="update-card">
+      <!-- SLOT 2 -->
+      <div v-if="card2.active" class="update-card">
         <div class="card-category">
-          <span class="category-dot" :class="cards[1].dotClass"></span>
-          <span class="category-name">{{ cards[1].category }}</span>
+          <span class="category-dot" :class="card2.dotClass"></span>
+          <span class="category-name">{{ card2.category }}</span>
         </div>
-        <h3 class="card-title">{{ cards[1].title }}</h3>
+        <h3 class="card-title">{{ card2.title }}</h3>
         <div class="card-meta">
-          <span class="meta-date">📅 {{ cards[1].date }}</span>
+          <span class="meta-date">📅 {{ card2.date }}</span>
           <div class="updated-by">
-            <img :src="cards[1].avatarUrl" class="github-avatar" :alt="cards[1].username">
-            <span>by <a :href="cards[1].profileUrl" target="_blank">{{ cards[1].username }}</a></span>
+            <img :src="card2.avatarUrl" class="github-avatar" :alt="card2.username">
+            <span>by <a :href="card2.profileUrl" target="_blank">{{ card2.username }}</a></span>
           </div>
         </div>
         <div class="card-footer">
           <div class="card-tags">
-            <WildfireTag :color="cards[1].tagColor" :text="cards[1].tag1" class="small-tag" />
-            <WildfireTag :color="cards[1].tagColor" :text="cards[1].tag2" class="small-tag" />
+            <WildfireTag :color="card2.tagColor" :text="card2.tag1" class="small-tag" />
+            <WildfireTag :color="card2.tagColor" :text="card2.tag2" class="small-tag" />
           </div>
-          <a :href="cards[1].link" class="card-button">
-            <span>{{ cards[1].buttonText }}</span>
+          <a :href="card2.link" class="card-button">
+            <span>{{ card2.buttonText }}</span>
             <span class="button-arrow">→</span>
           </a>
         </div>
       </div>
 
-      <!-- CARD 3 -->
-      <div v-if="cards[2].active" class="update-card">
+      <!-- SLOT 3 -->
+      <div v-if="card3.active" class="update-card">
         <div class="card-category">
-          <span class="category-dot" :class="cards[2].dotClass"></span>
-          <span class="category-name">{{ cards[2].category }}</span>
+          <span class="category-dot" :class="card3.dotClass"></span>
+          <span class="category-name">{{ card3.category }}</span>
         </div>
-        <h3 class="card-title">{{ cards[2].title }}</h3>
+        <h3 class="card-title">{{ card3.title }}</h3>
         <div class="card-meta">
-          <span class="meta-date">📅 {{ cards[2].date }}</span>
+          <span class="meta-date">📅 {{ card3.date }}</span>
           <div class="updated-by">
-            <img :src="cards[2].avatarUrl" class="github-avatar" :alt="cards[2].username">
-            <span>by <a :href="cards[2].profileUrl" target="_blank">{{ cards[2].username }}</a></span>
+            <img :src="card3.avatarUrl" class="github-avatar" :alt="card3.username">
+            <span>by <a :href="card3.profileUrl" target="_blank">{{ card3.username }}</a></span>
           </div>
         </div>
         <div class="card-footer">
           <div class="card-tags">
-            <WildfireTag :color="cards[2].tagColor" :text="cards[2].tag1" class="small-tag" />
-            <WildfireTag :color="cards[2].tagColor" :text="cards[2].tag2" class="small-tag" />
+            <WildfireTag :color="card3.tagColor" :text="card3.tag1" class="small-tag" />
+            <WildfireTag :color="card3.tagColor" :text="card3.tag2" class="small-tag" />
           </div>
-          <a :href="cards[2].link" class="card-button">
-            <span>{{ cards[2].buttonText }}</span>
+          <a :href="card3.link" class="card-button">
+            <span>{{ card3.buttonText }}</span>
             <span class="button-arrow">→</span>
           </a>
         </div>
       </div>
 
-      <!-- CARD 4 -->
-      <div v-if="cards[3].active" class="update-card">
+      <!-- SLOT 4 -->
+      <div v-if="card4.active" class="update-card">
         <div class="card-category">
-          <span class="category-dot" :class="cards[3].dotClass"></span>
-          <span class="category-name">{{ cards[3].category }}</span>
+          <span class="category-dot" :class="card4.dotClass"></span>
+          <span class="category-name">{{ card4.category }}</span>
         </div>
-        <h3 class="card-title">{{ cards[3].title }}</h3>
+        <h3 class="card-title">{{ card4.title }}</h3>
         <div class="card-meta">
-          <span class="meta-date">📅 {{ cards[3].date }}</span>
+          <span class="meta-date">📅 {{ card4.date }}</span>
           <div class="updated-by">
-            <img :src="cards[3].avatarUrl" class="github-avatar" :alt="cards[3].username">
-            <span>by <a :href="cards[3].profileUrl" target="_blank">{{ cards[3].username }}</a></span>
+            <img :src="card4.avatarUrl" class="github-avatar" :alt="card4.username">
+            <span>by <a :href="card4.profileUrl" target="_blank">{{ card4.username }}</a></span>
           </div>
         </div>
         <div class="card-footer">
           <div class="card-tags">
-            <WildfireTag :color="cards[3].tagColor" :text="cards[3].tag1" class="small-tag" />
-            <WildfireTag :color="cards[3].tagColor" :text="cards[3].tag2" class="small-tag" />
+            <WildfireTag :color="card4.tagColor" :text="card4.tag1" class="small-tag" />
+            <WildfireTag :color="card4.tagColor" :text="card4.tag2" class="small-tag" />
           </div>
-          <a :href="cards[3].link" class="card-button">
-            <span>{{ cards[3].buttonText }}</span>
+          <a :href="card4.link" class="card-button">
+            <span>{{ card4.buttonText }}</span>
             <span class="button-arrow">→</span>
           </a>
         </div>
       </div>
 
-      <!-- CARD 5 -->
-      <div v-if="cards[4].active" class="update-card">
+      <!-- SLOT 5 -->
+      <div v-if="card5.active" class="update-card">
         <div class="card-category">
-          <span class="category-dot" :class="cards[4].dotClass"></span>
-          <span class="category-name">{{ cards[4].category }}</span>
+          <span class="category-dot" :class="card5.dotClass"></span>
+          <span class="category-name">{{ card5.category }}</span>
         </div>
-        <h3 class="card-title">{{ cards[4].title }}</h3>
+        <h3 class="card-title">{{ card5.title }}</h3>
         <div class="card-meta">
-          <span class="meta-date">📅 {{ cards[4].date }}</span>
+          <span class="meta-date">📅 {{ card5.date }}</span>
           <div class="updated-by">
-            <img :src="cards[4].avatarUrl" class="github-avatar" :alt="cards[4].username">
-            <span>by <a :href="cards[4].profileUrl" target="_blank">{{ cards[4].username }}</a></span>
+            <img :src="card5.avatarUrl" class="github-avatar" :alt="card5.username">
+            <span>by <a :href="card5.profileUrl" target="_blank">{{ card5.username }}</a></span>
           </div>
         </div>
         <div class="card-footer">
           <div class="card-tags">
-            <WildfireTag :color="cards[4].tagColor" :text="cards[4].tag1" class="small-tag" />
-            <WildfireTag :color="cards[4].tagColor" :text="cards[4].tag2" class="small-tag" />
+            <WildfireTag :color="card5.tagColor" :text="card5.tag1" class="small-tag" />
+            <WildfireTag :color="card5.tagColor" :text="card5.tag2" class="small-tag" />
           </div>
-          <a :href="cards[4].link" class="card-button">
-            <span>{{ cards[4].buttonText }}</span>
+          <a :href="card5.link" class="card-button">
+            <span>{{ card5.buttonText }}</span>
             <span class="button-arrow">→</span>
           </a>
         </div>
       </div>
 
-      <!-- CARD 6 -->
-      <div v-if="cards[5].active" class="update-card">
+      <!-- SLOT 6 -->
+      <div v-if="card6.active" class="update-card">
         <div class="card-category">
-          <span class="category-dot" :class="cards[5].dotClass"></span>
-          <span class="category-name">{{ cards[5].category }}</span>
+          <span class="category-dot" :class="card6.dotClass"></span>
+          <span class="category-name">{{ card6.category }}</span>
         </div>
-        <h3 class="card-title">{{ cards[5].title }}</h3>
+        <h3 class="card-title">{{ card6.title }}</h3>
         <div class="card-meta">
-          <span class="meta-date">📅 {{ cards[5].date }}</span>
+          <span class="meta-date">📅 {{ card6.date }}</span>
           <div class="updated-by">
-            <img :src="cards[5].avatarUrl" class="github-avatar" :alt="cards[5].username">
-            <span>by <a :href="cards[5].profileUrl" target="_blank">{{ cards[5].username }}</a></span>
+            <img :src="card6.avatarUrl" class="github-avatar" :alt="card6.username">
+            <span>by <a :href="card6.profileUrl" target="_blank">{{ card6.username }}</a></span>
           </div>
         </div>
         <div class="card-footer">
           <div class="card-tags">
-            <WildfireTag :color="cards[5].tagColor" :text="cards[5].tag1" class="small-tag" />
-            <WildfireTag :color="cards[5].tagColor" :text="cards[5].tag2" class="small-tag" />
+            <WildfireTag :color="card6.tagColor" :text="card6.tag1" class="small-tag" />
+            <WildfireTag :color="card6.tagColor" :text="card6.tag2" class="small-tag" />
           </div>
-          <a :href="cards[5].link" class="card-button">
-            <span>{{ cards[5].buttonText }}</span>
+          <a :href="card6.link" class="card-button">
+            <span>{{ card6.buttonText }}</span>
             <span class="button-arrow">→</span>
           </a>
         </div>
@@ -182,107 +182,123 @@ const cleanTemplate = `<template>
 import { ref, computed } from 'vue'
 import WildfireTag from './WildfireTag.vue'
 
-// Array cu 6 carduri - toate false la reset
-const cards = ref([
-  {
-    active: false,
-    dotClass: 'dot-blue',
-    category: '',
-    title: '',
-    date: '',
-    username: '',
-    avatarUrl: '',
-    profileUrl: '',
-    tagColor: 'blue',
-    tag1: '',
-    tag2: '',
-    link: '',
-    buttonText: ''
-  },
-  {
-    active: false,
-    dotClass: 'dot-orange',
-    category: '',
-    title: '',
-    date: '',
-    username: '',
-    avatarUrl: '',
-    profileUrl: '',
-    tagColor: 'orange',
-    tag1: '',
-    tag2: '',
-    link: '',
-    buttonText: ''
-  },
-  {
-    active: false,
-    dotClass: 'dot-teal',
-    category: '',
-    title: '',
-    date: '',
-    username: '',
-    avatarUrl: '',
-    profileUrl: '',
-    tagColor: 'teal',
-    tag1: '',
-    tag2: '',
-    link: '',
-    buttonText: ''
-  },
-  {
-    active: false,
-    dotClass: 'dot-amber',
-    category: '',
-    title: '',
-    date: '',
-    username: '',
-    avatarUrl: '',
-    profileUrl: '',
-    tagColor: 'amber',
-    tag1: '',
-    tag2: '',
-    link: '',
-    buttonText: ''
-  },
-  {
-    active: false,
-    dotClass: 'dot-purple',
-    category: '',
-    title: '',
-    date: '',
-    username: '',
-    avatarUrl: '',
-    profileUrl: '',
-    tagColor: 'purple',
-    tag1: '',
-    tag2: '',
-    link: '',
-    buttonText: ''
-  },
-  {
-    active: false,
-    dotClass: 'dot-pink',
-    category: '',
-    title: '',
-    date: '',
-    username: '',
-    avatarUrl: '',
-    profileUrl: '',
-    tagColor: 'pink',
-    tag1: '',
-    tag2: '',
-    link: '',
-    buttonText: ''
-  }
-])
+// CARD 1
+const card1 = ref({
+  active: false,
+  dotClass: 'dot-blue',
+  category: '',
+  title: '',
+  date: '',
+  username: '',
+  avatarUrl: '',
+  profileUrl: '',
+  tagColor: 'blue',
+  tag1: '',
+  tag2: '',
+  link: '',
+  buttonText: ''
+})
 
-// Calculează câte carduri sunt active
+// CARD 2
+const card2 = ref({
+  active: false,
+  dotClass: 'dot-orange',
+  category: '',
+  title: '',
+  date: '',
+  username: '',
+  avatarUrl: '',
+  profileUrl: '',
+  tagColor: 'orange',
+  tag1: '',
+  tag2: '',
+  link: '',
+  buttonText: ''
+})
+
+// CARD 3
+const card3 = ref({
+  active: false,
+  dotClass: 'dot-teal',
+  category: '',
+  title: '',
+  date: '',
+  username: '',
+  avatarUrl: '',
+  profileUrl: '',
+  tagColor: 'teal',
+  tag1: '',
+  tag2: '',
+  link: '',
+  buttonText: ''
+})
+
+// CARD 4
+const card4 = ref({
+  active: false,
+  dotClass: 'dot-amber',
+  category: '',
+  title: '',
+  date: '',
+  username: '',
+  avatarUrl: '',
+  profileUrl: '',
+  tagColor: 'amber',
+  tag1: '',
+  tag2: '',
+  link: '',
+  buttonText: ''
+})
+
+// CARD 5
+const card5 = ref({
+  active: false,
+  dotClass: 'dot-purple',
+  category: '',
+  title: '',
+  date: '',
+  username: '',
+  avatarUrl: '',
+  profileUrl: '',
+  tagColor: 'purple',
+  tag1: '',
+  tag2: '',
+  link: '',
+  buttonText: ''
+})
+
+// CARD 6
+const card6 = ref({
+  active: false,
+  dotClass: 'dot-pink',
+  category: '',
+  title: '',
+  date: '',
+  username: '',
+  avatarUrl: '',
+  profileUrl: '',
+  tagColor: 'pink',
+  tag1: '',
+  tag2: '',
+  link: '',
+  buttonText: ''
+})
+
+// Numără câte carduri sunt active
 const activeCards = computed(() => {
-  return cards.value.filter(card => card.active).length
+  let count = 0
+  if (card1.value.active) count++
+  if (card2.value.active) count++
+  if (card3.value.active) count++
+  if (card4.value.active) count++
+  if (card5.value.active) count++
+  if (card6.value.active) count++
+  return count
 })
 </script>
 
 <style scoped>
+/* AICI VIN TOATE STILURILE LA FEL CA MAI SUS */
 .last-updates,
 .update-card,
 .category-dot,
@@ -663,8 +679,5 @@ const activeCards = computed(() => {
 }
 </style>`
 
-// Scrie direct în fișier
-fs.writeFileSync(filePath, cleanTemplate, 'utf-8')
-
-console.log('✅ Reset complet! Toate cardurile sunt false și goale.')
-console.log('📦 Acum poți activa și completa manual cardurile în array-ul "cards"')
+fs.writeFileSync(filePath, resetTemplate, 'utf-8')
+console.log('✅ Reset complet! 6 sloturi goale.')
