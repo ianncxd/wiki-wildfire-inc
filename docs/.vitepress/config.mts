@@ -229,29 +229,36 @@ export default defineConfig({
     },
 
     // SOCIAL LINKS - SVG INLINE
-    socialLinks: [
-      { 
-        icon: { 
-          svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.33-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.17.33.26c.03.02.03.08-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/></svg>' 
-        }, 
-        link: 'https://discord.gg/wildfire',
-        ariaLabel: 'Discord'
-      },
-      { 
-        icon: { 
-          svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.89 1.52 2.34 1.08 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.94c0-1.09.39-1.98 1.03-2.68c-.1-.25-.45-1.28.1-2.66c0 0 .84-.27 2.75 1.02c.8-.22 1.65-.33 2.5-.33c.85 0 1.7.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.38.2 2.41.1 2.66c.64.7 1.03 1.59 1.03 2.68c0 3.84-2.34 4.68-4.57 4.93c.36.31.68.92.68 1.85v2.74c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>' 
-        }, 
-        link: 'https://steamcommunity.com/groups/wildfire',
-        ariaLabel: 'Steam'
-      },
-      { 
-        icon: { 
-          svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74a2.89 2.89 0 0 1 2.31-4.64c.23 0 .46.02.67.06v-3.5a7.93 7.93 0 0 0-1-.06a7.44 7.44 0 0 0-7.44 7.44a7.41 7.41 0 0 0 2.68 5.73a7.35 7.35 0 0 0 4.9 1.78a7.44 7.44 0 0 0 7.44-7.44V8.48a8.34 8.34 0 0 0 4.87 1.56V6.7c-.26 0-.51-.01-.76-.01z"/></svg>' 
-        }, 
-        link: 'https://www.tiktok.com/@wildfire.ro',
-        ariaLabel: 'TikTok'
-      }
-    ],
+      socialLinks: [
+        { 
+          icon: { 
+            svg: '<img src="/icons/discord.svg" class="nav-icon" width="20" height="20" alt="Discord">' 
+          }, 
+          link: 'https://discord.gg/Knu76DhE9h',
+          ariaLabel: 'Discord'
+        },
+        { 
+          icon: { 
+            svg: '<img src="/icons/web.svg" class="nav-icon" width="20" height="20" alt="Website">' 
+          }, 
+          link: 'https://www.wildfire.ro',
+          ariaLabel: 'Web Site'
+        },
+        // { TBD IN VIITOR - NU AVEM ÎNCĂ UN GRUP PE STEAM
+        //   icon: { 
+        //     svg: '<img src="/icons/steam.svg" class="nav-icon" width="20" height="20" alt="Steam">' 
+        //   }, 
+        //   link: 'https://steamcommunity.com/groups/wildfire',
+        //   ariaLabel: 'Steam'
+        // },
+        { 
+          icon: { 
+            svg: '<img src="/icons/tiktok.svg" class="nav-icon" width="20" height="20" alt="TikTok">' 
+          }, 
+          link: 'https://www.tiktok.com/@wildfire.ro',
+          ariaLabel: 'TikTok'
+        }
+      ],
 
     // ✅ SEARCH ACTIVAT
     search: {

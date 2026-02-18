@@ -347,14 +347,14 @@ function parseSlots(input) {
   return Array.from(slots).sort((a, b) => a - b)
 }
 
-// ===== GUI PREMIUM CU PREVIEW =====
+// ===== GUI PREMIUM CU 6 CARDURI DIFERITE =====
 function guiMode() {
   const html = `<!DOCTYPE html>
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wildfire • 6 Sloturi • Copy/Paste</title>
+  <title>Wildfire • 6 Carduri Diferite</title>
   <style>
     * {
       margin: 0;
@@ -368,97 +368,75 @@ function guiMode() {
       min-height: 100vh;
       padding: 30px;
       color: #fff;
-      position: relative;
-    }
-    
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: radial-gradient(circle at 30% 40%, rgba(255,69,0,0.1) 0%, transparent 40%),
-                  radial-gradient(circle at 70% 60%, rgba(255,215,0,0.08) 0%, transparent 40%);
-      pointer-events: none;
     }
     
     .container {
-      max-width: 1600px;
+      max-width: 1400px;
       margin: 0 auto;
     }
     
-    /* Header */
     .header {
-      background: rgba(15,15,15,0.8);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,69,0,0.3);
-      border-radius: 24px;
-      padding: 30px;
-      margin-bottom: 30px;
+      background: #0f0f0f;
+      border: 1px solid #ff4500;
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
     }
     
     h1 {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 800;
-      margin-bottom: 10px;
       background: linear-gradient(135deg, #fff, #ffd700);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    
-    h1 span {
-      background: linear-gradient(135deg, #ff4500, #ff8c00);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     
     .stats {
       display: flex;
-      gap: 20px;
-      margin-top: 20px;
+      gap: 15px;
     }
     
-    .stat-card {
-      background: rgba(25,25,25,0.7);
-      border: 1px solid rgba(255,69,0,0.3);
-      border-radius: 16px;
-      padding: 20px 30px;
+    .stat {
+      background: #1a1a1a;
+      border: 1px solid #ff4500;
+      border-radius: 30px;
+      padding: 8px 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     
     .stat-value {
-      font-size: 36px;
-      font-weight: 800;
       color: #ff4500;
-      margin-bottom: 5px;
+      font-weight: 700;
+      font-size: 20px;
     }
     
-    .stat-label {
-      color: #9ca3af;
-      font-size: 13px;
-    }
-    
-    /* Slot grid */
     .slot-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-bottom: 30px;
+      gap: 16px;
+      margin-bottom: 25px;
     }
     
     .slot-card {
-      background: rgba(20,20,20,0.9);
-      border: 1px solid rgba(255,69,0,0.3);
-      border-radius: 20px;
-      padding: 20px;
+      background: #0f0f0f;
+      border: 1px solid #ff4500;
+      border-radius: 16px;
+      padding: 16px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
     }
     
     .slot-card:hover {
-      transform: translateY(-4px);
-      border-color: #ff4500;
-      box-shadow: 0 15px 30px rgba(255,69,0,0.2);
+      transform: translateY(-2px);
+      border-color: #ffd700;
+      box-shadow: 0 8px 16px -8px #ff4500;
     }
     
     .slot-card.selected {
@@ -467,50 +445,51 @@ function guiMode() {
     }
     
     .slot-number {
-      font-size: 28px;
+      font-size: 24px;
       font-weight: 800;
       color: #ff4500;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     
     .slot-status {
-      font-size: 12px;
+      font-size: 11px;
       color: #9ca3af;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     
     .slot-title {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
     .slot-category {
-      font-size: 12px;
+      font-size: 11px;
       color: #ff4500;
     }
     
-    /* Preview card */
     .preview-section {
-      background: rgba(15,15,15,0.8);
-      border: 1px solid rgba(255,69,0,0.3);
-      border-radius: 24px;
-      padding: 25px;
-      margin-bottom: 30px;
-    }
-    
-    .preview-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: #ffd700;
-      margin-bottom: 20px;
-    }
-    
-    .preview-card {
       background: #0f0f0f;
       border: 1px solid #ff4500;
       border-radius: 16px;
       padding: 20px;
+      margin-bottom: 25px;
+    }
+    
+    .preview-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffd700;
+      margin-bottom: 15px;
+    }
+    
+    .preview-card {
+      background: #0a0a0a;
+      border-radius: 14px;
+      padding: 16px;
       max-width: 350px;
       margin: 0 auto;
     }
@@ -518,25 +497,25 @@ function guiMode() {
     .preview-category {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
+      gap: 6px;
+      margin-bottom: 10px;
     }
     
     .preview-dot {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
     }
     
     .preview-cat-name {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       text-transform: uppercase;
       color: #9ca3af;
     }
     
     .preview-card-title {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
       margin-bottom: 12px;
     }
@@ -546,20 +525,20 @@ function guiMode() {
       align-items: center;
       justify-content: space-between;
       margin-bottom: 12px;
-      padding-bottom: 12px;
+      padding-bottom: 10px;
       border-bottom: 1px solid #ff4500;
-      font-size: 12px;
+      font-size: 11px;
     }
     
     .preview-user {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
     
     .preview-avatar {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       border: 2px solid #ff4500;
     }
@@ -572,43 +551,42 @@ function guiMode() {
     
     .preview-tags {
       display: flex;
-      gap: 8px;
+      gap: 6px;
     }
     
     .preview-tag {
-      padding: 4px 10px;
-      font-size: 10px;
+      padding: 3px 10px;
+      font-size: 9px;
       font-weight: 600;
-      border-radius: 16px;
+      border-radius: 30px;
       border: 1px solid;
     }
     
     .preview-btn {
-      padding: 5px 15px;
-      border-radius: 20px;
+      padding: 4px 12px;
+      border-radius: 30px;
       background: rgba(255,69,0,0.1);
       color: #ff4500;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
     }
     
-    /* Editor */
     .editor {
-      background: rgba(15,15,15,0.9);
-      border: 1px solid rgba(255,69,0,0.3);
-      border-radius: 24px;
-      padding: 35px;
+      background: #0f0f0f;
+      border: 1px solid #ff4500;
+      border-radius: 16px;
+      padding: 25px;
     }
     
     .editor-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
     
     .editor-title {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 700;
     }
     
@@ -618,17 +596,17 @@ function guiMode() {
     
     .copy-tools {
       display: flex;
-      gap: 10px;
+      gap: 8px;
     }
     
     .copy-btn {
-      background: rgba(25,25,25,0.7);
+      background: #1a1a1a;
       border: 1px solid #ff4500;
-      border-radius: 30px;
-      padding: 10px 20px;
+      border-radius: 20px;
+      padding: 6px 14px;
       color: white;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 12px;
       transition: all 0.2s;
     }
     
@@ -639,31 +617,31 @@ function guiMode() {
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 25px;
-      margin-bottom: 25px;
+      gap: 16px;
+      margin-bottom: 16px;
     }
     
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 12px;
     }
     
     label {
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
       color: #9ca3af;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       text-transform: uppercase;
     }
     
     input, select {
       width: 100%;
-      padding: 15px 20px;
-      background: rgba(0,0,0,0.3);
-      border: 1px solid rgba(255,69,0,0.5);
-      border-radius: 14px;
+      padding: 10px 14px;
+      background: #1a1a1a;
+      border: 1px solid #ff4500;
+      border-radius: 10px;
       color: white;
-      font-size: 15px;
+      font-size: 14px;
     }
     
     input:focus, select:focus {
@@ -674,17 +652,18 @@ function guiMode() {
     .color-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+      gap: 8px;
     }
     
     .color-opt {
-      background: rgba(25,25,25,0.7);
-      border: 1px solid rgba(255,69,0,0.5);
-      border-radius: 12px;
-      padding: 10px;
+      background: #1a1a1a;
+      border: 1px solid #ff4500;
+      border-radius: 8px;
+      padding: 8px 4px;
       text-align: center;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 11px;
+      transition: all 0.2s;
     }
     
     .color-opt:hover {
@@ -696,25 +675,59 @@ function guiMode() {
       border-color: #ffd700;
     }
     
+    .copy-panel {
+      background: #1a1a1a;
+      border: 1px dashed #ff4500;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 15px;
+      display: none;
+    }
+    
+    .copy-panel.active {
+      display: block;
+    }
+    
+    .slot-selector {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0;
+    }
+    
+    .slot-option {
+      background: #0f0f0f;
+      border: 1px solid #ff4500;
+      border-radius: 8px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    
+    .slot-option.selected {
+      background: rgba(255,69,0,0.3);
+      border-color: #ffd700;
+    }
+    
     .action-btns {
       display: flex;
-      gap: 20px;
-      margin-top: 30px;
+      gap: 12px;
+      margin-top: 20px;
     }
     
     .btn {
-      padding: 16px 32px;
+      padding: 12px 24px;
       border: none;
-      border-radius: 50px;
-      font-size: 16px;
-      font-weight: 700;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
       flex: 1;
     }
     
     .btn-reset {
-      background: rgba(25,25,25,0.7);
+      background: #1a1a1a;
       border: 1px solid #ff4500;
       color: white;
     }
@@ -730,13 +743,13 @@ function guiMode() {
     
     .btn-save:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(255,69,0,0.3);
+      box-shadow: 0 8px 16px rgba(255,69,0,0.3);
     }
     
     .status {
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 10px;
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
       display: none;
     }
     
@@ -754,40 +767,6 @@ function guiMode() {
       border: 1px solid #ef4444;
     }
     
-    .copy-panel {
-      background: rgba(25,25,25,0.5);
-      border: 1px dashed #ff4500;
-      border-radius: 16px;
-      padding: 20px;
-      margin-top: 20px;
-      display: none;
-    }
-    
-    .copy-panel.active {
-      display: block;
-    }
-    
-    .slot-selector {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin: 15px 0;
-    }
-    
-    .slot-option {
-      background: rgba(20,20,20,0.9);
-      border: 1px solid #ff4500;
-      border-radius: 10px;
-      padding: 10px 15px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    
-    .slot-option.selected {
-      background: rgba(255,69,0,0.3);
-      border-color: #ffd700;
-    }
-    
     @media (max-width: 1024px) {
       .slot-grid { grid-template-columns: repeat(2, 1fr); }
     }
@@ -802,11 +781,11 @@ function guiMode() {
 <body>
   <div class="container">
     <div class="header">
-      <h1>🔥 <span>WILDFIRE</span> • 6 SLOTURI • COPY/PASTE</h1>
+      <h1>🔥 WILDFIRE • 6 CARDURI DIFERITE</h1>
       <div class="stats">
-        <div class="stat-card"><div class="stat-value" id="total">6</div><div class="stat-label">Total</div></div>
-        <div class="stat-card"><div class="stat-value" id="active">0</div><div class="stat-label">Active</div></div>
-        <div class="stat-card"><div class="stat-value" id="current">1</div><div class="stat-label">Curent</div></div>
+        <div class="stat"><span class="stat-value" id="total">6</span> Total</div>
+        <div class="stat"><span class="stat-value" id="active">0</span> Active</div>
+        <div class="stat"><span class="stat-value" id="current">1</span> Curent</div>
       </div>
     </div>
     
@@ -847,15 +826,15 @@ function guiMode() {
       </div>
       
       <div id="copyPanel" class="copy-panel">
-        <h4 style="margin-bottom:15px;">Copiază din slotul curent în:</h4>
+        <h4 style="margin-bottom:10px;">Copiază în:</h4>
         <div class="slot-selector" id="copySlots"></div>
-        <button class="btn btn-save" style="margin-top:15px;" onclick="executeCopy()">Confirmă copiere</button>
+        <button class="btn btn-save" style="margin-top:10px;" onclick="executeCopy()">Confirmă copiere</button>
       </div>
       
       <div id="pastePanel" class="copy-panel">
-        <h4 style="margin-bottom:15px;">Paste din slotul:</h4>
+        <h4 style="margin-bottom:10px;">Paste din:</h4>
         <div class="slot-selector" id="pasteSlots"></div>
-        <button class="btn btn-save" style="margin-top:15px;" onclick="executePaste()">Confirmă paste</button>
+        <button class="btn btn-save" style="margin-top:10px;" onclick="executePaste()">Confirmă paste</button>
       </div>
       
       <div class="form-row">
@@ -1177,6 +1156,7 @@ function guiMode() {
           }
           renderSlots()
           updateStats()
+          loadSlot(currentSlot)
         }
       } catch (e) {
         showStatus('Eroare', 'error')
@@ -1274,10 +1254,10 @@ function guiMode() {
   server.listen(PORT, () => {
     console.clear()
     console.log(c.gold('\n╔════════════════════════════════════════════════════════╗'))
-    console.log(c.gold('║') + '            ' + c.o('🔥 WILDFIRE ULTIMATE') + '                 ' + c.gold('║'))
+    console.log(c.gold('║') + '            ' + c.o('🔥 6 CARDURI DIFERITE') + '                 ' + c.gold('║'))
     console.log(c.gold('╠════════════════════════════════════════════════════════╣'))
     console.log(c.gold('║') + `  🌐 GUI: ${c.c(`http://localhost:${PORT}`)}`.padEnd(58) + c.gold('║'))
-    console.log(c.gold('║') + '  📦 6 sloturi • Copy/Paste • Preview'.padEnd(58) + c.gold('║'))
+    console.log(c.gold('║') + '  📦 6 sloturi • Fiecare card diferit'.padEnd(58) + c.gold('║'))
     console.log(c.gold('╚════════════════════════════════════════════════════════╝\n'))
     
     const start = process.platform === 'win32' ? 'start' : 'open'
@@ -1291,8 +1271,8 @@ async function main() {
   console.log(c.gold('\n╔════════════════════════════════════════════════════════╗'))
   console.log(c.gold('║') + '            ' + c.o('🔥 WILDFIRE CARD EDITOR') + '            ' + c.gold('║'))
   console.log(c.gold('╠════════════════════════════════════════════════════════╣'))
-  console.log(c.gold('║') + '  ' + c.g('1.') + ' 🖥️  Terminal Mode (cu preview)'.padEnd(58) + c.gold('║'))
-  console.log(c.gold('║') + '  ' + c.g('2.') + ' 🌐  GUI Ultimate - Copy/Paste'.padEnd(58) + c.gold('║'))
+  console.log(c.gold('║') + '  ' + c.g('1.') + ' 🖥️  Terminal Mode'.padEnd(58) + c.gold('║'))
+  console.log(c.gold('║') + '  ' + c.g('2.') + ' 🌐  GUI - 6 Carduri Diferite'.padEnd(58) + c.gold('║'))
   console.log(c.gold('║') + '  ' + c.r('0.') + ' ❌  Exit'.padEnd(60) + c.gold('║'))
   console.log(c.gold('╚════════════════════════════════════════════════════════╝\n'))
   
