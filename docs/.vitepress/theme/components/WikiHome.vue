@@ -51,13 +51,14 @@
             src="/icons/wildfire.webp" 
             alt="Wildfire.ro" 
             class="wildfire-logo"
-            :class="{ 'animated': logoAnimated }"
+            :class="{ 'logo-intro': logoIntro }"
             width="220"
             height="220"
             fetchpriority="high"
             decoding="sync"
             @mouseenter="isHovered = true"
             @mouseleave="isHovered = false"
+            ref="logoImg"
           >
         </div>
 
@@ -113,7 +114,7 @@ import LastUpdates from './LastUpdates.vue'
 
 const isHovered = ref(false)
 const isOverlayLoaded = ref(false)
-const logoAnimated = ref(false)
+const logoIntro = ref(false)
 
 const openSearch = (e: MouseEvent) => {
   e.preventDefault()
@@ -145,11 +146,15 @@ onMounted(() => {
     }
   }, 2000)
   
-  requestAnimationFrame(() => {
+  // Efect unic la intrare pentru logo
+  setTimeout(() => {
+    logoIntro.value = true
+    
+    // Eliminăm clasa după ce animația se termină
     setTimeout(() => {
-      logoAnimated.value = true
-    }, 100)
-  })
+      logoIntro.value = false
+    }, 1000)
+  }, 300)
 })
 </script>
 
@@ -275,51 +280,6 @@ onMounted(() => {
   background: rgba(249, 115, 22, 0.04);
 }
 
-.dark .wildfire-home .wildfire-bg {
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(2px);
-}
-
-.dark .wildfire-home .wildfire-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(69, 10, 10, 0.4), rgba(30, 15, 0, 0.3), rgba(0, 0, 0, 0.7));
-}
-
-.dark .wildfire-home .wildfire-grid-primary {
-  opacity: 0.15;
-  background-image: 
-    linear-gradient(to right, rgba(255, 69, 0, 0.2) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 69, 0, 0.2) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-.dark .wildfire-home .wildfire-grid-secondary {
-  opacity: 0.1;
-  background-image: 
-    linear-gradient(to right, rgba(255, 140, 0, 0.15) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 140, 0, 0.15) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.dark .wildfire-home .wildfire-scanlines {
-  opacity: 0.05;
-  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.8) 0px, rgba(0,0,0,0.8) 1px, transparent 1px, transparent 2px);
-  background-size: 100% 2px;
-}
-
-.dark .wildfire-home .wildfire-spotlight-tl {
-  top: 0;
-  left: 25%;
-  background: rgba(220, 38, 38, 0.2);
-}
-
-.dark .wildfire-home .wildfire-spotlight-br {
-  bottom: 0;
-  right: 25%;
-  background: rgba(234, 88, 12, 0.2);
-}
-
 .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-spotlight-tl,
 .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-spotlight-br {
   opacity: 1;
@@ -366,6 +326,51 @@ onMounted(() => {
     transform: scale(1) translateZ(0);
     filter: blur(48px);
   }
+}
+
+.dark .wildfire-home .wildfire-bg {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(2px);
+}
+
+.dark .wildfire-home .wildfire-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(69, 10, 10, 0.4), rgba(30, 15, 0, 0.3), rgba(0, 0, 0, 0.7));
+}
+
+.dark .wildfire-home .wildfire-grid-primary {
+  opacity: 0.15;
+  background-image: 
+    linear-gradient(to right, rgba(255, 69, 0, 0.2) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 69, 0, 0.2) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.dark .wildfire-home .wildfire-grid-secondary {
+  opacity: 0.1;
+  background-image: 
+    linear-gradient(to right, rgba(255, 140, 0, 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 140, 0, 0.15) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.dark .wildfire-home .wildfire-scanlines {
+  opacity: 0.05;
+  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.8) 0px, rgba(0,0,0,0.8) 1px, transparent 1px, transparent 2px);
+  background-size: 100% 2px;
+}
+
+.dark .wildfire-home .wildfire-spotlight-tl {
+  top: 0;
+  left: 25%;
+  background: rgba(220, 38, 38, 0.2);
+}
+
+.dark .wildfire-home .wildfire-spotlight-br {
+  bottom: 0;
+  right: 25%;
+  background: rgba(234, 88, 12, 0.2);
 }
 
 .dark .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-grid-primary {
@@ -464,25 +469,55 @@ onMounted(() => {
   transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.wildfire-home .wildfire-logo.animated {
-  animation: float 4s ease-in-out infinite;
+/* EFFECT UNIC LA INTrare - doar pentru logo */
+.logo-intro {
+  animation: uniqueIntro 2s cubic-bezier(0.25, 0.1, 0.15, 1) forwards;
+}
+
+@keyframes uniqueIntro {
+  0% {
+    transform: scale(0.2) rotate(-180deg);
+    opacity: 0;
+  }
+  40% {
+    transform: scale(1.15) rotate(8deg);
+    opacity: 1;
+  }
+  65% {
+    transform: scale(0.95) rotate(-3deg);
+  }
+  85% {
+    transform: scale(1.02) rotate(1deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
 }
 
 .wildfire-home .wildfire-logo:hover {
-  animation: none;
-  transform: scale(1.05) translateZ(0);
+  animation: logoHoverSpin 0.8s cubic-bezier(0.25, 0.1, 0.15, 1) forwards;
+}
+
+@keyframes logoHoverSpin {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  30% {
+    transform: scale(1.15) rotate(15deg);
+  }
+  60% {
+    transform: scale(0.95) rotate(-5deg);
+  }
+  85% {
+    transform: scale(1.02) rotate(2deg);
+  }
+  100% {
+    transform: scale(1.05) rotate(0deg);
+  }
 }
 
 .wildfire-home .wildfire-logo:hover + .wildfire-logo-glow {
   opacity: 1;
-}
-
-@keyframes float {
-  0% { transform: translateY(0px) translateZ(0); }
-  25% { transform: translateY(-6px) translateZ(0); }
-  50% { transform: translateY(0px) translateZ(0); }
-  75% { transform: translateY(6px) translateZ(0); }
-  100% { transform: translateY(0px) translateZ(0); }
 }
 
 .wildfire-home .wildfire-title {
