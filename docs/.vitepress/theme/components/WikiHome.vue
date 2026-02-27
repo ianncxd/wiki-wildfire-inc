@@ -124,7 +124,7 @@
               decoding="async"
             >
             <span class="home-search-text">Caută în documentație...</span>
-            <span class="home-search-shortcut">⌘K</span>
+            <span class="home-search-shortcut">CTRL K</span>
           </button>
         </div>
 
