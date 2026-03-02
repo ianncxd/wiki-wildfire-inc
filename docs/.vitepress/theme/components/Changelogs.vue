@@ -139,13 +139,6 @@
               <h3>{{ commit.message }}</h3>
             </div>
 
-            <!-- DESCRIPTION (extrasă din mesaj) -->
-            <transition name="fade">
-              <div v-if="commit.description" class="description-bubble">
-                <p>{{ commit.description }}</p>
-              </div>
-            </transition>
-
             <!-- INTERACTION BAR -->
             <div class="interaction-bar">
               <div class="actor">
@@ -172,10 +165,21 @@
               </div>
             </div>
 
-            <!-- EXPAND CONTENT - AICI APAR FILELE -->
+            <!-- EXPAND CONTENT - AICI APAR DETALIILE COMPLETE -->
             <transition name="liquid">
               <div v-if="open[commit.id]" class="liquid-expand">
-                <!-- FILES -->
+                <!-- DESCRIEREA DETALIATĂ (în collapse) -->
+                <div v-if="commit.description" class="expand-section">
+                  <div class="section-label">
+                    <span class="label-icon">📋</span>
+                    <span class="label-text">Details</span>
+                  </div>
+                  <div class="description-details">
+                    <pre class="details-pre">{{ commit.description }}</pre>
+                  </div>
+                </div>
+
+                <!-- FILES CHANGED -->
                 <div class="expand-section">
                   <div class="section-label">
                     <span class="label-icon">📄</span>
@@ -1035,31 +1039,6 @@ html:not(.dark) .glass-card:hover {
   transition: color 0.2s;
 }
 
-/* DESCRIPTION BUBBLE */
-.description-bubble {
-  margin-bottom: 20px;
-  padding: 16px 20px;
-  background: var(--bg-elevated);
-  border-radius: 20px;
-  border: 1px solid var(--border-subtle);
-  backdrop-filter: blur(5px);
-  position: relative;
-  transition: all 0.3s;
-}
-
-.description-bubble:hover {
-  border-color: var(--primary-soft);
-  background: var(--bg-surface-raised);
-}
-
-.description-bubble p {
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 0;
-  font-weight: 400;
-}
-
 /* INTERACTION BAR */
 .interaction-bar {
   display: flex;
@@ -1275,6 +1254,51 @@ html:not(.dark) .glass-card:hover {
   background: var(--primary);
   color: white;
   transform: scale(1.05);
+}
+
+/* DESCRIPTION DETAILS */
+.description-details {
+  background: var(--bg-elevated);
+  border-radius: 16px;
+  padding: 16px 20px;
+  border: 1px solid var(--border-subtle);
+  font-family: 'SF Mono', 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.details-pre {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Custom scrollbar for description */
+.description-details::-webkit-scrollbar {
+  width: 6px;
+}
+
+.description-details::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+  border-radius: 10px;
+}
+
+.description-details::-webkit-scrollbar-thumb {
+  background: var(--primary-soft);
+  border-radius: 10px;
+  border: 1px solid var(--border-strong);
+}
+
+.description-details::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
 }
 
 /* FILES POOL */
