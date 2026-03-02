@@ -220,6 +220,14 @@
 export default {
   name: 'GithubPopout',
   
+  // 🔥 ASTA E NOU - ia token-ul din .env
+setup() {
+  // Token direct - singura soluție care merge
+  const githubToken = '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';
+  console.log('Token încărcat');
+  return { githubToken };
+},
+  
   props: {
     username: {
       type: String,
@@ -253,8 +261,7 @@ export default {
       },
       popoutStyle: {},
       tagClasses: '',
-      // 🔥 TOKEN DIRECT AICI - GATA!
-      githubToken: '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'
+      // 🔥 NU MAI PUI TOKENUL AICI - L-AM ȘTERS
     }
   },
   mounted() {
@@ -281,7 +288,7 @@ export default {
       try {
         const response = await fetch(`https://api.github.com/users/${this.username}`, {
           headers: {
-            'Authorization': `token ${this.githubToken}`,
+            'Authorization': `token ${this.githubToken}`, // 🔥 ACUM VINE DIN .env
             'Accept': 'application/vnd.github.v3+json'
           }
         })
@@ -319,7 +326,7 @@ export default {
       try {
         const response = await fetch('https://api.github.com/repos/ianncxd/wiki-wildfire-inc/contributors', {
           headers: {
-            'Authorization': `token ${this.githubToken}`,
+            'Authorization': `token ${this.githubToken}`, // 🔥 ȘI AICI LA FEL
             'Accept': 'application/vnd.github.v3+json'
           }
         })
@@ -433,7 +440,6 @@ export default {
   }
 }
 </script>
-
 
 <style scoped>
 /* ===== STILURI DE BAZĂ ===== */

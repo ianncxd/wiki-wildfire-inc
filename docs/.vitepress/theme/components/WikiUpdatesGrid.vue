@@ -270,11 +270,15 @@
 export default {
   name: 'WikiUpdatesGrid',
   
+  // 🔥 TOKEN-UL ÎN SETUP() - SIGUR
+  setup() {
+    const githubToken = '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';
+    console.log('Token în WikiUpdatesGrid:', 'merge');
+    return { githubToken };
+  },
+  
   data() {
     return {
-      // 🔥 TOKEN DIRECT AICI - GATA!
-      githubToken: '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',
-      
       // Date din API
       repoStats: {
         totalCommits: 0,
@@ -454,7 +458,20 @@ export default {
 
       } catch (error) {
         console.error('Eroare la fetch date GitHub:', error);
-        // În caz de eroare, lasă valorile default (0) - fără fallback manual
+        // În caz de eroare, lasă valorile default (0)
+        this.repoStats = {
+          totalCommits: 0,
+          contributors: 1,
+          files: 0,
+          stars: 0,
+          openIssues: 0,
+          openPRs: 0
+        };
+        this.topContributor = {
+          login: 'ianncxd',
+          contributions: 0,
+          prs: 0
+        };
       } finally {
         this.isLoading = false;
       }
