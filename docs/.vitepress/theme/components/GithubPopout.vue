@@ -54,105 +54,105 @@
         </div>
 
         <!-- Profile -->
-<template v-else>
-  <!-- Header cu POZA si INFO -->
-  <div class="popout-header">
-    <div class="avatar-column">
-      <img :src="user.avatar" :alt="user.username" class="popout-avatar" @error="handleAvatarError">
-      <a :href="user.profileUrl" target="_blank" rel="noopener noreferrer" @click.stop class="username-link">@{{ user.username }}</a>
-    </div>
-    
-    <div class="info-column">
-      <div class="name-row">
-        <h3>{{ user.name || user.username }}</h3>
-      </div>
-      <div class="square-tags" :class="tagClasses">
-        <!-- 1. WILDFIRE -->
-        <span class="square-tag tag-wildfire">
-          <img src="/icons/wildfire.webp" alt="wildfire" class="tag-icon" @error="handleIconError">
-          <span>WILDFIRE</span>
-        </span>
-        
-        <!-- 2. FOUNDER -->
-        <span class="square-tag tag-founder">
-          <img src="/icons/wildfire.webp" alt="founder" class="tag-icon" @error="handleIconError">
-          <span>FOUNDER</span>
-        </span>
-        
-        <!-- 3. DEV -->
-        <span class="square-tag tag-dev">
-          <img src="/icons/vsc.svg" alt="dev" class="tag-icon" @error="handleIconError">
-          <span>DEV</span>
-        </span>
-        
-        <!-- 4. STAFF -->
-        <span class="square-tag tag-staff">
-          <img src="/icons/wildfire.webp" alt="staff" class="tag-icon" @error="handleIconError">
-          <span>STAFF</span>
-        </span>
-        
-        <!-- 5. ADMIN -->
-        <span class="square-tag tag-admin">
-          <img src="/icons/admin.svg" alt="admin" class="tag-icon" @error="handleIconError">
-          <span>ADMIN</span>
-        </span>
-        
-        <!-- 6. MOD -->
-        <span class="square-tag tag-mod">
-          <img src="/icons/mod.svg" alt="mod" class="tag-icon" @error="handleIconError">
-          <span>MOD</span>
-        </span>
-        
-        <!-- 7. SUPPORTER -->
-        <span class="square-tag tag-supporter">
-          <img src="/icons/supporter.svg" alt="supporter" class="tag-icon" @error="handleIconError">
-          <span>SUPPORTER</span>
-        </span>
-        
-        <!-- 8. BOOSTER -->
-        <span class="square-tag tag-booster">
-          <img src="/icons/booster.svg" alt="booster" class="tag-icon" @error="handleIconError">
-          <span>BOOSTER</span>
-        </span>
-        
-        <!-- 9. PARTNER -->
-        <span class="square-tag tag-partner">
-          <img src="/icons/partner.svg" alt="partner" class="tag-icon" @error="handleIconError">
-          <span>PARTNER</span>
-        </span>
-        
-        <!-- 10. CONTRIBUTOR -->
-        <span class="square-tag tag-contributor">
-          <img src="/icons/contributor.svg" alt="contributor" class="tag-icon" @error="handleIconError">
-          <span>CONTRIBUTOR</span>
-        </span>
-        
-        <!-- 11. WIKI -->
-        <span class="square-tag tag-wiki">
-          <img src="/icons/vue.svg" alt="wiki" class="tag-icon" @error="handleIconError">
-          <span>WIKI</span>
-        </span>
-        
-        <!-- 12. TRUSTED -->
-        <span class="square-tag tag-trusted">
-          <img src="/icons/wildfire.webp" alt="trusted" class="tag-icon" @error="handleIconError">
-          <span>TRUSTED</span>
-        </span>
-        
-        <!-- 13. PRO -->
-        <span class="square-tag tag-pro">
-          <img src="/icons/wildfire.webp" alt="pro" class="tag-icon" @error="handleIconError">
-          <span>PRO</span>
-        </span>
-        
-        <!-- 14. VIP -->
-        <span class="square-tag tag-vip">
-          <img src="/icons/wildfire.webp" alt="vip" class="tag-icon" @error="handleIconError">
-          <span>VIP</span>
-        </span>
-      </div>
-    </div>
-  </div>
+        <template v-else>
+          <!-- Header cu POZA si INFO -->
+          <div class="popout-header">
+            <div class="avatar-column">
+              <img :src="user.avatar" :alt="user.username" class="popout-avatar" @error="handleAvatarError">
+              <a :href="user.profileUrl" target="_blank" rel="noopener noreferrer" @click.stop class="username-link">@{{ user.username }}</a>
+            </div>
+            
+            <div class="info-column">
+              <div class="name-row">
+                <h3>{{ user.name || user.username }}</h3>
+              </div>
+              <div class="square-tags" :class="tagClasses">
+                <!-- 1. WILDFIRE -->
+                <span class="square-tag tag-wildfire">
+                  <img src="/icons/wildfire.webp" alt="wildfire" class="tag-icon" @error="handleIconError">
+                  <span>WILDFIRE</span>
+                </span>
+                
+                <!-- 2. FOUNDER -->
+                <span class="square-tag tag-founder">
+                  <img src="/icons/wildfire.webp" alt="founder" class="tag-icon" @error="handleIconError">
+                  <span>FOUNDER</span>
+                </span>
+                
+                <!-- 3. DEV -->
+                <span class="square-tag tag-dev">
+                  <img src="/icons/vsc.svg" alt="dev" class="tag-icon" @error="handleIconError">
+                  <span>DEV</span>
+                </span>
+                
+                <!-- 4. STAFF -->
+                <span class="square-tag tag-staff">
+                  <img src="/icons/wildfire.webp" alt="staff" class="tag-icon" @error="handleIconError">
+                  <span>STAFF</span>
+                </span>
+                
+                <!-- 5. ADMIN -->
+                <span class="square-tag tag-admin">
+                  <img src="/icons/admin.svg" alt="admin" class="tag-icon" @error="handleIconError">
+                  <span>ADMIN</span>
+                </span>
+                
+                <!-- 6. MOD -->
+                <span class="square-tag tag-mod">
+                  <img src="/icons/mod.svg" alt="mod" class="tag-icon" @error="handleIconError">
+                  <span>MOD</span>
+                </span>
+                
+                <!-- 7. SUPPORTER -->
+                <span class="square-tag tag-supporter">
+                  <img src="/icons/supporter.svg" alt="supporter" class="tag-icon" @error="handleIconError">
+                  <span>SUPPORTER</span>
+                </span>
+                
+                <!-- 8. BOOSTER -->
+                <span class="square-tag tag-booster">
+                  <img src="/icons/booster.svg" alt="booster" class="tag-icon" @error="handleIconError">
+                  <span>BOOSTER</span>
+                </span>
+                
+                <!-- 9. PARTNER -->
+                <span class="square-tag tag-partner">
+                  <img src="/icons/partner.svg" alt="partner" class="tag-icon" @error="handleIconError">
+                  <span>PARTNER</span>
+                </span>
+                
+                <!-- 10. CONTRIBUTOR -->
+                <span class="square-tag tag-contributor">
+                  <img src="/icons/contributor.svg" alt="contributor" class="tag-icon" @error="handleIconError">
+                  <span>CONTRIBUTOR</span>
+                </span>
+                
+                <!-- 11. WIKI -->
+                <span class="square-tag tag-wiki">
+                  <img src="/icons/vue.svg" alt="wiki" class="tag-icon" @error="handleIconError">
+                  <span>WIKI</span>
+                </span>
+                
+                <!-- 12. TRUSTED -->
+                <span class="square-tag tag-trusted">
+                  <img src="/icons/wildfire.webp" alt="trusted" class="tag-icon" @error="handleIconError">
+                  <span>TRUSTED</span>
+                </span>
+                
+                <!-- 13. PRO -->
+                <span class="square-tag tag-pro">
+                  <img src="/icons/wildfire.webp" alt="pro" class="tag-icon" @error="handleIconError">
+                  <span>PRO</span>
+                </span>
+                
+                <!-- 14. VIP -->
+                <span class="square-tag tag-vip">
+                  <img src="/icons/wildfire.webp" alt="vip" class="tag-icon" @error="handleIconError">
+                  <span>VIP</span>
+                </span>
+              </div>
+            </div>
+          </div>
 
           <!-- Bio -->
           <p v-if="user.bio" class="popout-bio">{{ user.bio }}</p>
@@ -251,7 +251,8 @@ export default {
         contributions: null
       },
       popoutStyle: {},
-      tagClasses: ''
+      tagClasses: '',
+      githubToken: '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' // TOKENUL TĂU AICI
     }
   },
   mounted() {
@@ -276,7 +277,17 @@ export default {
       this.error = null
       
       try {
-        const response = await fetch(`https://api.github.com/users/${this.username}`)
+        const response = await fetch(`https://api.github.com/users/${this.username}`, {
+          headers: {
+            'Authorization': `token ${this.githubToken}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        })
+        
+        if (!response.ok) {
+          throw new Error(`GitHub API error: ${response.status}`)
+        }
+        
         const data = await response.json()
         
         this.user = {
@@ -295,6 +306,7 @@ export default {
           profileUrl: data.html_url || this.user.profileUrl
         }
       } catch (error) {
+        console.error('Eroare fetch user:', error)
         this.error = 'Failed to load profile'
       } finally {
         this.loading = false
@@ -303,20 +315,34 @@ export default {
     
     async fetchUserContributions() {
       try {
-        const response = await fetch('https://api.github.com/repos/ianncxd/wiki-wildfire-inc/contributors')
+        const response = await fetch('https://api.github.com/repos/ianncxd/wiki-wildfire-inc/contributors', {
+          headers: {
+            'Authorization': `token ${this.githubToken}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        })
+        
+        if (!response.ok) {
+          throw new Error(`GitHub API error: ${response.status}`)
+        }
+        
         const contributors = await response.json()
         
+        // Verifică dacă e array
+        if (!Array.isArray(contributors)) {
+          console.log('Răspuns invalid:', contributors)
+          this.user.contributions = 0
+          return
+        }
+        
         const contributor = contributors.find(c => 
-          c.login.toLowerCase() === this.username.toLowerCase()
+          c.login?.toLowerCase() === this.username.toLowerCase()
         )
         
-        if (contributor) {
-          this.user.contributions = contributor.contributions
-        } else {
-          this.user.contributions = 0
-        }
+        this.user.contributions = contributor ? contributor.contributions : 0
+        
       } catch (error) {
-        console.log('Nu s-au putut încărca contribuțiile:', error)
+        console.error('Eroare fetch contribuții:', error)
         this.user.contributions = 0
       }
     },
@@ -405,6 +431,7 @@ export default {
   }
 }
 </script>
+
 
 <style scoped>
 /* ===== STILURI DE BAZĂ ===== */

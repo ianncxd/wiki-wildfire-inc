@@ -127,7 +127,7 @@
 
         <!-- Wiki Updates Grid -->
         <div class="updates-grid-section reveal-element" ref="updatesGridRef">
-          <WikiUpdatesGrid :updates="recentCommits" :stats="stats" />
+              <WikiUpdatesGrid />
         </div>
         
       </div>
@@ -186,121 +186,6 @@ const displayTitle = ref('')
 const displayTitleArray = computed(() => displayTitle.value.split(''))
 const titleTyped = ref(false)
 const titleOriginal = 'WILDFIRE.RO DOCS'
-
-// ===== FUNCȚII HELPER (MUTATE SUS) =====
-const formatCommits = (commits: any[]) => {
-  if (!Array.isArray(commits)) return []
-  
-  const emojis = ['⚡', '🎉', '📚', '🔄', '🔧', '📝', '✨', '🐛', '🚀']
-  
-  return commits.map((commit, index) => ({
-    id: commit.sha.substring(0, 7),
-    message: commit.commit.message.split('\n')[0],
-    emoji: emojis[index % emojis.length],
-    author: commit.author?.login || commit.commit.author.name,
-    date: commit.commit.author.date,
-    url: commit.html_url
-  }))
-}
-
-// ===== FETCH GITHUB DATA =====
-const recentCommits = ref<any[]>([])
-const stats = ref({
-  totalCommits: 0,
-  contributors: 0,
-  totalFiles: 0,
-  stars: 0
-})
-
-const fetchGitHubData = async () => {
-  const owner = 'ianncxd'
-  const repo = 'wiki-wildfire-inc'
-  const baseUrl = `https://api.github.com/repos/${owner}/${repo}`
-  
-  try {
-    console.log('Fetching GitHub data from wikihome...')
-    
-    // Facem request-urile în paralel
-    const [commitsRes, repoRes, contributorsRes, treeRes] = await Promise.all([
-      fetch(`${baseUrl}/commits?per_page=4`),
-      fetch(baseUrl),
-      fetch(`${baseUrl}/contributors`), // SCHIMBAT aici - folosim /contributors în loc de /stats/contributors
-      fetch(`${baseUrl}/git/trees/main?recursive=1`)
-    ])
-
-    if (!commitsRes.ok || !repoRes.ok || !contributorsRes.ok || !treeRes.ok) {
-      throw new Error('GitHub API returned an error')
-    }
-
-    const commits = await commitsRes.json()
-    const repoData = await repoRes.json()
-    const contributorsData = await contributorsRes.json()
-    const treeData = await treeRes.json()
-
-    recentCommits.value = formatCommits(commits)
-
-    // Calculăm total commits din header
-    const linkHeader = commitsRes.headers.get('Link')
-    let totalCommits = 0
-    if (linkHeader) {
-      const match = linkHeader.match(/&page=(\d+)>; rel="last"/)
-      if (match) totalCommits = parseInt(match[1], 10) * 30
-    }
-
-    stats.value = {
-      totalCommits: totalCommits || commits.length,
-      contributors: contributorsData.length || 1,
-      totalFiles: treeData.tree?.filter((item: any) => item.type === 'blob').length || 0,
-      stars: repoData.stargazers_count || 0
-    }
-
-    console.log('GitHub data loaded in wikihome:', stats.value)
-
-  } catch (error) {
-    console.error('Eroare la fetch GitHub:', error)
-    // Date de backup în caz de eroare
-    recentCommits.value = [
-      {
-        id: 'a44828c',
-        message: 'Repaired some errors at git pushing',
-        emoji: '🔧',
-        author: 'ianncxd',
-        date: new Date().toISOString(),
-        url: `https://github.com/${owner}/${repo}/commit/a44828c`
-      },
-      {
-        id: '5ce19a6',
-        message: 'Final commit on wildfire`s official wikipedia!',
-        emoji: '🎉',
-        author: 'ianncxd',
-        date: new Date(Date.now() - 86400000).toISOString(),
-        url: `https://github.com/${owner}/${repo}/commit/5ce19a6`
-      },
-      {
-        id: '9c4cccb',
-        message: 'WikiDocs core phase 1',
-        emoji: '📚',
-        author: 'ianncxd',
-        date: new Date(Date.now() - 172800000).toISOString(),
-        url: `https://github.com/${owner}/${repo}/commit/9c4cccb`
-      },
-      {
-        id: 'd475a34',
-        message: 'big update la tags si camere',
-        emoji: '🔄',
-        author: 'ianncxd',
-        date: new Date(Date.now() - 259200000).toISOString(),
-        url: `https://github.com/${owner}/${repo}/commit/d475a34`
-      }
-    ]
-    stats.value = {
-      totalCommits: 33,
-      contributors: 1,
-      totalFiles: 124,
-      stars: 0
-    }
-  }
-}
 
 // Scroll indicator
 const showScrollIndicator = ref(false)
@@ -562,8 +447,7 @@ watch(isHomePage, (newValue) => {
 onMounted(() => {
   toggleDefaultNavbar(isHomePage.value)
   
-  // Fetch GitHub data
-  fetchGitHubData()
+  // Nu mai fetch-uim GitHub aici - totul e în WikiUpdatesGrid
   
   setTimeout(() => {
     const overlayImg = new Image()
