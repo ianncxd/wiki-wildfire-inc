@@ -44,7 +44,7 @@
                 </span>
                 <span v-if="index === 0" class="contributor-stat">
                   <span class="stat-icon">⭐</span>
-                  <span class="stat-value">{{ contributor.stars || 0 }}</span>
+                  <span class="stat-value">{{ repoData.totalStars }}</span>
                   <span class="stat-label">stars</span>
                 </span>
               </div>
@@ -57,6 +57,41 @@
               <span class="link-arrow">→</span>
             </a>
             <span class="contributor-quote">{{ getContributorQuote(index) }}</span>
+          </div>
+        </div>
+
+        <!-- Dacă nu sunt contributori, afișăm placeholder -->
+        <div v-if="topContributors.length === 0" class="feature-card card-contributor scroll-reveal grid-col-span-2">
+          <div class="card-glow"></div>
+          <div class="card-border"></div>
+          <div class="contributor-header">
+            <div class="contributor-avatar">
+              <img src="https://github.com/ianncxd.png" alt="ianncxd">
+              <span class="avatar-ring"></span>
+              <span class="avatar-crown">👑</span>
+            </div>
+            <div class="contributor-info">
+              <span class="contributor-badge">TOP CONTRIBUTOR</span>
+              <h4 class="contributor-name">ianncxd</h4>
+              <div class="contributor-stats">
+                <span class="contributor-stat">
+                  <span class="stat-icon">📦</span>
+                  <span class="stat-value">{{ repoData.totalCommits }}</span>
+                  <span class="stat-label">commits</span>
+                </span>
+                <span class="contributor-stat">
+                  <span class="stat-icon">🔀</span>
+                  <span class="stat-value">{{ repoData.totalPRs }}</span>
+                  <span class="stat-label">PR-uri</span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="contributor-footer">
+            <a href="https://github.com/ianncxd" target="_blank" class="contributor-link clickable-link">
+              Vezi profil 
+              <span class="link-arrow">→</span>
+            </a>
           </div>
         </div>
 
@@ -211,6 +246,13 @@
               <span class="contributor-list-commits">{{ contributor.commits }} commits</span>
               <span class="contributor-list-prs">{{ contributor.prs }} PR-uri</span>
               <span class="item-click-icon">→</span>
+            </div>
+            <div v-if="topContributors.length === 0" class="contributor-list-item">
+              <span class="contributor-rank">1</span>
+              <img src="https://github.com/ianncxd.png" alt="ianncxd" class="contributor-list-avatar">
+              <span class="contributor-list-name">ianncxd</span>
+              <span class="contributor-list-commits">{{ repoData.totalCommits }} commits</span>
+              <span class="contributor-list-prs">{{ repoData.totalPRs }} PR-uri</span>
             </div>
           </div>
         </div>
@@ -405,45 +447,67 @@ export default {
       const baseUrl = `https://api.github.com/repos/${owner}/${repo}`;
 
       try {
-        // Fetch contributors data
+        // 1. Fetch repo details pentru stars
+        const repoRes = await fetch(baseUrl);
+        if (repoRes.ok) {
+          const repoData = await repoRes.json();
+          this.repoData.totalStars = repoData.stargazers_count || 0;
+        }
+
+        // 2. Fetch contributors
         const contributorsRes = await fetch(`${baseUrl}/stats/contributors`);
-        
         if (contributorsRes.ok) {
           const contributorsData = await contributorsRes.json();
           
           // Procesăm contributorii
-          const contributors = await Promise.all(
-            contributorsData.map(async (c) => {
+          const contributors = [];
+          
+          for (const c of contributorsData) {
+            if (c.author && c.author.login) {
               // Fetch PR-uri pentru fiecare contributor
               const prs = await this.fetchContributorPRs(owner, repo, c.author.login);
-              return {
+              contributors.push({
                 login: c.author.login,
                 avatar_url: c.author.avatar_url,
                 commits: c.total,
-                prs: prs,
-                stars: 0 // Putem adăuga și alte stats dacă vrem
-              };
-            })
-          );
+                prs: prs
+              });
+            }
+          }
           
           // Sortăm după numărul de commit-uri
           this.topContributors = contributors.sort((a, b) => b.commits - a.commits);
         }
 
-        // PR-uri totale
+        // 3. Fetch total PR-uri
         const pullsRes = await fetch(`${baseUrl}/pulls?state=all&per_page=1`);
-        const linkHeader = pullsRes.headers.get('Link');
-        this.repoData.totalPRs = this.extractTotalCountFromLink(linkHeader);
+        if (pullsRes.ok) {
+          const linkHeader = pullsRes.headers.get('Link');
+          this.repoData.totalPRs = this.extractTotalCountFromLink(linkHeader);
+        }
 
-        // PR-uri deschise
+        // 4. Fetch open PR-uri
         const openPullsRes = await fetch(`${baseUrl}/pulls?state=open&per_page=1`);
-        const openPullsLink = openPullsRes.headers.get('Link');
-        this.openPRs = this.extractTotalCountFromLink(openPullsLink);
+        if (openPullsRes.ok) {
+          const openPullsLink = openPullsRes.headers.get('Link');
+          this.openPRs = this.extractTotalCountFromLink(openPullsLink);
+        }
 
-        // Issue-uri deschise
+        // 5. Fetch open issues
         const issuesRes = await fetch(`${baseUrl}/issues?state=open&per_page=1`);
-        const issuesLink = issuesRes.headers.get('Link');
-        this.openIssues = this.extractTotalCountFromLink(issuesLink);
+        if (issuesRes.ok) {
+          const issuesLink = issuesRes.headers.get('Link');
+          this.openIssues = this.extractTotalCountFromLink(issuesLink);
+        }
+
+        // 6. Fetch commits pentru timeline (dacă nu avem din props)
+        if (this.repoData.recentCommits.length === 0) {
+          const commitsRes = await fetch(`${baseUrl}/commits?per_page=4`);
+          if (commitsRes.ok) {
+            const commitsData = await commitsRes.json();
+            this.repoData.recentCommits = this.formatCommits(commitsData);
+          }
+        }
 
       } catch (error) {
         console.error('Eroare la fetch date GitHub:', error);
@@ -452,13 +516,13 @@ export default {
           {
             login: 'ianncxd',
             commits: this.repoData.totalCommits || 33,
-            prs: 12,
-            stars: 0
+            prs: 12
           }
         ];
-        this.repoData.totalPRs = 1;
+        this.repoData.totalPRs = 12;
         this.openPRs = 0;
         this.openIssues = 0;
+        this.repoData.totalStars = this.repoData.totalStars || 0;
       } finally {
         this.isLoading = false;
         
@@ -485,6 +549,21 @@ export default {
       }
     },
 
+    formatCommits(commits) {
+      if (!Array.isArray(commits)) return [];
+      
+      const emojis = ['⚡', '🎉', '📚', '🔄', '🔧', '📝', '✨', '🐛', '🚀'];
+      
+      return commits.map((commit, index) => ({
+        id: commit.sha ? commit.sha.substring(0, 7) : `commit-${index}`,
+        message: commit.commit ? commit.commit.message.split('\n')[0] : 'Commit',
+        emoji: emojis[index % emojis.length],
+        author: commit.author ? (commit.author.login || commit.commit.author.name) : 'unknown',
+        date: commit.commit ? commit.commit.author.date : new Date().toISOString(),
+        url: commit.html_url || '#'
+      }));
+    },
+
     extractTotalCountFromLink(linkHeader) {
       if (!linkHeader) return 1;
       const lastPageMatch = linkHeader.match(/&page=(\d+)>; rel="last"/);
@@ -509,17 +588,21 @@ export default {
     },
 
     formatDate(date) {
-      const d = new Date(date)
-      const now = new Date()
-      const diff = Math.floor((now - d) / (1000 * 60 * 60 * 24))
-      
-      if (diff === 0) return 'azi'
-      if (diff === 1) return 'ieri'
-      if (diff < 7) return `acum ${diff} zile`
-      return d.toLocaleDateString('ro-RO', { 
-        day: 'numeric', 
-        month: 'short'
-      })
+      try {
+        const d = new Date(date)
+        const now = new Date()
+        const diff = Math.floor((now - d) / (1000 * 60 * 60 * 24))
+        
+        if (diff === 0) return 'azi'
+        if (diff === 1) return 'ieri'
+        if (diff < 7) return `acum ${diff} zile`
+        return d.toLocaleDateString('ro-RO', { 
+          day: 'numeric', 
+          month: 'short'
+        })
+      } catch (e) {
+        return 'recent'
+      }
     },
 
     openProfile(username) {
@@ -527,7 +610,7 @@ export default {
     },
 
     openCommit(url) {
-      window.open(url, '_blank')
+      if (url && url !== '#') window.open(url, '_blank')
     },
 
     openContributing() {
@@ -1820,6 +1903,141 @@ export default {
   .text-content {
     max-width: 100%;
     padding: 0 20px;
+  }
+  
+  .contributor-list-item {
+    flex-wrap: wrap;
+  }
+}
+
+/* TOATE STILURILE RĂMÂN LA FEL - le păstrezi exact așa cum sunt în codul tău original */
+/* Am inclus doar stilurile noi pentru contributors list, restul rămân neschimbate */
+
+/* Contributors list - stiluri noi */
+.contributors-list-block {
+  padding-left: 24px;
+  margin-top: 10px;
+}
+
+.contributors-list-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.contributors-list-icon {
+  font-size: 20px;
+  color: #ff4500;
+}
+
+.contributors-list-header h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--vp-c-text-1);
+  font-family: 'Orbitron', sans-serif;
+}
+
+.contributors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contributor-list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: rgba(255, 69, 0, 0.03);
+  border: 1px solid rgba(255, 69, 0, 0.1);
+  border-radius: 30px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.contributor-list-item:hover {
+  background: rgba(255, 69, 0, 0.08);
+  border-color: rgba(255, 69, 0, 0.3);
+  transform: translateX(5px);
+}
+
+.contributor-rank {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ff4500;
+  min-width: 20px;
+  text-align: center;
+}
+
+.contributor-list-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid #ff4500;
+}
+
+.contributor-list-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--vp-c-text-1);
+  flex: 1;
+}
+
+.contributor-list-commits {
+  font-size: 11px;
+  color: #ff4500;
+  font-weight: 600;
+}
+
+.contributor-list-prs {
+  font-size: 11px;
+  color: var(--vp-c-text-2);
+}
+
+/* Staggered reveal pentru lista de contributori */
+.contributors-list.revealed .contributor-list-item {
+  animation: listItemReveal 0.4s ease forwards;
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+.contributor-list-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.contributor-list-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.contributor-list-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.contributor-list-item:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.contributor-list-item:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+@keyframes listItemReveal {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.grid-col-span-2 {
+  grid-column: span 2;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .grid-col-span-2 {
+    grid-column: span 1;
   }
   
   .contributor-list-item {
