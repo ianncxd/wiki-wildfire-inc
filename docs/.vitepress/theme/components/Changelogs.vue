@@ -14,10 +14,11 @@
         </div>
         
         <div class="search-hints">
-          <button class="hint-chip" @click="search = 'feature'">✨ feature</button>
+          <button class="hint-chip" @click="search = 'feat'">✨ feature</button>
           <button class="hint-chip" @click="search = 'fix'">🔧 fix</button>
-          <button class="hint-chip" @click="search = 'api'">⚡ api</button>
           <button class="hint-chip" @click="search = 'docs'">📚 docs</button>
+          <button class="hint-chip" @click="search = 'refactor'">♻️ refactor</button>
+          <button class="hint-chip" @click="search = 'test'">🧪 test</button>
         </div>
       </div>
 
@@ -43,21 +44,25 @@
 
         <div class="tags-group">
           <PageTagGreen 
-            :class="{ 'tag-active': tagFilter === 'feature' }" 
-            @click="tagFilter = tagFilter === 'feature' ? 'all' : 'feature'"
-          >✨</PageTagGreen>
+            :class="{ 'tag-active': tagFilter === 'feat' }" 
+            @click="tagFilter = tagFilter === 'feat' ? 'all' : 'feat'"
+          >✨ feat</PageTagGreen>
           <PageTagRed 
             :class="{ 'tag-active': tagFilter === 'fix' }" 
             @click="tagFilter = tagFilter === 'fix' ? 'all' : 'fix'"
-          >🔧</PageTagRed>
+          >🔧 fix</PageTagRed>
           <PageTagBlue 
             :class="{ 'tag-active': tagFilter === 'docs' }" 
             @click="tagFilter = tagFilter === 'docs' ? 'all' : 'docs'"
-          >📚</PageTagBlue>
+          >📚 docs</PageTagBlue>
           <PageTagOrange 
-            :class="{ 'tag-active': tagFilter === 'update' }" 
-            @click="tagFilter = tagFilter === 'update' ? 'all' : 'update'"
-          >🔄</PageTagOrange>
+            :class="{ 'tag-active': tagFilter === 'refactor' }" 
+            @click="tagFilter = tagFilter === 'refactor' ? 'all' : 'refactor'"
+          >♻️ refactor</PageTagOrange>
+          <PageTagPurple 
+            :class="{ 'tag-active': tagFilter === 'test' }" 
+            @click="tagFilter = tagFilter === 'test' ? 'all' : 'test'"
+          >🧪 test</PageTagPurple>
         </div>
 
         <button class="reset-pill" @click="resetFilters">
@@ -65,9 +70,13 @@
           <span class="pill-text">Reset</span>
         </button>
 
-        <div class="count-badge">
+        <div class="count-badge" v-if="!isLoading">
           <span class="count-number">{{ filteredCommits.length }}</span>
           <span class="count-label">commits</span>
+        </div>
+        <div class="count-badge loading-badge" v-else>
+          <span class="loading-spinner-small"></span>
+          <span class="count-label">loading</span>
         </div>
       </div>
 
@@ -87,7 +96,20 @@
 
     <!-- COMMITS LIST -->
     <div class="commits-flow">
-      <transition-group name="list" tag="div" class="commits-grid">
+      <div v-if="isLoading" class="loading-liquid">
+        <div class="loading-sphere">
+          <div class="loading-spinner-large"></div>
+        </div>
+        <p>Loading commits from GitHub...</p>
+      </div>
+
+      <div v-else-if="error" class="error-liquid">
+        <div class="error-sphere">⚠️</div>
+        <p>{{ error }}</p>
+        <button @click="fetchCommits">Try again</button>
+      </div>
+
+      <transition-group v-else name="list" tag="div" class="commits-grid">
         <div v-for="(commit, idx) in filteredCommits" :key="commit.id" 
              class="commit-module">
           
@@ -95,7 +117,7 @@
             <!-- HEADER -->
             <div class="module-header">
               <div class="header-breadcrumbs">
-                <span class="breadcrumb-hash">{{ commit.hash.substring(0, 7) }}</span>
+                <a :href="commit.url" target="_blank" class="breadcrumb-hash">{{ commit.hash.substring(0, 7) }}</a>
                 <span class="breadcrumb-date">
                   <span class="breadcrumb-icon">📅</span>
                   {{ formatDate(commit.date) }}
@@ -117,7 +139,7 @@
               <h3>{{ commit.message }}</h3>
             </div>
 
-            <!-- DESCRIPTION -->
+            <!-- DESCRIPTION (extrasă din mesaj) -->
             <transition name="fade">
               <div v-if="commit.description" class="description-bubble">
                 <p>{{ commit.description }}</p>
@@ -131,7 +153,7 @@
                   <img :src="`https://github.com/${commit.author}.png`" :alt="commit.author">
                   <span class="avatar-glow"></span>
                 </div>
-                <span class="actor-name">{{ commit.author }}</span>
+                <a :href="`https://github.com/${commit.author}`" target="_blank" class="actor-name">{{ commit.author }}</a>
               </div>
               
               <div class="actions">
@@ -142,9 +164,7 @@
                   <span class="action-arrow">{{ open[commit.id] ? '▲' : '▼' }}</span>
                 </button>
                 
-                <a :href="`https://github.com/ianncxd/wiki-wildfire-inc/commit/${commit.id}`" 
-                   target="_blank" 
-                   class="action-liquid github-action">
+                <a :href="commit.url" target="_blank" class="action-liquid github-action">
                   <span class="action-icon">🔗</span>
                   <span class="action-text">GitHub</span>
                   <span class="action-arrow">→</span>
@@ -170,17 +190,24 @@
                   </div>
                 </div>
 
-                <!-- CHANGES -->
-                <div v-if="commit.changes" class="expand-section">
+                <!-- STATS -->
+                <div class="expand-section">
                   <div class="section-label">
-                    <span class="label-icon">🔄</span>
-                    <span class="label-text">Key changes</span>
-                    <span class="label-count">{{ commit.changes.length }}</span>
+                    <span class="label-icon">📊</span>
+                    <span class="label-text">Stats</span>
                   </div>
-                  <div class="changes-stream">
-                    <div v-for="change in commit.changes" :key="change" class="change-drop">
-                      <span class="drop-bullet">●</span>
-                      <span class="drop-text">{{ change }}</span>
+                  <div class="stats-pool">
+                    <div class="stat-item">
+                      <span class="stat-label">Additions:</span>
+                      <span class="stat-value stat-add">+{{ commit.add }}</span>
+                    </div>
+                    <div class="stat-item">
+                      <span class="stat-label">Deletions:</span>
+                      <span class="stat-value stat-del">-{{ commit.del }}</span>
+                    </div>
+                    <div class="stat-item">
+                      <span class="stat-label">Total changes:</span>
+                      <span class="stat-value">{{ commit.add + commit.del }}</span>
                     </div>
                   </div>
                 </div>
@@ -190,14 +217,13 @@
             <!-- TAGS -->
             <div class="tags-cloud">
               <PageTagRed v-if="commit.tags.includes('fix')">🔧 fix</PageTagRed>
-              <PageTagGreen v-if="commit.tags.includes('feature')">✨ feature</PageTagGreen>
+              <PageTagGreen v-if="commit.tags.includes('feat')">✨ feat</PageTagGreen>
               <PageTagBlue v-if="commit.tags.includes('docs')">📚 docs</PageTagBlue>
-              <PageTagPurple v-if="commit.tags.includes('api')">⚡ api</PageTagPurple>
-              <PageTagOrange v-if="commit.tags.includes('update')">🔄 update</PageTagOrange>
-              <PageTagPink v-if="commit.tags.includes('tutorial')">📖 tutorial</PageTagPink>
-              <PageTagIndigo v-if="commit.tags.includes('server')">🌐 server</PageTagIndigo>
+              <PageTagPurple v-if="commit.tags.includes('test')">🧪 test</PageTagPurple>
+              <PageTagOrange v-if="commit.tags.includes('refactor')">♻️ refactor</PageTagOrange>
+              <PageTagPink v-if="commit.tags.includes('style')">🎨 style</PageTagPink>
+              <PageTagIndigo v-if="commit.tags.includes('perf')">⚡ perf</PageTagIndigo>
               <PageTagYellow v-if="commit.tags.includes('security')">🔒 security</PageTagYellow>
-              <PageTagTeal v-if="commit.tags.includes('refactor')">🛠️ refactor</PageTagTeal>
             </div>
           </div>
         </div>
@@ -206,7 +232,7 @@
 
     <!-- EMPTY STATE -->
     <transition name="fade">
-      <div v-if="filteredCommits.length === 0" class="empty-liquid">
+      <div v-if="!isLoading && !error && filteredCommits.length === 0" class="empty-liquid">
         <div class="empty-sphere">
           <span>🔍</span>
         </div>
@@ -228,422 +254,16 @@ export default {
       tagFilter: 'all',
       open: {},
       
-      commits: [
-        {
-          id: 'a0d9e8f7b6c5d4e3f2g1h0i9j8k7l6m5',
-          hash: 'a0d9e8f',
-          message: '🎉 Initial commit - Wiki structure',
-          description: 'Created the initial structure for the WildFire wiki. Added main pages and basic configuration.',
-          emoji: '🎉',
-          author: 'ianncxd',
-          date: '2024-01-15',
-          branch: 'main',
-          files: [
-            'README.md',
-            'docs/index.md',
-            'docs/getting-started.md',
-            'docs/guides/index.md',
-            '.vitepress/config.js'
-          ],
-          changes: [
-            'Created main wiki structure',
-            'Added getting started guide',
-            'Configured VitePress',
-            'Set up basic navigation'
-          ],
-          tags: ['feature', 'docs'],
-          add: 1245,
-          del: 0
-        },
-        {
-          id: 'b1c2d3e4f5g6h7i8j9k0l1m2n3o4p5q6',
-          hash: 'b1c2d3e',
-          message: '📝 Add FAQ section',
-          description: 'Created comprehensive FAQ section with answers to common questions about WildFire services and community.',
-          emoji: '📝',
-          author: 'ianncxd',
-          date: '2024-01-18',
-          branch: 'main',
-          files: [
-            'docs/faq/index.md',
-            'docs/faq/general.md',
-            'docs/faq/technical.md',
-            'docs/faq/community.md'
-          ],
-          changes: [
-            'Added 25+ FAQ entries',
-            'Categorized questions by topic',
-            'Added searchable format',
-            'Linked to relevant guides'
-          ],
-          tags: ['feature', 'docs'],
-          add: 3456,
-          del: 0
-        },
-        {
-          id: 'c7d8e9f0a1b2c3d4e5f6g7h8i9j0k1l2',
-          hash: 'c7d8e9f',
-          message: '🔧 Fix broken links in documentation',
-          description: 'Fixed multiple broken links across the wiki, updated outdated references, and improved navigation.',
-          emoji: '🔧',
-          author: 'ianncxd',
-          date: '2024-01-22',
-          branch: 'hotfix',
-          files: [
-            'docs/guides/deployment.md',
-            'docs/guides/configuration.md',
-            'docs/api/endpoints.md',
-            'docs/index.md'
-          ],
-          changes: [
-            'Fixed 15 broken external links',
-            'Updated 8 outdated references',
-            'Improved internal linking structure',
-            'Added redirects for moved pages'
-          ],
-          tags: ['fix'],
-          add: 234,
-          del: 89
-        },
-        {
-          id: 'd3e4f5g6h7i8j9k0l1m2n3o4p5q6r7s8',
-          hash: 'd3e4f5g',
-          message: '⚙️ Update VitePress configuration',
-          description: 'Updated VitePress config with new theme options, added search functionality, and improved sidebar navigation.',
-          emoji: '⚙️',
-          author: 'ianncxd',
-          date: '2024-01-25',
-          branch: 'main',
-          files: [
-            '.vitepress/config.js',
-            '.vitepress/theme/index.js',
-            '.vitepress/theme/style.css',
-            'package.json'
-          ],
-          changes: [
-            'Enabled full-text search',
-            'Updated theme configuration',
-            'Added dark mode support',
-            'Improved mobile responsiveness'
-          ],
-          tags: ['config', 'update'],
-          add: 567,
-          del: 123
-        },
-        {
-          id: 'e9f0a1b2c3d4e5f6g7h8i9j0k1l2m3n4',
-          hash: 'e9f0a1b',
-          message: '📚 Add deployment guides',
-          description: 'Added comprehensive deployment guides for different platforms including Docker, VPS, and cloud providers.',
-          emoji: '📚',
-          author: 'ianncxd',
-          date: '2024-01-28',
-          branch: 'feature/guides',
-          files: [
-            'docs/guides/deployment/docker.md',
-            'docs/guides/deployment/vps.md',
-            'docs/guides/deployment/cloud.md',
-            'docs/guides/deployment/netlify.md'
-          ],
-          changes: [
-            'Docker deployment guide with examples',
-            'VPS setup instructions for Ubuntu',
-            'AWS and GCP deployment options',
-            'Netlify one-click deploy guide'
-          ],
-          tags: ['feature', 'docs'],
-          add: 2890,
-          del: 0
-        },
-        {
-          id: 'f1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6',
-          hash: 'f1a2b3c',
-          message: '🔄 Update API documentation',
-          description: 'Updated API documentation with new endpoints, authentication methods, and code examples.',
-          emoji: '🔄',
-          author: 'ianncxd',
-          date: '2024-02-01',
-          branch: 'main',
-          files: [
-            'docs/api/authentication.md',
-            'docs/api/endpoints.md',
-            'docs/api/examples.md',
-            'docs/api/errors.md'
-          ],
-          changes: [
-            'Added 5 new API endpoints',
-            'Updated OAuth2 authentication flow',
-            'Added code examples in JS, Python, and curl',
-            'Improved error handling documentation'
-          ],
-          tags: ['update', 'api'],
-          add: 1876,
-          del: 234
-        },
-        {
-          id: 'g2h3i4j5k6l7m8n9o0p1q2r3s4t5u6v7',
-          hash: 'g2h3i4j',
-          message: '🐛 Fix mobile navigation',
-          description: 'Fixed responsive issues with mobile navigation menu. Improved touch targets and menu behavior on small screens.',
-          emoji: '🐛',
-          author: 'ianncxd',
-          date: '2024-02-05',
-          branch: 'hotfix/mobile',
-          files: [
-            '.vitepress/theme/components/NavBar.vue',
-            '.vitepress/theme/styles/mobile.css',
-            'docs/index.md'
-          ],
-          changes: [
-            'Fixed hamburger menu on iOS',
-            'Improved touch target sizes',
-            'Added smooth animations',
-            'Fixed z-index issues'
-          ],
-          tags: ['fix'],
-          add: 345,
-          del: 178
-        },
-        {
-          id: 'h5i6j7k8l9m0n1o2p3q4r5s6t7u8v9w0',
-          hash: 'h5i6j7k',
-          message: '✨ Add search functionality',
-          description: 'Implemented full-text search across the wiki using FlexSearch. Added search modal and keyboard shortcuts.',
-          emoji: '✨',
-          author: 'ianncxd',
-          date: '2024-02-08',
-          branch: 'feature/search',
-          files: [
-            '.vitepress/theme/components/SearchModal.vue',
-            '.vitepress/theme/composables/useSearch.ts',
-            'package.json',
-            'docs/index.md'
-          ],
-          changes: [
-            'Implemented FlexSearch integration',
-            'Added search modal with keyboard shortcut (Ctrl+K)',
-            'Real-time search results',
-            'Highlighted matching terms'
-          ],
-          tags: ['feature', 'config'],
-          add: 2345,
-          del: 0
-        },
-        {
-          id: 'i8j9k0l1m2n3o4p5q6r7s8t9u0v1w2x3',
-          hash: 'i8j9k0l',
-          message: '📖 Create contributor guide',
-          description: 'Added comprehensive guide for contributors including coding standards, PR process, and community guidelines.',
-          emoji: '📖',
-          author: 'ianncxd',
-          date: '2024-02-12',
-          branch: 'main',
-          files: [
-            'CONTRIBUTING.md',
-            'docs/contributing/index.md',
-            'docs/contributing/code-style.md',
-            'docs/contributing/pr-guide.md'
-          ],
-          changes: [
-            'Added coding standards section',
-            'Pull request template and process',
-            'Commit message conventions',
-            'Community guidelines'
-          ],
-          tags: ['docs'],
-          add: 3456,
-          del: 0
-        },
-        {
-          id: 'j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5',
-          hash: 'j0k1l2m',
-          message: '⚡ Optimize images and assets',
-          description: 'Optimized all images and assets for faster loading. Implemented lazy loading and responsive images.',
-          emoji: '⚡',
-          author: 'ianncxd',
-          date: '2024-02-15',
-          branch: 'main',
-          files: [
-            'docs/assets/**/*.png',
-            'docs/assets/**/*.jpg',
-            'docs/assets/**/*.svg',
-            '.vitepress/config.js'
-          ],
-          changes: [
-            'Compressed 50+ images (60% size reduction)',
-            'Implemented lazy loading',
-            'Added responsive image srcsets',
-            'Optimized SVG files'
-          ],
-          tags: ['update'],
-          add: 456,
-          del: 2345
-        },
-        {
-          id: 'k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6',
-          hash: 'k1l2m3n',
-          message: '🔧 Fix typo in README',
-          description: 'Fixed a small typo in the main README file and updated the getting started instructions.',
-          emoji: '🔧',
-          author: 'ianncxd',
-          date: '2024-02-18',
-          branch: 'hotfix',
-          files: [
-            'README.md',
-            'docs/getting-started.md'
-          ],
-          changes: [
-            'Fixed spelling errors',
-            'Updated installation steps',
-            'Added quick start example'
-          ],
-          tags: ['fix'],
-          add: 45,
-          del: 12
-        },
-        {
-          id: 'l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7',
-          hash: 'l2m3n4o',
-          message: '📚 Add troubleshooting section',
-          description: 'Added a comprehensive troubleshooting section with common issues and solutions for WildFire services.',
-          emoji: '📚',
-          author: 'ianncxd',
-          date: '2024-02-20',
-          branch: 'main',
-          files: [
-            'docs/troubleshooting/index.md',
-            'docs/troubleshooting/common-issues.md',
-            'docs/troubleshooting/faq.md'
-          ],
-          changes: [
-            '20+ common issues with solutions',
-            'Diagnostic commands section',
-            'Error code reference',
-            'Community support links'
-          ],
-          tags: ['docs', 'feature'],
-          add: 2345,
-          del: 0
-        },
-        {
-          id: 'm3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8',
-          hash: 'm3n4o5p',
-          message: '⚙️ Update theme configuration',
-          description: 'Updated the theme configuration with new colors, fonts, and layout options for better readability.',
-          emoji: '⚙️',
-          author: 'ianncxd',
-          date: '2024-02-23',
-          branch: 'main',
-          files: [
-            '.vitepress/theme/index.js',
-            '.vitepress/theme/styles/vars.css',
-            '.vitepress/theme/styles/globals.css'
-          ],
-          changes: [
-            'New color scheme with better contrast',
-            'Updated typography system',
-            'Improved spacing and layout',
-            'Added print styles'
-          ],
-          tags: ['config', 'update'],
-          add: 678,
-          del: 345
-        },
-        {
-          id: 'n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9',
-          hash: 'n4o5p6q',
-          message: '🔄 Update dependencies',
-          description: 'Updated all npm dependencies to their latest versions. Fixed security vulnerabilities and improved performance.',
-          emoji: '🔄',
-          author: 'ianncxd',
-          date: '2024-02-26',
-          branch: 'main',
-          files: [
-            'package.json',
-            'package-lock.json'
-          ],
-          changes: [
-            'Updated VitePress to v1.0.0',
-            'Patched security vulnerabilities',
-            'Removed deprecated packages',
-            'Improved build performance'
-          ],
-          tags: ['update'],
-          add: 567,
-          del: 234
-        },
-        {
-          id: 'o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0',
-          hash: 'o5p6q7r',
-          message: '✨ Add community section',
-          description: 'Created a new community section with information about Discord, forums, events, and how to get involved.',
-          emoji: '✨',
-          author: 'ianncxd',
-          date: '2024-02-29',
-          branch: 'feature/community',
-          files: [
-            'docs/community/index.md',
-            'docs/community/discord.md',
-            'docs/community/events.md',
-            'docs/community/contributors.md'
-          ],
-          changes: [
-            'Discord server rules and channels',
-            'Monthly community events calendar',
-            'Contributor spotlight section',
-            'Community showcase'
-          ],
-          tags: ['feature', 'docs'],
-          add: 2890,
-          del: 0
-        },
-        {
-          id: 'p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1',
-          hash: 'p6q7r8s',
-          message: '🔧 Fix search modal on mobile',
-          description: 'Fixed search modal display issues on mobile devices and improved touch interactions.',
-          emoji: '🔧',
-          author: 'ianncxd',
-          date: '2024-03-02',
-          branch: 'hotfix',
-          files: [
-            '.vitepress/theme/components/SearchModal.vue',
-            '.vitepress/theme/styles/mobile.css'
-          ],
-          changes: [
-            'Fixed modal positioning',
-            'Improved touch scrolling',
-            'Added swipe to close',
-            'Fixed keyboard issues'
-          ],
-          tags: ['fix'],
-          add: 234,
-          del: 89
-        },
-        {
-          id: 'q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2',
-          hash: 'q7r8s9t',
-          message: '📝 Add API rate limiting guide',
-          description: 'Added detailed documentation about API rate limits, headers, and best practices for handling limits.',
-          emoji: '📝',
-          author: 'ianncxd',
-          date: '2024-03-05',
-          branch: 'main',
-          files: [
-            'docs/api/rate-limiting.md',
-            'docs/api/best-practices.md'
-          ],
-          changes: [
-            'Rate limit headers explanation',
-            'Backoff strategies',
-            'Code examples for handling limits',
-            'Quota management tips'
-          ],
-          tags: ['docs', 'api'],
-          add: 1456,
-          del: 0
-        }
-      ]
+      commits: [],
+      isLoading: true,
+      error: null,
+      
+      // Cache pentru a nu face prea multe request-uri
+      cache: {
+        commits: null,
+        timestamp: null
+      },
+      cacheDuration: 5 * 60 * 1000 // 5 minute
     }
   },
 
@@ -655,8 +275,8 @@ export default {
         const q = this.search.toLowerCase()
         filtered = filtered.filter(c => 
           c.message.toLowerCase().includes(q) ||
-          c.description?.toLowerCase().includes(q) ||
-          c.author.includes(q) ||
+          (c.description && c.description.toLowerCase().includes(q)) ||
+          c.author.toLowerCase().includes(q) ||
           c.tags.some(t => t.includes(q))
         )
       }
@@ -672,10 +292,200 @@ export default {
       })
 
       return filtered
+    },
+
+    githubToken() {
+      return this.$githubToken || window.__GITHUB_TOKEN || import.meta.env.VITE_GITHUB_TOKEN
     }
   },
 
+  async mounted() {
+    await this.fetchCommits()
+  },
+
   methods: {
+    async fetchCommits() {
+      this.isLoading = true
+      this.error = null
+
+      // Verifică cache-ul
+      if (this.cache.commits && this.cache.timestamp && 
+          (Date.now() - this.cache.timestamp < this.cacheDuration)) {
+        this.commits = this.cache.commits
+        this.initOpenState()
+        this.isLoading = false
+        return
+      }
+
+      if (!this.githubToken) {
+        this.error = 'GitHub token missing. Check your .env file.'
+        this.isLoading = false
+        return
+      }
+
+      try {
+        const owner = 'ianncxd'
+        const repo = 'wiki-wildfire-inc'
+        
+        console.log('📡 Fetching commits from GitHub...')
+        
+        // Fetch commits (ultimele 100)
+        const commitsRes = await fetch(
+          `https://api.github.com/repos/${owner}/${repo}/commits?per_page=100`,
+          {
+            headers: {
+              'Authorization': `token ${this.githubToken}`,
+              'Accept': 'application/vnd.github.v3+json'
+            }
+          }
+        )
+
+        if (!commitsRes.ok) {
+          throw new Error(`GitHub API error: ${commitsRes.status}`)
+        }
+
+        const commits = await commitsRes.json()
+        
+        // Procesează fiecare commit pentru a lua mai multe detalii
+        const processedCommits = await Promise.all(
+          commits.map(async (commit) => {
+            // Ia detaliile complete ale commit-ului (inclusiv fișiere)
+            const detailRes = await fetch(commit.url, {
+              headers: {
+                'Authorization': `token ${this.githubToken}`,
+                'Accept': 'application/vnd.github.v3+json'
+              }
+            })
+            
+            let files = []
+            let add = 0
+            let del = 0
+            
+            if (detailRes.ok) {
+              const detail = await detailRes.json()
+              files = detail.files?.map(f => f.filename) || []
+              add = detail.stats?.additions || 0
+              del = detail.stats?.deletions || 0
+            }
+
+            // Extrage tag-urile din mesaj (conventional commits)
+            const message = commit.commit.message
+            const tags = this.extractTags(message)
+            
+            // Extrage descrierea (dacă există)
+            const description = this.extractDescription(message)
+            
+            // Emoji pe baza tipului de commit
+            const emoji = this.getCommitEmoji(tags[0] || '')
+
+            return {
+              id: commit.sha,
+              hash: commit.sha,
+              message: this.extractTitle(message),
+              description: description,
+              emoji: emoji,
+              author: commit.author?.login || commit.commit.author.name,
+              date: commit.commit.author.date,
+              branch: 'main',
+              files: files,
+              tags: tags,
+              add: add,
+              del: del,
+              url: commit.html_url
+            }
+          })
+        )
+
+        this.commits = processedCommits
+        
+        // Salvează în cache
+        this.cache = {
+          commits: processedCommits,
+          timestamp: Date.now()
+        }
+
+        // Inițializează open state pentru collapse
+        this.initOpenState()
+
+        console.log(`✅ Loaded ${processedCommits.length} commits`)
+
+      } catch (error) {
+        console.error('❌ Error fetching commits:', error)
+        this.error = 'Failed to load commits. Please try again.'
+      } finally {
+        this.isLoading = false
+      }
+    },
+
+    initOpenState() {
+      const openState = {}
+      this.commits.forEach(c => {
+        openState[c.id] = false
+      })
+      this.open = openState
+    },
+
+    extractTags(message) {
+      const tags = []
+      
+      // Conventional commits pattern
+      if (message.startsWith('feat')) tags.push('feat')
+      if (message.startsWith('fix')) tags.push('fix')
+      if (message.startsWith('docs')) tags.push('docs')
+      if (message.startsWith('test')) tags.push('test')
+      if (message.startsWith('refactor')) tags.push('refactor')
+      if (message.startsWith('style')) tags.push('style')
+      if (message.startsWith('perf')) tags.push('perf')
+      if (message.startsWith('security')) tags.push('security')
+      
+      // Fallback pe cuvinte cheie
+      if (tags.length === 0) {
+        const lower = message.toLowerCase()
+        if (lower.includes('fix') || lower.includes('bug')) tags.push('fix')
+        if (lower.includes('feat') || lower.includes('add')) tags.push('feat')
+        if (lower.includes('doc') || lower.includes('readme')) tags.push('docs')
+        if (lower.includes('test')) tags.push('test')
+        if (lower.includes('refactor')) tags.push('refactor')
+        if (lower.includes('style')) tags.push('style')
+        if (lower.includes('perf') || lower.includes('performance')) tags.push('perf')
+        if (lower.includes('security')) tags.push('security')
+      }
+      
+      // Default
+      if (tags.length === 0) tags.push('update')
+      
+      return tags
+    },
+
+    extractTitle(message) {
+      // Ia prima linie
+      return message.split('\n')[0]
+    },
+
+    extractDescription(message) {
+      const lines = message.split('\n')
+      if (lines.length > 1) {
+        // Ignoră prima linie (titlul) și liniile goale
+        return lines.slice(1).filter(l => l.trim() !== '').join('\n').trim()
+      }
+      return null
+    },
+
+    getCommitEmoji(tag) {
+      const emojiMap = {
+        'feat': '✨',
+        'fix': '🐛',
+        'docs': '📝',
+        'test': '🧪',
+        'refactor': '♻️',
+        'style': '🎨',
+        'perf': '⚡',
+        'security': '🔒',
+        'update': '🔄'
+      }
+      return emojiMap[tag] || '🔨'
+    },
+
     formatDate(date) {
       const d = new Date(date)
       const now = new Date()
@@ -684,7 +494,11 @@ export default {
       if (diff === 0) return 'today'
       if (diff === 1) return 'yesterday'
       if (diff < 7) return `${diff} days ago`
-      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      return d.toLocaleDateString('en-US', { 
+        year: 'numeric',
+        month: 'short', 
+        day: 'numeric'
+      })
     },
 
     toggle(id) {
@@ -697,14 +511,6 @@ export default {
       this.sortOrder = 'desc'
       this.tagFilter = 'all'
     }
-  },
-
-  mounted() {
-    const openState = {}
-    this.commits.forEach(c => {
-      openState[c.id] = false
-    })
-    this.open = openState
   }
 }
 </script>
@@ -924,14 +730,9 @@ html:not(.dark) .filters-panel {
 }
 
 .tags-group :deep(.page-tag) {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  font-size: 18px;
-  opacity: 0.6;
+  padding: 6px 12px;
+  font-size: 12px;
+  opacity: 0.7;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -939,7 +740,8 @@ html:not(.dark) .filters-panel {
 .tags-group :deep(.page-tag.tag-active) {
   opacity: 1;
   background: var(--primary-soft);
-  transform: scale(1.05);
+  transform: scale(1.02);
+  border-color: var(--primary);
 }
 
 .reset-pill {
@@ -982,6 +784,20 @@ html:not(.dark) .filters-panel {
 .count-label {
   color: var(--text-tertiary);
   font-size: 12px;
+}
+
+.loading-badge {
+  background: var(--bg-elevated);
+  border-color: var(--border-subtle);
+}
+
+.loading-spinner-small {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border-subtle);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 
 /* ACTIVE FILTERS */
@@ -1127,10 +943,13 @@ html:not(.dark) .glass-card:hover {
   letter-spacing: 0.3px;
   border: 1px solid var(--border-strong);
   transition: all 0.2s;
+  text-decoration: none;
 }
 
 .breadcrumb-hash:hover {
   transform: scale(1.02);
+  background: var(--primary);
+  color: white;
 }
 
 .breadcrumb-date, .breadcrumb-branch {
@@ -1302,6 +1121,11 @@ html:not(.dark) .glass-card:hover {
   font-size: 14px;
   font-weight: 500;
   transition: color 0.2s;
+  text-decoration: none;
+}
+
+.actor-name:hover {
+  text-decoration: underline;
 }
 
 .actions {
@@ -1322,6 +1146,7 @@ html:not(.dark) .glass-card:hover {
   transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1);
   font-size: 13px;
   backdrop-filter: blur(5px);
+  text-decoration: none;
 }
 
 .action-liquid:hover {
@@ -1511,59 +1336,47 @@ html:not(.dark) .glass-card:hover {
   color: var(--primary);
 }
 
-/* CHANGES STREAM */
-.changes-stream {
+/* STATS POOL */
+.stats-pool {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.change-drop {
+.stat-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 0;
-  border-bottom: 1px dashed var(--border-subtle);
-  transition: all 0.3s;
-  animation: changeFade 0.3s ease forwards;
-  opacity: 0;
-  transform: translateY(5px);
+  padding: 6px 12px;
+  background: var(--bg-elevated);
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s;
 }
 
-@keyframes changeFade {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.stat-item:hover {
+  background: var(--primary-soft);
+  transform: translateX(4px);
 }
 
-.change-drop:last-child {
-  border-bottom: none;
+.stat-label {
+  color: var(--text-tertiary);
+  font-size: 12px;
+  font-weight: 500;
 }
 
-.drop-bullet {
-  color: var(--primary);
-  font-size: 10px;
-  min-width: 20px;
-  text-align: center;
-  transition: all 0.3s;
-}
-
-.change-drop:hover .drop-bullet {
-  transform: scale(1.8);
-  color: var(--primary-dark);
-}
-
-.drop-text {
-  color: var(--text-secondary);
+.stat-value {
+  margin-left: auto;
   font-size: 13px;
-  line-height: 1.5;
-  flex: 1;
-  transition: color 0.3s;
+  font-weight: 600;
 }
 
-.change-drop:hover .drop-text {
-  color: var(--primary);
+.stat-add {
+  color: var(--green);
+}
+
+.stat-del {
+  color: var(--red);
 }
 
 /* TAGS CLOUD */
@@ -1587,6 +1400,149 @@ html:not(.dark) .glass-card:hover {
   filter: brightness(1.2);
   box-shadow: 0 4px 12px var(--primary-glow);
   opacity: 1;
+}
+
+/* ===== LOADING STATES ===== */
+.loading-liquid {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--bg-surface);
+  backdrop-filter: blur(var(--blur-amount));
+  border-radius: 40px;
+  border: 1px solid var(--border-subtle);
+}
+
+.loading-sphere {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-spinner-large {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-subtle);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-liquid p {
+  color: var(--text-tertiary);
+  margin: 0;
+}
+
+.error-liquid {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--bg-surface);
+  backdrop-filter: blur(var(--blur-amount));
+  border-radius: 40px;
+  border: 1px solid var(--red-soft);
+}
+
+.error-sphere {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 20px;
+  background: var(--red-soft);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  border: 1px solid var(--red);
+}
+
+.error-liquid p {
+  color: var(--red);
+  margin: 0 0 20px;
+}
+
+.error-liquid button {
+  padding: 10px 24px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 40px;
+  color: var(--primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.error-liquid button:hover {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  transform: translateY(-2px);
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-liquid {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--bg-surface);
+  backdrop-filter: blur(var(--blur-amount));
+  border-radius: 40px;
+  border: 1px solid var(--border-subtle);
+  transition: all 0.3s;
+}
+
+.empty-sphere {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background: var(--primary-soft);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  border: 1px solid var(--border-strong);
+  animation: floatPulse 3s infinite ease-in-out;
+}
+
+@keyframes floatPulse {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 0 0 0 var(--primary-glow);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 0 30px 10px var(--primary-glow);
+  }
+}
+
+.empty-liquid p {
+  color: var(--text-tertiary);
+  font-size: 15px;
+  margin: 0 0 20px;
+  transition: color 0.2s;
+}
+
+.empty-liquid button {
+  padding: 10px 24px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 40px;
+  color: var(--primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+  backdrop-filter: blur(5px);
+}
+
+.empty-liquid button:hover {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--primary-glow);
 }
 
 /* ===== TRANSITIONS ===== */
@@ -1647,68 +1603,6 @@ html:not(.dark) .glass-card:hover {
 .liquid-leave-to {
   opacity: 0;
   transform: scaleY(0.8) translateY(-15px);
-}
-
-/* EMPTY LIQUID */
-.empty-liquid {
-  text-align: center;
-  padding: 60px 20px;
-  background: var(--bg-surface);
-  backdrop-filter: blur(var(--blur-amount));
-  border-radius: 40px;
-  border: 1px solid var(--border-subtle);
-  transition: all 0.3s;
-}
-
-.empty-sphere {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 20px;
-  background: var(--primary-soft);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  border: 1px solid var(--border-strong);
-  animation: floatPulse 3s infinite ease-in-out;
-}
-
-@keyframes floatPulse {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-    box-shadow: 0 0 0 0 var(--primary-glow);
-  }
-  50% {
-    transform: translateY(-10px) scale(1.05);
-    box-shadow: 0 0 30px 10px var(--primary-glow);
-  }
-}
-
-.empty-liquid p {
-  color: var(--text-tertiary);
-  font-size: 15px;
-  margin: 0 0 20px;
-  transition: color 0.2s;
-}
-
-.empty-liquid button {
-  padding: 10px 24px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
-  border-radius: 40px;
-  color: var(--primary);
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s;
-  backdrop-filter: blur(5px);
-}
-
-.empty-liquid button:hover {
-  border-color: var(--primary);
-  background: var(--primary-soft);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px var(--primary-glow);
 }
 
 /* RESPONSIVE */

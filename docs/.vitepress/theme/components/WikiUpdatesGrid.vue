@@ -362,7 +362,7 @@ export default {
         prs: 0
       },
       recentCommits: [],
-      topContributors: [], // 🔥 NOU: Array pentru top 3 contribuitori
+      topContributors: [],
       isLoading: true,
       
       // Referințe pentru scroll reveal
@@ -370,7 +370,7 @@ export default {
       card2Ref: null,
       card3Ref: null,
       card4Ref: null,
-      cardTop3Ref: null, // 🔥 NOU: Referință pentru cardul Top 3
+      cardTop3Ref: null,
       headerRef: null,
       descRef: null,
       howToItem1Ref: null,
@@ -381,10 +381,8 @@ export default {
   },
 
   async mounted() {
-    // 🔥 Token-ul vine din proprietatea globală adăugată în index.ts
     const githubToken = this.$githubToken || window.__GITHUB_TOKEN || import.meta.env.VITE_GITHUB_TOKEN
     
-    // Verifică dacă token-ul există
     if (!githubToken) {
       console.error('❌ Token GitHub lipsește! Verifică variabila VITE_GITHUB_TOKEN din .env');
       this.isLoading = false;
@@ -393,12 +391,11 @@ export default {
 
     console.log('✅ WikiUpdatesGrid - Token găsit, lungime:', githubToken.length);
 
-    // Setup referințe
     this.card1Ref = this.$refs.card1Ref;
     this.card2Ref = this.$refs.card2Ref;
     this.card3Ref = this.$refs.card3Ref;
     this.card4Ref = this.$refs.card4Ref;
-    this.cardTop3Ref = this.$refs.cardTop3Ref; // 🔥 NOU
+    this.cardTop3Ref = this.$refs.cardTop3Ref;
     this.headerRef = this.$refs.headerRef;
     this.descRef = this.$refs.descRef;
     this.howToItem1Ref = this.$refs.howToItem1Ref;
@@ -409,7 +406,6 @@ export default {
     this.setupScrollReveal();
     window.addEventListener('scroll', this.handleScroll);
     
-    // Fetch ALL data from GitHub
     await this.fetchAllGitHubData(githubToken);
     
     setTimeout(() => {
@@ -452,12 +448,11 @@ export default {
         if (!repoRes.ok) throw new Error(`Repo error: ${repoRes.status}`);
         const repoData = await repoRes.json();
         
-        // 3. Fetch contributors (acum ia primii 3 pentru top)
+        // 3. Fetch contributors (primii 3)
         const contributorsRes = await fetch(`${baseUrl}/contributors?per_page=3&anon=1`, { headers });
         if (!contributorsRes.ok) throw new Error(`Contributors error: ${contributorsRes.status}`);
         const contributors = await contributorsRes.json();
         
-        // Extrage numărul total de contributori
         const contributorsLink = contributorsRes.headers.get('Link');
         let totalContributors = 1;
         if (contributorsLink) {
@@ -467,7 +462,6 @@ export default {
           }
         }
         
-        // Setează top contributor (primul)
         if (contributors && contributors.length > 0) {
           this.topContributor = {
             login: contributors[0].login,
@@ -475,7 +469,6 @@ export default {
             prs: Math.floor(contributors[0].contributions * 0.1)
           };
           
-          // 🔥 NOU: Setează top 3 contribuitori
           this.topContributors = contributors.slice(0, 3).map(c => ({
             login: c.login,
             contributions: c.contributions
@@ -505,25 +498,61 @@ export default {
           console.log('Nu s-au putut încărca fișierele');
         }
 
-        // 6. Fetch issues și PR-uri
-        const issuesRes = await fetch(`${baseUrl}/issues?state=open&per_page=1`, { headers });
-        const issuesLink = issuesRes.headers.get('Link');
+        // 6. Fetch ISSUE-URI (separate de PR-uri)
         let openIssues = 0;
-        if (issuesLink) {
-          const match = issuesLink.match(/&page=(\d+)>; rel="last"/);
-          if (match && match[1]) {
-            openIssues = parseInt(match[1], 10);
+        try {
+          // Fetch mai multe pentru a acoperi toate posibilitățile
+          const issuesRes = await fetch(`${baseUrl}/issues?state=open&per_page=100`, { headers });
+          
+          if (issuesRes.ok) {
+            const allIssues = await issuesRes.json();
+            
+            // Filtrăm doar issue-urile reale (cele fără pull_request)
+            const realIssues = allIssues.filter(issue => !issue.pull_request);
+            openIssues = realIssues.length;
+            
+            console.log('📊 Total items în issues API:', allIssues.length);
+            console.log('📊 PR-uri mascate ca issues:', allIssues.length - realIssues.length);
+            console.log('📊 Issue-uri reale:', openIssues);
+          } else {
+            console.log('⚠️ Eroare la fetch issues:', issuesRes.status);
           }
+        } catch (e) {
+          console.log('❌ Eroare la procesare issues:', e);
+          openIssues = 0;
         }
 
-        const pullsRes = await fetch(`${baseUrl}/pulls?state=open&per_page=1`, { headers });
-        const pullsLink = pullsRes.headers.get('Link');
+        // 7. Fetch PR-uri
         let openPRs = 0;
-        if (pullsLink) {
-          const match = pullsLink.match(/&page=(\d+)>; rel="last"/);
-          if (match && match[1]) {
-            openPRs = parseInt(match[1], 10);
+        try {
+          const pullsRes = await fetch(`${baseUrl}/pulls?state=open&per_page=1`, { headers });
+          
+          if (pullsRes.ok) {
+            const pullsLink = pullsRes.headers.get('Link');
+            
+            if (pullsLink) {
+              const match = pullsLink.match(/&page=(\d+)>; rel="last"/);
+              if (match && match[1]) {
+                openPRs = parseInt(match[1], 10);
+              } else {
+                const checkPulls = await fetch(`${baseUrl}/pulls?state=open&per_page=1`, { headers });
+                if (checkPulls.ok) {
+                  const data = await checkPulls.json();
+                  openPRs = data.length;
+                }
+              }
+            } else {
+              const data = await pullsRes.json();
+              openPRs = data.length;
+            }
+            
+            console.log('📊 PR-uri deschise:', openPRs);
+          } else {
+            console.log('⚠️ Eroare la fetch PR-uri:', pullsRes.status);
           }
+        } catch (e) {
+          console.log('❌ Eroare la procesare PR-uri:', e);
+          openPRs = 0;
         }
 
         // Actualizează stats
@@ -537,7 +566,7 @@ export default {
         };
 
         console.log('✅ GitHub data loaded:', this.repoStats);
-        console.log('🏆 Top 3 contributors:', this.topContributors); // 🔥 NOU
+        console.log('🏆 Top 3 contributors:', this.topContributors);
 
       } catch (error) {
         console.error('❌ Eroare la fetch date GitHub:', error);
@@ -602,7 +631,7 @@ export default {
         this.card2Ref,
         this.card3Ref,
         this.card4Ref,
-        this.cardTop3Ref, // 🔥 NOU
+        this.cardTop3Ref,
         this.headerRef,
         this.descRef,
         this.howToItem1Ref,
