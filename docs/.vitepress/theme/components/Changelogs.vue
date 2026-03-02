@@ -148,6 +148,7 @@
                 </div>
                 <a :href="`https://github.com/${commit.author}`" target="_blank" class="actor-name">{{ commit.author }}</a>
               </div>
+               
               
               <div class="actions">
                 <button class="action-liquid" @click="toggle(commit.id)">
