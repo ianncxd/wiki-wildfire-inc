@@ -439,100 +439,114 @@ export default {
   },
 
   methods: {
-    async fetchAllGitHubData() {
-      this.isLoading = true;
+   async fetchAllGitHubData() {
+  this.isLoading = true;
+  
+  const owner = 'ianncxd';
+  const repo = 'wiki-wildfire-inc';
+  const repoUrl = `https://api.github.com/repos/${owner}/${repo}`;
+
+  try {
+    // 1. Fetch repo details pentru stars
+    const repoRes = await fetch(repoUrl);
+    if (repoRes.ok) {
+      const repoData = await repoRes.json();
+      this.repoData.totalStars = repoData.stargazers_count || 0;
+    }
+
+    // 2. ASTA E CHEIA: Folosim fix același API ca și graficul de contribuitori
+    // /stats/contributors returnează array-ul cu numărul REAL de commit-uri
+    const contributorsStatsRes = await fetch(`${repoUrl}/stats/contributors`);
+    if (contributorsStatsRes.ok) {
+      const contributorsStats = await contributorsStatsRes.json();
       
-      const owner = 'ianncxd';
-      const repo = 'wiki-wildfire-inc';
-      const baseUrl = `https://api.github.com/repos/${owner}/${repo}`;
-
-      try {
-        // 1. Fetch repo details pentru stars
-        const repoRes = await fetch(baseUrl);
-        if (repoRes.ok) {
-          const repoData = await repoRes.json();
-          this.repoData.totalStars = repoData.stargazers_count || 0;
+      // Procesăm contributorii cu numărul REAL de commit-uri
+      const contributors = [];
+      
+      for (const c of contributorsStats) {
+        if (c.author && c.author.login) {
+          // Fetch PR-uri pentru fiecare contributor
+          const prs = await this.fetchContributorPRs(owner, repo, c.author.login);
+          contributors.push({
+            login: c.author.login,
+            avatar_url: c.author.avatar_url,
+            commits: c.total || 0, // ASTA e numărul REAL de commit-uri
+            prs: prs
+          });
         }
-
-        // 2. Fetch contributors
-        const contributorsRes = await fetch(`${baseUrl}/stats/contributors`);
-        if (contributorsRes.ok) {
-          const contributorsData = await contributorsRes.json();
-          
-          // Procesăm contributorii
-          const contributors = [];
-          
-          for (const c of contributorsData) {
-            if (c.author && c.author.login) {
-              // Fetch PR-uri pentru fiecare contributor
-              const prs = await this.fetchContributorPRs(owner, repo, c.author.login);
-              contributors.push({
-                login: c.author.login,
-                avatar_url: c.author.avatar_url,
-                commits: c.total,
-                prs: prs
-              });
-            }
-          }
-          
-          // Sortăm după numărul de commit-uri
-          this.topContributors = contributors.sort((a, b) => b.commits - a.commits);
-        }
-
-        // 3. Fetch total PR-uri
-        const pullsRes = await fetch(`${baseUrl}/pulls?state=all&per_page=1`);
-        if (pullsRes.ok) {
-          const linkHeader = pullsRes.headers.get('Link');
-          this.repoData.totalPRs = this.extractTotalCountFromLink(linkHeader);
-        }
-
-        // 4. Fetch open PR-uri
-        const openPullsRes = await fetch(`${baseUrl}/pulls?state=open&per_page=1`);
-        if (openPullsRes.ok) {
-          const openPullsLink = openPullsRes.headers.get('Link');
-          this.openPRs = this.extractTotalCountFromLink(openPullsLink);
-        }
-
-        // 5. Fetch open issues
-        const issuesRes = await fetch(`${baseUrl}/issues?state=open&per_page=1`);
-        if (issuesRes.ok) {
-          const issuesLink = issuesRes.headers.get('Link');
-          this.openIssues = this.extractTotalCountFromLink(issuesLink);
-        }
-
-        // 6. Fetch commits pentru timeline (dacă nu avem din props)
-        if (this.repoData.recentCommits.length === 0) {
-          const commitsRes = await fetch(`${baseUrl}/commits?per_page=4`);
-          if (commitsRes.ok) {
-            const commitsData = await commitsRes.json();
-            this.repoData.recentCommits = this.formatCommits(commitsData);
-          }
-        }
-
-      } catch (error) {
-        console.error('Eroare la fetch date GitHub:', error);
-        // Date de backup
-        this.topContributors = [
-          {
-            login: 'ianncxd',
-            commits: this.repoData.totalCommits || 33,
-            prs: 12
-          }
-        ];
-        this.repoData.totalPRs = 12;
-        this.openPRs = 0;
-        this.openIssues = 0;
-        this.repoData.totalStars = this.repoData.totalStars || 0;
-      } finally {
-        this.isLoading = false;
-        
-        // Actualizăm referințele pentru cardurile contribuitorilor
-        this.$nextTick(() => {
-          this.contributorCardsRef = this.$refs.contributorCardsRef || [];
-        });
       }
-    },
+      
+      // Sortăm după numărul de commit-uri
+      this.topContributors = contributors.sort((a, b) => b.commits - a.commits);
+      
+      // Calculăm total commits din suma contributorilor
+      this.repoData.totalCommits = contributors.reduce((sum, c) => sum + c.commits, 0);
+      this.repoData.contributorsCount = contributors.length;
+    }
 
+    // 3. Fetch total PR-uri
+    const totalPrsRes = await fetch(
+      `https://api.github.com/search/issues?q=repo:${owner}/${repo}+type:pr`
+    );
+    if (totalPrsRes.ok) {
+      const totalPrsData = await totalPrsRes.json();
+      this.repoData.totalPRs = totalPrsData.total_count || 0;
+    }
+
+    // 4. Fetch open PR-uri
+    const openPrsRes = await fetch(
+      `https://api.github.com/search/issues?q=repo:${owner}/${repo}+type:pr+state:open`
+    );
+    if (openPrsRes.ok) {
+      const openPrsData = await openPrsRes.json();
+      this.openPRs = openPrsData.total_count || 0;
+    }
+
+    // 5. Fetch open issues
+    const issuesRes = await fetch(
+      `https://api.github.com/search/issues?q=repo:${owner}/${repo}+type:issue+state:open`
+    );
+    if (issuesRes.ok) {
+      const issuesData = await issuesRes.json();
+      this.openIssues = issuesData.total_count || 0;
+    }
+
+    // 6. Fetch commits pentru timeline
+    if (this.repoData.recentCommits.length === 0) {
+      const commitsRes = await fetch(`${repoUrl}/commits?per_page=4`);
+      if (commitsRes.ok) {
+        const commitsData = await commitsRes.json();
+        this.repoData.recentCommits = this.formatCommits(commitsData);
+      }
+    }
+
+    console.log('Date reale din stats/contributors:', this.topContributors);
+    console.log('Total commits REAL:', this.repoData.totalCommits);
+
+  } catch (error) {
+    console.error('Eroare la fetch date GitHub:', error);
+    // Date de backup
+    this.topContributors = [
+      {
+        login: 'ianncxd',
+        commits: 33,
+        prs: 12
+      }
+    ];
+    this.repoData.totalCommits = 33;
+    this.repoData.totalPRs = 12;
+    this.openPRs = 0;
+    this.openIssues = 0;
+    this.repoData.totalStars = this.repoData.totalStars || 0;
+    this.repoData.contributorsCount = 1;
+  } finally {
+    this.isLoading = false;
+    
+    this.$nextTick(() => {
+      this.contributorCardsRef = this.$refs.contributorCardsRef || [];
+    });
+  }
+},
     async fetchContributorPRs(owner, repo, username) {
       try {
         const res = await fetch(
@@ -562,15 +576,6 @@ export default {
         date: commit.commit ? commit.commit.author.date : new Date().toISOString(),
         url: commit.html_url || '#'
       }));
-    },
-
-    extractTotalCountFromLink(linkHeader) {
-      if (!linkHeader) return 1;
-      const lastPageMatch = linkHeader.match(/&page=(\d+)>; rel="last"/);
-      if (lastPageMatch && lastPageMatch[1]) {
-        return parseInt(lastPageMatch[1], 10);
-      }
-      return 1;
     },
 
     getContributorBadge(index) {

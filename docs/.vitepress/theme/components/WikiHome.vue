@@ -218,12 +218,13 @@ const fetchGitHubData = async () => {
   const baseUrl = `https://api.github.com/repos/${owner}/${repo}`
   
   try {
-    console.log('Fetching GitHub data...')
+    console.log('Fetching GitHub data from wikihome...')
     
+    // Facem request-urile în paralel
     const [commitsRes, repoRes, contributorsRes, treeRes] = await Promise.all([
       fetch(`${baseUrl}/commits?per_page=4`),
       fetch(baseUrl),
-      fetch(`${baseUrl}/stats/contributors`),
+      fetch(`${baseUrl}/contributors`), // SCHIMBAT aici - folosim /contributors în loc de /stats/contributors
       fetch(`${baseUrl}/git/trees/main?recursive=1`)
     ])
 
@@ -238,16 +239,22 @@ const fetchGitHubData = async () => {
 
     recentCommits.value = formatCommits(commits)
 
+    // Calculăm total commits din header
+    const linkHeader = commitsRes.headers.get('Link')
+    let totalCommits = 0
+    if (linkHeader) {
+      const match = linkHeader.match(/&page=(\d+)>; rel="last"/)
+      if (match) totalCommits = parseInt(match[1], 10) * 30
+    }
+
     stats.value = {
-      totalCommits: Array.isArray(contributorsData) 
-        ? contributorsData.reduce((sum: number, c: any) => sum + c.total, 0) 
-        : 0,
-      contributors: Array.isArray(contributorsData) ? contributorsData.length : 0,
+      totalCommits: totalCommits || commits.length,
+      contributors: contributorsData.length || 1,
       totalFiles: treeData.tree?.filter((item: any) => item.type === 'blob').length || 0,
       stars: repoData.stargazers_count || 0
     }
 
-    console.log('GitHub data loaded:', stats.value)
+    console.log('GitHub data loaded in wikihome:', stats.value)
 
   } catch (error) {
     console.error('Eroare la fetch GitHub:', error)
@@ -283,7 +290,7 @@ const fetchGitHubData = async () => {
         emoji: '🔄',
         author: 'ianncxd',
         date: new Date(Date.now() - 259200000).toISOString(),
-        url: `https://github.com/${owner}/${repo}/commit/d475a34` // ← AM REPARAT GHILIMEEA
+        url: `https://github.com/${owner}/${repo}/commit/d475a34`
       }
     ]
     stats.value = {
