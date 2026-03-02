@@ -109,5 +109,5 @@ Vrei să faci parte din treaba asta? Intri pe server, bagi câteva runde, vezi t
 - **Discord:** [discord.gg/wildfire](https://discord.gg/wildfire)
 - **Steam Group:** [Wildfire CS](https://steamcommunity.com/groups/wildfire-ro)
 - **IP Server:** `go.wildfire.ro`
-
+ acesta este un test
 ---
