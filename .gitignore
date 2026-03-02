@@ -32,8 +32,3 @@ yarn-error.log*
 Thumbs.db
 ehthumbs.db
 Desktop.ini
-
-# Environment variables
-.env
-.env.local
-.env.*.local

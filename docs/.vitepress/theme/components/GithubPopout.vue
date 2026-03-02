@@ -219,15 +219,6 @@
 <script>
 export default {
   name: 'GithubPopout',
-  
-  // 🔥 ASTA E NOU - ia token-ul din .env
-setup() {
-  // Token direct - singura soluție care merge
-  const githubToken = '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';
-  console.log('Token încărcat');
-  return { githubToken };
-},
-  
   props: {
     username: {
       type: String,
@@ -261,10 +252,12 @@ setup() {
       },
       popoutStyle: {},
       tagClasses: '',
-      // 🔥 NU MAI PUI TOKENUL AICI - L-AM ȘTERS
+      // 🔥 TOKENUL TĂU DIRECT AICI - BĂGAT PULĂ
+      githubToken: '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'
     }
   },
   mounted() {
+    console.log('🚀 GithubPopout încărcat cu token:', this.githubToken ? 'EXISTĂ' : 'LIPSEȘTE')
     this.fetchUserData()
     this.fetchUserContributions()
     window.addEventListener('resize', this.positionPopout)
@@ -286,18 +279,21 @@ setup() {
       this.error = null
       
       try {
+        console.log('📡 Fetch user data pentru:', this.username)
+        
         const response = await fetch(`https://api.github.com/users/${this.username}`, {
           headers: {
-            'Authorization': `token ${this.githubToken}`, // 🔥 ACUM VINE DIN .env
+            'Authorization': `Bearer ${this.githubToken}`,
             'Accept': 'application/vnd.github.v3+json'
           }
         })
         
         if (!response.ok) {
-          throw new Error(`GitHub API error: ${response.status}`)
+          throw new Error(`GitHub API error: ${response.status} - ${response.statusText}`)
         }
         
         const data = await response.json()
+        console.log('✅ User data primit:', data.login)
         
         this.user = {
           ...this.user,
@@ -315,7 +311,7 @@ setup() {
           profileUrl: data.html_url || this.user.profileUrl
         }
       } catch (error) {
-        console.error('Eroare fetch user:', error)
+        console.error('❌ Eroare fetch user:', error)
         this.error = 'Failed to load profile'
       } finally {
         this.loading = false
@@ -324,22 +320,24 @@ setup() {
     
     async fetchUserContributions() {
       try {
+        console.log('📡 Fetch contribuții pentru:', this.username)
+        
         const response = await fetch('https://api.github.com/repos/ianncxd/wiki-wildfire-inc/contributors', {
           headers: {
-            'Authorization': `token ${this.githubToken}`, // 🔥 ȘI AICI LA FEL
+            'Authorization': `Bearer ${this.githubToken}`,
             'Accept': 'application/vnd.github.v3+json'
           }
         })
         
         if (!response.ok) {
-          throw new Error(`GitHub API error: ${response.status}`)
+          console.log('⚠️ Nu s-au putut lua contribuțiile:', response.status)
+          this.user.contributions = 0
+          return
         }
         
         const contributors = await response.json()
         
-        // Verifică dacă e array
         if (!Array.isArray(contributors)) {
-          console.log('Răspuns invalid:', contributors)
           this.user.contributions = 0
           return
         }
@@ -349,9 +347,10 @@ setup() {
         )
         
         this.user.contributions = contributor ? contributor.contributions : 0
+        console.log(`✅ Contribuții pentru ${this.username}:`, this.user.contributions)
         
       } catch (error) {
-        console.error('Eroare fetch contribuții:', error)
+        console.error('❌ Eroare fetch contribuții:', error)
         this.user.contributions = 0
       }
     },
