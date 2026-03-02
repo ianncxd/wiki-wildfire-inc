@@ -219,6 +219,7 @@
 <script>
 export default {
   name: 'GithubPopout',
+  
   props: {
     username: {
       type: String,
@@ -252,7 +253,8 @@ export default {
       },
       popoutStyle: {},
       tagClasses: '',
-      githubToken: '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' // TOKENUL TĂU AICI
+      // 🔥 TOKEN DIRECT AICI - GATA!
+      githubToken: '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'
     }
   },
   mounted() {

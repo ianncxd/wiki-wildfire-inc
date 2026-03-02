@@ -1,3 +1,4 @@
+
 <template>
   <div class="wiki-home-updates">
     <!-- LEFT SIDE - CARDURI CU PERSONALITATE (MULT SPRE STÂNGA) -->
@@ -11,7 +12,7 @@
       </div>
 
       <div class="cards-grid">
-        <!-- CARD 1: Top Contribuitor - AUTOMAT -->
+        <!-- CARD 1: Top Contribuitor - DINAMIC DIN API -->
         <div class="feature-card card-contributor clickable-card scroll-reveal" 
              @click="openProfile(topContributor.login)"
              :style="{ animationDelay: '0.2s' }"
@@ -52,7 +53,7 @@
           </div>
         </div>
 
-        <!-- CARD 2: Timeline - 4 update-uri AUTOMATE -->
+        <!-- CARD 2: Timeline - 4 update-uri DINAMICE DIN API -->
         <div class="feature-card card-timeline scroll-reveal" 
              :style="{ animationDelay: '0.8s' }"
              ref="card2Ref">
@@ -95,7 +96,7 @@
           </div>
         </div>
 
-        <!-- CARD 3: Statistici Rapide - AUTOMATE -->
+        <!-- CARD 3: Statistici Rapide (DINAMICE DIN API) -->
         <div class="feature-card card-stats-quick scroll-reveal" 
              :style="{ animationDelay: '1.6s' }"
              ref="card3Ref">
@@ -271,10 +272,10 @@ export default {
   
   data() {
     return {
-      // Token-ul tău GitHub
-      githubToken: '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',
+      // 🔥 TOKEN DIRECT AICI - GATA!
+      githubToken: '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',
       
-      // Date din API - toate AUTOMATE
+      // Date din API
       repoStats: {
         totalCommits: 0,
         contributors: 0,
@@ -321,7 +322,7 @@ export default {
     this.setupScrollReveal();
     window.addEventListener('scroll', this.handleScroll);
     
-    // Fetch ALL data from GitHub - 100% AUTOMAT
+    // Fetch ALL data from GitHub
     await this.fetchAllGitHubData();
     
     setTimeout(() => {
