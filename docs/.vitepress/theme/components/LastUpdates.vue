@@ -2,7 +2,7 @@
   <div class="last-updates">
     <div class="updates-header">
       <h2 class="section-title"><span>Recently Updated</span></h2>
-      <span class="updates-badge">{{ activeCards }} noi</span>
+      <span class="updates-badge">6 noi</span>
     </div>
     
     <div class="updates-grid">
@@ -194,12 +194,96 @@
 import { ref, computed } from 'vue'
 import WildfireTag from './WildfireTag.vue'
 
-const card1 = ref({ active: false, dotClass: 'dot-blue', category: '', title: '', date: '', username: '', avatarUrl: '', profileUrl: '', tagColor: 'blue', tag1: '', tag2: '', link: '', buttonText: '' })
-const card2 = ref({ active: false, dotClass: 'dot-orange', category: '', title: '', date: '', username: '', avatarUrl: '', profileUrl: '', tagColor: 'orange', tag1: '', tag2: '', link: '', buttonText: '' })
-const card3 = ref({ active: false, dotClass: 'dot-teal', category: '', title: '', date: '', username: '', avatarUrl: '', profileUrl: '', tagColor: 'teal', tag1: '', tag2: '', link: '', buttonText: '' })
-const card4 = ref({ active: false, dotClass: 'dot-amber', category: '', title: '', date: '', username: '', avatarUrl: '', profileUrl: '', tagColor: 'amber', tag1: '', tag2: '', link: '', buttonText: '' })
-const card5 = ref({ active: false, dotClass: 'dot-purple', category: '', title: '', date: '', username: '', avatarUrl: '', profileUrl: '', tagColor: 'purple', tag1: '', tag2: '', link: '', buttonText: '' })
-const card6 = ref({ active: false, dotClass: 'dot-pink', category: '', title: '', date: '', username: '', avatarUrl: '', profileUrl: '', tagColor: 'pink', tag1: '', tag2: '', link: '', buttonText: '' })
+const card1 = ref({
+  active: true,
+  dotClass: 'dot-orange',
+  category: 'CHANGELOGS',
+  title: 'UPDATES WIKI',
+  date: '02.03.2026',
+  username: 'ianncxd',
+  avatarUrl: 'https://github.com/ianncxd.png',
+  profileUrl: 'https://github.com/ianncxd',
+  tagColor: 'orange',
+  tag1: 'UPDATES',
+  tag2: 'INFO',
+  link: '/updates_wiki/updateswiki',
+  buttonText: 'citeste'
+})
+const card2 = ref({
+  active: true,
+  dotClass: 'dot-orange',
+  category: 'CHANGELOGS',
+  title: 'UPDATES WIKI',
+  date: '02.03.2026',
+  username: 'ianncxd',
+  avatarUrl: 'https://github.com/ianncxd.png',
+  profileUrl: 'https://github.com/ianncxd',
+  tagColor: 'orange',
+  tag1: 'UPDATES',
+  tag2: 'INFO',
+  link: '/updates_wiki/updateswiki',
+  buttonText: 'citeste'
+})
+const card3 = ref({
+  active: true,
+  dotClass: 'dot-orange',
+  category: 'CHANGELOGS',
+  title: 'UPDATES WIKI',
+  date: '02.03.2026',
+  username: 'ianncxd',
+  avatarUrl: 'https://github.com/ianncxd.png',
+  profileUrl: 'https://github.com/ianncxd',
+  tagColor: 'orange',
+  tag1: 'UPDATES',
+  tag2: 'INFO',
+  link: '/updates_wiki/updateswiki',
+  buttonText: 'citeste'
+})
+const card4 = ref({
+  active: true,
+  dotClass: 'dot-orange',
+  category: 'CHANGELOGS',
+  title: 'UPDATES WIKI',
+  date: '02.03.2026',
+  username: 'ianncxd',
+  avatarUrl: 'https://github.com/ianncxd.png',
+  profileUrl: 'https://github.com/ianncxd',
+  tagColor: 'orange',
+  tag1: 'UPDATES',
+  tag2: 'INFO',
+  link: '/updates_wiki/updateswiki',
+  buttonText: 'citeste'
+})
+const card5 = ref({
+  active: true,
+  dotClass: 'dot-orange',
+  category: 'CHANGELOGS',
+  title: 'UPDATES WIKI',
+  date: '02.03.2026',
+  username: 'ianncxd',
+  avatarUrl: 'https://github.com/ianncxd.png',
+  profileUrl: 'https://github.com/ianncxd',
+  tagColor: 'orange',
+  tag1: 'UPDATES',
+  tag2: 'INFO',
+  link: '/updates_wiki/updateswiki',
+  buttonText: 'citeste'
+})
+const card6 = ref({
+  active: true,
+  dotClass: 'dot-orange',
+  category: 'CHANGELOGS',
+  title: 'UPDATES WIKI',
+  date: '02.03.2026',
+  username: 'ianncxd',
+  avatarUrl: 'https://github.com/ianncxd.png',
+  profileUrl: 'https://github.com/ianncxd',
+  tagColor: 'orange',
+  tag1: 'UPDATES',
+  tag2: 'INFO',
+  link: '/updates_wiki/updateswiki',
+  buttonText: 'citeste'
+})
 
 const hexColors = {
   blue: '#3b82f6', orange: '#f97316', teal: '#14b8a6', amber: '#f59e0b',

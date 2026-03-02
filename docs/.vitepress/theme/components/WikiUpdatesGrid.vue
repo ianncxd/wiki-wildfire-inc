@@ -11,7 +11,7 @@
       </div>
 
       <div class="cards-grid">
-        <!-- CARD 1: Top Contribuitor (mare, prominent) -->
+        <!-- CARD 1: Top Contribuitor - FORȚAT DIN STATS -->
         <div class="feature-card card-contributor clickable-card scroll-reveal" 
              @click="openProfile('ianncxd')"
              :style="{ animationDelay: '0.2s' }"
@@ -32,12 +32,12 @@
               <div class="contributor-stats">
                 <span class="contributor-stat">
                   <span class="stat-icon">📦</span>
-                  <span class="stat-value">30</span>
+                  <span class="stat-value">{{ repoData.totalCommits }}</span>
                   <span class="stat-label">commits</span>
                 </span>
                 <span class="contributor-stat">
                   <span class="stat-icon">⭐</span>
-                  <span class="stat-value">16</span>
+                  <span class="stat-value">{{ repoData.totalPRs }}</span>
                   <span class="stat-label">PR-uri</span>
                 </span>
               </div>
@@ -45,7 +45,6 @@
           </div>
           
           <div class="contributor-footer">
-            <!-- <span class="contributor-quote">Wildfire on top</span> -->
             <a href="https://github.com/ianncxd" target="_blank" class="contributor-link clickable-link">
               Vezi profil 
               <span class="link-arrow">→</span>
@@ -53,7 +52,7 @@
           </div>
         </div>
 
-        <!-- CARD 2: Timeline - 4 update-uri într-un card -->
+        <!-- CARD 2: Timeline - 4 update-uri dinamice -->
         <div class="feature-card card-timeline scroll-reveal" 
              :style="{ animationDelay: '0.8s' }"
              ref="card2Ref">
@@ -66,7 +65,7 @@
           </div>
           
           <div class="timeline-list">
-            <div v-for="(commit, index) in recentCommits" :key="commit.id" 
+            <div v-for="(commit, index) in repoData.recentCommits" :key="commit.id" 
                  class="timeline-item clickable-item" 
                  @click="openCommit(commit.url)">
               <div class="timeline-dot" :style="{ animationDelay: `${index * 0.2}s` }"></div>
@@ -82,17 +81,21 @@
               </div>
               <span class="item-click-icon">→</span>
             </div>
+            <div v-if="isLoading && repoData.recentCommits.length === 0" class="timeline-loading">
+              <span class="loading-spinner"></span>
+              <span>Se încarcă...</span>
+            </div>
           </div>
           
           <div class="view-all-updates-wrapper">
-            <a href="/updates_wiki/updateswiki" class="view-all-updates-btn">
+            <a :href="`https://github.com/ianncxd/wiki-wildfire-inc/commits/main`" target="_blank" class="view-all-updates-btn">
               <span>Vezi toate update-urile</span>
               <span class="btn-arrow">→</span>
             </a>
           </div>
         </div>
 
-        <!-- CARD 3: Statistici Rapide (nu e clickabil) -->
+        <!-- CARD 3: Statistici Rapide (dinamice) -->
         <div class="feature-card card-stats-quick scroll-reveal" 
              :style="{ animationDelay: '1.6s' }"
              ref="card3Ref">
@@ -106,19 +109,19 @@
           
           <div class="stats-quick-grid">
             <div class="stats-quick-item">
-              <span class="stats-quick-value">{{ stats.totalCommits }}</span>
+              <span class="stats-quick-value">{{ repoData.totalCommits }}</span>
               <span class="stats-quick-label">commits</span>
             </div>
             <div class="stats-quick-item">
-              <span class="stats-quick-value">{{ stats.contributors }}</span>
+              <span class="stats-quick-value">{{ repoData.contributorsCount }}</span>
               <span class="stats-quick-label">contribuitori</span>
             </div>
             <div class="stats-quick-item">
-              <span class="stats-quick-value">{{ stats.totalFiles }}</span>
+              <span class="stats-quick-value">{{ repoData.totalFiles }}</span>
               <span class="stats-quick-label">fișiere</span>
             </div>
             <div class="stats-quick-item">
-              <span class="stats-quick-value">{{ stats.stars }}</span>
+              <span class="stats-quick-value">{{ repoData.totalStars }}</span>
               <span class="stats-quick-label">stars</span>
             </div>
           </div>
@@ -136,129 +139,113 @@
           <div class="plus-content">
             <div class="plus-icon">+</div>
             <h4 class="plus-title">Contribuie și tu</h4>
-            <p class="plus-description">Vrei să ajuti? Orice contribuție contează.</p>
+            <p class="plus-description">Vrei să ajuți? Orice contribuție contează.</p>
             <div class="plus-stats">
-              <span class="plus-stat">🔧 3 issue-uri deschise</span>
-              <span class="plus-stat">📝 2 pagini în lucru</span>
+              <span class="plus-stat">🔧 {{ openIssues }} issue-uri deschise</span>
+              <span class="plus-stat">📝 {{ openPRs }} PR-uri deschise</span>
             </div>
-            <span class="plus-link clickable-link">
+            <a :href="`https://github.com/ianncxd/wiki-wildfire-inc/issues`" target="_blank" class="plus-link clickable-link">
               Află cum 
               <span class="link-arrow">→</span>
-            </span>
+            </a>
           </div>
         </div>
       </div>
     </div>
 
-<!-- RIGHT SIDE - DESPRE CONTRIBUITORI (CENTRAT) -->
-<div class="text-zone">
-  <div class="text-content">
-    <!-- Header cu vertical line -->
-    <div class="header-block scroll-reveal" 
-         :style="{ animationDelay: '0.1s' }"
-         ref="headerRef">
-      <div class="vertical-line"></div>
-      <div class="header-text">
-        <span class="header-tag">🤝 COMUNITATE</span>
-        <h2 class="main-title">
-          <span class="title-static">DESPRE</span>
-          <span class="title-gradient">CONTRIBUITORI</span>
-        </h2>
-      </div>
-    </div>
-    
-    <!-- Description -->
-    <div class="description-block scroll-reveal" 
-         :style="{ animationDelay: '0.3s' }"
-         ref="descRef">
-      <p class="description-main">
-        Documentația asta nu se scrie singură. În spatele ei sunt oameni care 
-        au contribuit cu timp, cunoștințe și răbdare ca tu să ai toate informațiile la îndemână.
-      </p>
-      <p class="description-secondary">
-        <span class="description-highlight">30 de commit-uri</span> au fost necesare 
-        până acum. Unele au adăugat pagini noi, altele au corectat greșeli, 
-        altele au clarificat explicații. Fiecare a contat.
-      </p>
-
-    </div>
-
-    <!-- Cum poți contribui -->
-    <div class="how-to-block">
-      
-      <div class="how-to-item scroll-reveal" 
-           :style="{ animationDelay: '0.5s' }"
-           ref="howToItem1Ref">
-        <div class="how-to-svg">
-          <svg viewBox="0 0 24 24" width="24" height="24">
-            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5" fill="none"/>
-            <path d="M21 21L17 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="how-to-content">
-          <div class="how-to-header">
-            <span class="how-to-tag">PASUL 01</span>
-            <div class="how-to-line"></div>
+    <!-- RIGHT SIDE - DESPRE CONTRIBUITORI (CENTRAT) -->
+    <div class="text-zone">
+      <div class="text-content">
+        <!-- Header cu vertical line -->
+        <div class="header-block scroll-reveal" 
+             :style="{ animationDelay: '0.1s' }"
+             ref="headerRef">
+          <div class="vertical-line"></div>
+          <div class="header-text">
+            <span class="header-tag">🤝 COMUNITATE</span>
+            <h2 class="main-title">
+              <span class="title-static">DESPRE</span>
+              <span class="title-gradient">CONTRIBUITORI</span>
+            </h2>
           </div>
-          <h4>Găsește ceva de îmbunătățit</h4>
-          <p>O greșeală, un exemplu neclar, o pagină lipsă. Orice pagină poate fi mai bună.</p>
         </div>
-      </div>
-      
-      <div class="how-to-item scroll-reveal" 
-           :style="{ animationDelay: '0.7s' }"
-           ref="howToItem2Ref">
-        <div class="how-to-svg">
-          <svg viewBox="0 0 24 24" width="24" height="24">
-            <path d="M6 5L18 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M6 12L18 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M6 19L18 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            <circle cx="6" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
-            <circle cx="18" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
-          </svg>
+        
+        <!-- Description -->
+        <div class="description-block scroll-reveal" 
+             :style="{ animationDelay: '0.3s' }"
+             ref="descRef">
+          <p class="description-main">
+            Documentația asta nu se scrie singură. În spatele ei sunt oameni care 
+            au contribuit cu timp, cunoștințe și răbdare ca tu să ai toate informațiile la îndemână.
+          </p>
+          <p class="description-secondary">
+            <span class="description-highlight">{{ repoData.totalCommits }} de commit-uri</span> au fost necesare 
+            până acum. Unele au adăugat pagini noi, altele au corectat greșeli, 
+            altele au clarificat explicații. Fiecare a contat.
+          </p>
         </div>
-        <div class="how-to-content">
-          <div class="how-to-header">
-            <span class="how-to-tag">PASUL 02</span>
-            <div class="how-to-line"></div>
-          </div>
-          <h4>Deschide un Pull Request</h4>
-          <p>Fork, modifici, faci PR. Durează 5 minute și ajută pe toată lumea.</p>
-        </div>
-      </div>
-      
-      <div class="how-to-item scroll-reveal" 
-           :style="{ animationDelay: '0.9s' }"
-           ref="howToItem3Ref">
-        <div class="how-to-svg">
-          <svg viewBox="0 0 24 24" width="24" height="24">
-            <path d="M12 2L15 9H22L16 14L19 21L12 16.5L5 21L8 14L2 9H9L12 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
-          </svg>
-        </div>
-        <div class="how-to-content">
-          <div class="how-to-header">
-            <span class="how-to-tag">PASUL 03</span>
-            <div class="how-to-line"></div>
-          </div>
-          <h4>Apari în istoric</h4>
-          <p>Contribuția ta rămâne în wiki și e vizibilă pentru toată lumea.</p>
-        </div>
-      </div>
-    </div>
 
-    <!-- Stats și CTA -->
-    <div class="cta-block scroll-reveal" 
-         :style="{ animationDelay: '1.1s' }"
-         ref="ctaRef">
-      <a href="https://github.com/ianncxd/wiki-wildfire-inc" target="_blank" class="cta-button primary clickable-button">
-        <span>🐙 GitHub</span>
-        <span class="button-arrow">→</span>
-      </a>
-      <a href="/informatii/contributing" class="cta-button secondary clickable-button">
-        <span>📖 Ghid contribuție</span>
-        <span class="button-arrow">→</span>
-      </a>
-</div>
+        <!-- Cum poți contribui -->
+        <div class="how-to-block">
+          <div class="how-to-item scroll-reveal" 
+               :style="{ animationDelay: '0.5s' }"
+               ref="howToItem1Ref">
+            <div class="how-to-svg">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                <path d="M21 21L17 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="how-to-content">
+              <div class="how-to-header">
+                <span class="how-to-tag">PASUL 01</span>
+                <div class="how-to-line"></div>
+              </div>
+              <h4>Găsește ceva de îmbunătățit</h4>
+              <p>O greșeală, un exemplu neclar, o pagină lipsă. Orice pagină poate fi mai bună.</p>
+            </div>
+          </div>
+          
+          <div class="how-to-item scroll-reveal" 
+               :style="{ animationDelay: '0.7s' }"
+               ref="howToItem2Ref">
+            <div class="how-to-svg">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path d="M6 5L18 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M6 12L18 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M6 19L18 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                <circle cx="6" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                <circle cx="18" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="how-to-content">
+              <div class="how-to-header">
+                <span class="how-to-tag">PASUL 02</span>
+                <div class="how-to-line"></div>
+              </div>
+              <h4>Deschide un Pull Request</h4>
+              <p>Fork, modifici, faci PR. Durează 5 minute și ajută pe toată lumea.</p>
+            </div>
+          </div>
+          
+          <div class="how-to-item scroll-reveal" 
+               :style="{ animationDelay: '0.9s' }"
+               ref="howToItem3Ref">
+            <div class="how-to-svg">
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path d="M12 2L15 9H22L16 14L19 21L12 16.5L5 21L8 14L2 9H9L12 2Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              </svg>
+            </div>
+            <div class="how-to-content">
+              <div class="how-to-header">
+                <span class="how-to-tag">PASUL 03</span>
+                <div class="how-to-line"></div>
+              </div>
+              <h4>Apari în istoric</h4>
+              <p>Contribuția ta rămâne în wiki și e vizibilă pentru toată lumea.</p>
+            </div>
+          </div>
+        </div>
 
         <!-- Stats și CTA -->
         <div class="cta-block scroll-reveal" 
@@ -290,9 +277,9 @@ export default {
     stats: {
       type: Object,
       default: () => ({
-        totalCommits: 30,
-        contributors: 1,
-        totalFiles: 124,
+        totalCommits: 0,
+        contributors: 0,
+        totalFiles: 0,
         stars: 0
       })
     }
@@ -300,42 +287,19 @@ export default {
   
   data() {
     return {
-      recentCommits: this.updates.length ? this.updates : [
-        {
-          id: '29ffea1',
-          message: 'wikidocs core phase 2',
-          emoji: '⚡',
-          author: 'ianncxd',
-          date: '2026-03-01',
-          url: 'https://github.com/ianncxd/wiki-wildfire-inc/commit/29ffea1'
-        },
-        {
-          id: '5ce19a6',
-          message: 'Final commit on wildfire`s official wikipedia!',
-          emoji: '🎉',
-          author: 'ianncxd',
-          date: '2026-02-18',
-          url: 'https://github.com/ianncxd/wiki-wildfire-inc/commit/5ce19a6'
-        },
-        {
-          id: '9c4cccb',
-          message: 'WikiDocs core phase 1',
-          emoji: '📚',
-          author: 'ianncxd',
-          date: '2026-02-01',
-          url: 'https://github.com/ianncxd/wiki-wildfire-inc/commit/9c4cccb'
-        },
-        {
-          id: 'd475a34',
-          message: 'big update la tags si camere',
-          emoji: '🔄',
-          author: 'ianncxd',
-          date: '2026-02-15',
-          url: 'https://github.com/ianncxd/wiki-wildfire-inc/commit/d475a34'
-        }
-      ],
+      repoData: {
+        recentCommits: [],
+        totalCommits: 0,
+        totalPRs: 0,
+        totalFiles: 0,
+        totalStars: 0,
+        contributorsCount: 0
+      },
+      openIssues: 0,
+      openPRs: 0,
+      isLoading: true,
       
-      // Adaugă referințe pentru toate elementele
+      // Referințe pentru scroll reveal
       card1Ref: null,
       card2Ref: null,
       card3Ref: null,
@@ -349,8 +313,31 @@ export default {
     }
   },
 
-  mounted() {
-    // Salvează referințele
+  watch: {
+    updates: {
+      handler(newVal) {
+        if (newVal && newVal.length) {
+          this.repoData.recentCommits = newVal;
+        }
+      },
+      immediate: true
+    },
+    stats: {
+      handler(newVal) {
+        if (newVal) {
+          this.repoData.totalCommits = newVal.totalCommits || 0;
+          this.repoData.totalFiles = newVal.totalFiles || 0;
+          this.repoData.totalStars = newVal.stars || 0;
+          this.repoData.contributorsCount = newVal.contributors || 1;
+        }
+      },
+      immediate: true,
+      deep: true
+    }
+  },
+
+  async mounted() {
+    // Setup referințe
     this.card1Ref = this.$refs.card1Ref;
     this.card2Ref = this.$refs.card2Ref;
     this.card3Ref = this.$refs.card3Ref;
@@ -362,14 +349,15 @@ export default {
     this.howToItem3Ref = this.$refs.howToItem3Ref;
     this.ctaRef = this.$refs.ctaRef;
     
-    // Setup scroll reveal
     this.setupScrollReveal();
     window.addEventListener('scroll', this.handleScroll);
     
-    // Aplică efectul imediat pentru elementele deja vizibile
     setTimeout(() => {
       this.handleScroll();
     }, 100);
+
+    // Fetch doar PR-uri și issues (contributors nu mai fetch-uim)
+    await this.fetchPRsAndIssues();
   },
 
   beforeDestroy() {
@@ -377,6 +365,48 @@ export default {
   },
 
   methods: {
+    async fetchPRsAndIssues() {
+      this.isLoading = true;
+      
+      const owner = 'ianncxd';
+      const repo = 'wiki-wildfire-inc';
+      const baseUrl = `https://api.github.com/repos/${owner}/${repo}`;
+
+      try {
+        // PR-uri totale
+        const pullsRes = await fetch(`${baseUrl}/pulls?state=all&per_page=1`);
+        const linkHeader = pullsRes.headers.get('Link');
+        this.repoData.totalPRs = this.extractTotalCountFromLink(linkHeader);
+
+        // PR-uri deschise
+        const openPullsRes = await fetch(`${baseUrl}/pulls?state=open&per_page=1`);
+        const openPullsLink = openPullsRes.headers.get('Link');
+        this.openPRs = this.extractTotalCountFromLink(openPullsLink);
+
+        // Issue-uri deschise
+        const issuesRes = await fetch(`${baseUrl}/issues?state=open&per_page=1`);
+        const issuesLink = issuesRes.headers.get('Link');
+        this.openIssues = this.extractTotalCountFromLink(issuesLink);
+
+      } catch (error) {
+        console.error('Eroare la fetch PR-uri și issues:', error);
+        this.repoData.totalPRs = 1;
+        this.openPRs = 0;
+        this.openIssues = 0;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    extractTotalCountFromLink(linkHeader) {
+      if (!linkHeader) return 1;
+      const lastPageMatch = linkHeader.match(/&page=(\d+)>; rel="last"/);
+      if (lastPageMatch && lastPageMatch[1]) {
+        return parseInt(lastPageMatch[1], 10);
+      }
+      return 1;
+    },
+
     formatDate(date) {
       const d = new Date(date)
       const now = new Date()
@@ -392,7 +422,7 @@ export default {
     },
 
     openProfile(username) {
-      window.open(`https://github.com/${username}`, '_blank')
+      if (username) window.open(`https://github.com/${username}`, '_blank')
     },
 
     openCommit(url) {
@@ -403,12 +433,11 @@ export default {
       window.location.href = '/informatii/contributing'
     },
 
-    // ===== FUNCȚII NOI PENTRU SCROLL REVEAL =====
+    // ===== FUNCȚII PENTRU SCROLL REVEAL =====
     isElementInViewport(el) {
       if (!el) return false
       const rect = el.getBoundingClientRect()
       const windowHeight = window.innerHeight || document.documentElement.clientHeight
-      // Elementul este considerat vizibil dacă este la 85% din viewport
       return rect.top < windowHeight * 0.85 && rect.bottom > 0
     },
 
@@ -440,16 +469,13 @@ export default {
     },
 
     setupScrollReveal() {
-      // Nu mai folosim Intersection Observer, folosim metoda noastră
-      // Păstrăm funcția pentru compatibilitate
+      // Păstrată pentru compatibilitate
     }
   }
 }
 </script>
 
-
 <style scoped>
-
 /* ===== EFFECT DE SCROLL REVEAL ===== */
 .scroll-reveal {
   opacity: 0;
@@ -1155,7 +1181,7 @@ export default {
   border-radius: 30px;
 }
 
-/* ===== RIGHT ZONE - REPARAT ȘI CENTRAT ===== */
+/* ===== RIGHT ZONE ===== */
 .text-zone {
   display: flex;
   flex-direction: column;
@@ -1249,7 +1275,7 @@ export default {
   font-weight: 600;
 }
 
-/* ===== HOW TO - TOATE LINIILE PORTOCALII ===== */
+/* ===== HOW TO ===== */
 .how-to-block {
   display: flex;
   flex-direction: column;
@@ -1259,7 +1285,6 @@ export default {
   position: relative;
 }
 
-/* Linii sub fiecare element */
 .how-to-item {
   display: flex;
   gap: 12px;
@@ -1273,55 +1298,6 @@ export default {
   transform: translateX(5px);
 }
 
-/* Linia sub primul element - PORTOCALIU */
-/* .how-to-item:first-child::after {
-  content: '';
-  position: absolute;
-  left: 18px;
-  bottom: 2px;
-  width: 2px;
-  height: 16px;
-  background: #ff4500;
-  transform: translateX(-50%);
-  z-index: 1;
-  opacity: 0.7;
-  transition: all 0.3s ease;
-  border-radius: 1px;
-} */
-
-/* Linia sub al doilea element - PORTOCALIU */
-/* .how-to-item:nth-child(2)::after {
-  content: '';
-  position: absolute;
-  left: 18px;
-  bottom: 2px;
-  width: 2px;
-  height: 16px;
-  background: #ff4500;
-  transform: translateX(-50%);
-  z-index: 1;
-  opacity: 0.7;
-  transition: all 0.3s ease;
-  border-radius: 1px;
-} */
-
-/* Linia sub al treilea element - PORTOCALIU */
-/* .how-to-item:nth-child(3)::after {
-  content: '';
-  position: absolute;
-  left: 18px;
-  bottom: 2px;
-  width: 2px;
-  height: 16px;
-  background: #ff4500;
-  transform: translateX(-50%);
-  z-index: 1;
-  opacity: 0.7;
-  transition: all 0.3s ease;
-  border-radius: 1px;
-} */
-
-/* La hover, liniile devin mai vizibile */
 .how-to-item:hover::after {
   opacity: 1;
   height: 20px;
@@ -1329,17 +1305,10 @@ export default {
   box-shadow: 0 0 6px rgba(255, 69, 0, 0.5);
 }
 
-/* Al patrulea element (dacă există) nu mai are linie */
-.how-to-item:nth-child(4)::after {
-  display: none;
-}
-
-/* Ultimul element nu mai are padding-bottom */
 .how-to-item:last-child {
   padding-bottom: 0;
 }
 
-/* Container SVG */
 .how-to-svg {
   display: flex;
   align-items: center;
@@ -1376,7 +1345,6 @@ export default {
   stroke: white;
 }
 
-/* Content area */
 .how-to-content {
   flex: 1;
   padding-top: 3px;
@@ -1389,7 +1357,6 @@ export default {
   margin-bottom: 4px;
 }
 
-/* TAG MIC */
 .how-to-tag {
   font-size: 8px;
   font-weight: 600;
@@ -1446,48 +1413,6 @@ export default {
 .dark .how-to-item:hover .how-to-svg {
   background: #ff4500;
   border-color: #ff4500;
-}
-
-/* Responsive - și mai mic pe mobil */
-@media (max-width: 700px) {
-  .how-to-block {
-    gap: 16px;
-    padding-left: 15px;
-  }
-  
-  .how-to-item {
-    gap: 10px;
-    padding-bottom: 14px;
-  }
-  
-  .how-to-item::after {
-    left: 15px;
-    height: 12px;
-    width: 1.5px;
-  }
-  
-  .how-to-svg {
-    width: 30px;
-    height: 30px;
-  }
-  
-  .how-to-svg svg {
-    width: 16px;
-    height: 16px;
-  }
-  
-  .how-to-tag {
-    font-size: 7px;
-    padding: 1px 4px;
-  }
-  
-  .how-to-content h4 {
-    font-size: 13px;
-  }
-  
-  .how-to-content p {
-    font-size: 11px;
-  }
 }
 
 /* CTA */
@@ -1594,6 +1519,29 @@ export default {
   transform: translateX(4px);
 }
 
+/* ===== LOADING ===== */
+.timeline-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+}
+
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 69, 0, 0.3);
+  border-top-color: #ff4500;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* Responsive */
 @media (max-width: 1100px) {
   .wiki-home-updates {
@@ -1652,5 +1600,28 @@ export default {
     max-width: 100%;
     padding: 0 20px;
   }
+}
+
+
+.timeline-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+}
+
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 69, 0, 0.3);
+  border-top-color: #ff4500;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 </style>

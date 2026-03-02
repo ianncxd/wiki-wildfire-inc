@@ -15,6 +15,9 @@ import SiteMap from './components/SiteMap.vue'
 import PageNotFound from './components/PageNotFound.vue'
 import HomeNavbar from './components/HomeNavbar.vue'
 
+// NOUA COMPONENTĂ
+import AboutWiki from './components/AboutWiki.vue'
+
 // Import popout
 import './popout.js'
 
@@ -73,6 +76,9 @@ export default {
     app.component('WildfireTag', WildfireTag)
     app.component('SiteMap', SiteMap)
     app.component('PageNotFound', PageNotFound)
+    
+    // NOUA COMPONENTĂ
+    app.component('AboutWiki', AboutWiki)
     
     // Toate tag-urile
     app.component('PageTagBlue', PageTagBlue)
