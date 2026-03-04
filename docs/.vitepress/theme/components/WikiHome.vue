@@ -32,15 +32,39 @@
       role="presentation"
     />
     
-    <div class="wildfire-bg">
-      <div class="wildfire-gradient"></div>
-      <div class="wildfire-grid-primary"></div>
-      <div class="wildfire-grid-secondary"></div>
-      <div class="wildfire-scanlines"></div>
-      <div class="wildfire-spotlight-tl"></div>
-      <div class="wildfire-spotlight-br"></div>
-      <div class="scroll-overlay" :style="{ opacity: scrollOverlayOpacity }"></div>
-    </div>
+<div class="wildfire-bg">
+  <!-- Gradient de bază - negru elegant -->
+  <div class="wildfire-base"></div>
+  
+  <!-- Elemente de design unice -->
+  <div class="wildfire-ember-left"></div>
+  <div class="wildfire-ember-right"></div>
+  <div class="wildfire-ember-bottom"></div>
+  <div class="wildfire-ember-top"></div>
+  
+  <!-- Linii de energie -->
+  <div class="wildfire-energy-line-1"></div>
+  <div class="wildfire-energy-line-2"></div>
+  <div class="wildfire-energy-line-3"></div>
+  
+  <!-- Particule fine -->
+  <div class="wildfire-particles"></div>
+  
+  <!-- Particule mobile -->
+<div class="wildfire-floating-particles">
+  <div class="wildfire-particle wildfire-particle-1"></div>
+  <div class="wildfire-particle wildfire-particle-2"></div>
+  <div class="wildfire-particle wildfire-particle-3"></div>
+  <div class="wildfire-particle wildfire-particle-4"></div>
+  <div class="wildfire-particle wildfire-particle-5"></div>
+  <div class="wildfire-particle wildfire-particle-6"></div>
+  <div class="wildfire-particle wildfire-particle-7"></div>
+  <div class="wildfire-particle wildfire-particle-8"></div>
+</div>
+
+  <!-- Gradient de scroll -->
+  <div class="scroll-overlay" :style="{ opacity: scrollOverlayOpacity }"></div>
+</div>
     
     <main class="wildfire-hero">
       <div class="wildfire-container">
@@ -552,14 +576,14 @@ onUnmounted(() => {
 }
 
 :not(.dark) .wildfire-home .wildfire-bg {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(2px);
 }
 
 :not(.dark) .wildfire-home .wildfire-gradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(220, 38, 38, 0.06), rgba(249, 115, 22, 0.03), rgba(255, 255, 255, 0.7));
+  background: linear-gradient(to bottom, rgba(220, 38, 38, 0.04), rgba(249, 115, 22, 0.02), rgba(255, 255, 255, 0.85));
 }
 
 .wildfire-home .wildfire-grid-primary,
@@ -571,24 +595,24 @@ onUnmounted(() => {
 }
 
 :not(.dark) .wildfire-home .wildfire-grid-primary {
-  opacity: 0.08;
+  opacity: 0.05;
   background-image: 
-    linear-gradient(to right, rgba(255, 69, 0, 0.15) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 69, 0, 0.15) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 69, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 69, 0, 0.1) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
 :not(.dark) .wildfire-home .wildfire-grid-secondary {
-  opacity: 0.05;
+  opacity: 0.03;
   background-image: 
-    linear-gradient(to right, rgba(255, 100, 0, 0.1) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 100, 0, 0.1) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 100, 0, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 100, 0, 0.07) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
 :not(.dark) .wildfire-home .wildfire-scanlines {
-  opacity: 0.02;
-  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 2px);
+  opacity: 0.01;
+  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 2px);
   background-size: 100% 2px;
 }
 
@@ -608,13 +632,13 @@ onUnmounted(() => {
 :not(.dark) .wildfire-home .wildfire-spotlight-tl {
   top: 0;
   left: 25%;
-  background: rgba(220, 38, 38, 0.06);
+  background: rgba(220, 38, 38, 0.04);
 }
 
 :not(.dark) .wildfire-home .wildfire-spotlight-br {
   bottom: 0;
   right: 25%;
-  background: rgba(249, 115, 22, 0.04);
+  background: rgba(249, 115, 22, 0.03);
 }
 
 .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-spotlight-tl,
@@ -636,121 +660,477 @@ onUnmounted(() => {
 }
 
 @keyframes grid-pulse {
-  0% { opacity: 0.08; }
-  50% { opacity: 0.2; }
-  100% { opacity: 0.08; }
-}
-
-@keyframes grid-pulse-slow {
   0% { opacity: 0.05; }
   50% { opacity: 0.15; }
   100% { opacity: 0.05; }
 }
 
+@keyframes grid-pulse-slow {
+  0% { opacity: 0.03; }
+  50% { opacity: 0.1; }
+  100% { opacity: 0.03; }
+}
+
 @keyframes spotlight-pulse {
   0% { 
-    opacity: 0.2; 
+    opacity: 0.15; 
     transform: scale(1) translateZ(0);
     filter: blur(48px);
   }
   50% { 
-    opacity: 0.5; 
+    opacity: 0.4; 
     transform: scale(1.2) translateZ(0);
     filter: blur(52px);
   }
   100% { 
-    opacity: 0.2; 
+    opacity: 0.15; 
     transform: scale(1) translateZ(0);
     filter: blur(48px);
   }
 }
 
+/* // DARK THEME */
+
+
+/* DARK MODE - Background nou */
 .dark .wildfire-home .wildfire-bg {
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(2px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  pointer-events: none;
+  transform: translateZ(0);
+  background: transparent; /* Fundal complet transparent */
 }
 
-.dark .wildfire-home .wildfire-gradient {
+.dark .wildfire-base {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(69, 10, 10, 0.4), rgba(30, 15, 0, 0.3), rgba(0, 0, 0, 0.7));
+  background: linear-gradient(145deg, #030303 0%, #0a0705 30%, #030303 70%);
+  opacity: 0.95;
 }
 
-.dark .wildfire-home .wildfire-grid-primary {
-  opacity: 0.15;
+.dark .wildfire-ember-left {
+  position: absolute;
+  bottom: 15%;
+  left: 5%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle at 30% 70%, rgba(255, 68, 0, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(50px);
+  opacity: 0.5;
+  animation: emberGlow 12s ease-in-out infinite;
+}
+
+.dark .wildfire-ember-right {
+  position: absolute;
+  top: 20%;
+  right: 5%;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle at 70% 30%, rgba(255, 85, 0, 0.07) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.45;
+  animation: emberGlowReverse 14s ease-in-out infinite;
+}
+
+.dark .wildfire-ember-bottom {
+  position: absolute;
+  bottom: 5%;
+  right: 15%;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle at 40% 60%, rgba(200, 60, 0, 0.06) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(45px);
+  opacity: 0.4;
+  animation: emberFloat 16s ease-in-out infinite;
+}
+
+.dark .wildfire-ember-top {
+  position: absolute;
+  top: 10%;
+  left: 15%;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle at 60% 40%, rgba(220, 70, 0, 0.06) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(55px);
+  opacity: 0.4;
+  animation: emberFloatReverse 15s ease-in-out infinite;
+}
+
+.dark .wildfire-energy-line-1 {
+  position: absolute;
+  top: 30%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 68, 0, 0.1) 20%, 
+    rgba(255, 68, 0, 0.2) 50%, 
+    rgba(255, 68, 0, 0.1) 80%, 
+    transparent 100%
+  );
+  transform: rotate(-3deg) scale(1.2);
+  opacity: 0.3;
+  animation: energyPulse 8s ease-in-out infinite;
+}
+
+.dark .wildfire-energy-line-2 {
+  position: absolute;
+  bottom: 40%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 85, 0, 0.08) 15%, 
+    rgba(255, 68, 0, 0.15) 50%, 
+    rgba(255, 85, 0, 0.08) 85%, 
+    transparent 100%
+  );
+  transform: rotate(2deg) scale(1.1);
+  opacity: 0.25;
+  animation: energyPulseReverse 10s ease-in-out infinite;
+}
+
+.dark .wildfire-energy-line-3 {
+  position: absolute;
+  top: 60%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(200, 60, 0, 0.06) 25%, 
+    rgba(220, 70, 0, 0.12) 50%, 
+    rgba(200, 60, 0, 0.06) 75%, 
+    transparent 100%
+  );
+  transform: rotate(-1deg) scale(1.15);
+  opacity: 0.2;
+  animation: energyPulse 12s ease-in-out infinite;
+}
+
+.dark .wildfire-particles {
+  position: absolute;
+  inset: 0;
   background-image: 
-    linear-gradient(to right, rgba(255, 69, 0, 0.2) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 69, 0, 0.2) 1px, transparent 1px);
-  background-size: 40px 40px;
+    radial-gradient(circle at 20% 30%, rgba(255, 68, 0, 0.02) 1px, transparent 1px),
+    radial-gradient(circle at 80% 70%, rgba(255, 85, 0, 0.02) 1px, transparent 1px),
+    radial-gradient(circle at 45% 20%, rgba(200, 60, 0, 0.01) 1px, transparent 1px),
+    radial-gradient(circle at 65% 85%, rgba(220, 70, 0, 0.01) 1px, transparent 1px),
+    radial-gradient(circle at 10% 60%, rgba(255, 68, 0, 0.01) 1px, transparent 1px),
+    radial-gradient(circle at 90% 40%, rgba(255, 85, 0, 0.01) 1px, transparent 1px);
+  background-size: 200px 200px, 180px 180px, 150px 150px, 220px 220px, 190px 190px, 210px 210px;
+  background-position: 0 0;
+  opacity: 0.4;
+  animation: particlesMove 60s linear infinite;
 }
 
-.dark .wildfire-home .wildfire-grid-secondary {
-  opacity: 0.1;
-  background-image: 
-    linear-gradient(to right, rgba(255, 140, 0, 0.15) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 140, 0, 0.15) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.dark .wildfire-home .wildfire-scanlines {
-  opacity: 0.05;
-  background-image: repeating-linear-gradient(0deg, rgba(0,0,0,0.8) 0px, rgba(0,0,0,0.8) 1px, transparent 1px, transparent 2px);
-  background-size: 100% 2px;
-}
-
-.dark .wildfire-home .wildfire-spotlight-tl {
+/* ===== SPOTLIGHTS FINE ÎN COLȚURI ===== */
+.dark .wildfire-spotlight-tl {
+  position: absolute;
   top: 0;
-  left: 25%;
-  background: rgba(220, 38, 38, 0.2);
+  left: 0;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle at 20% 20%, rgba(255, 69, 0, 0.18) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+  animation: spotlightPulse 12s ease-in-out infinite;
+  z-index: 1;
 }
 
-.dark .wildfire-home .wildfire-spotlight-br {
+.dark .wildfire-spotlight-tr {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle at 80% 20%, rgba(255, 85, 0, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.28;
+  animation: spotlightPulse 14s ease-in-out infinite;
+  z-index: 1;
+}
+
+.dark .wildfire-spotlight-bl {
+  position: absolute;
   bottom: 0;
-  right: 25%;
-  background: rgba(234, 88, 12, 0.2);
+  left: 0;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle at 20% 80%, rgba(255, 100, 0, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.25;
+  animation: spotlightPulse 10s ease-in-out infinite;
+  z-index: 1;
 }
 
-.dark .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-grid-primary {
-  animation: grid-pulse-dark 2s ease-in-out infinite;
+.dark .wildfire-spotlight-br {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle at 80% 80%, rgba(255, 68, 0, 0.14) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(75px);
+  opacity: 0.26;
+  animation: spotlightPulse 16s ease-in-out infinite;
+  z-index: 1;
 }
 
-.dark .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-grid-secondary {
-  animation: grid-pulse-slow-dark 2.5s ease-in-out infinite;
-}
-
-.dark .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-spotlight-tl,
-.dark .wildfire-wallpaper-hover ~ .wildfire-bg .wildfire-spotlight-br {
-  animation: spotlight-pulse-dark 2.2s ease-in-out infinite;
-}
-
-@keyframes grid-pulse-dark {
-  0% { opacity: 0.15; }
-  50% { opacity: 0.28; }
-  100% { opacity: 0.15; }
-}
-
-@keyframes grid-pulse-slow-dark {
-  0% { opacity: 0.1; }
-  50% { opacity: 0.22; }
-  100% { opacity: 0.1; }
-}
-
-@keyframes spotlight-pulse-dark {
-  0% { 
-    opacity: 0.2; 
-    transform: scale(1) translateZ(0);
-    filter: blur(48px);
+@keyframes spotlightPulse {
+  0%, 100% { 
+    opacity: 0.25; 
+    transform: scale(1);
   }
   50% { 
-    opacity: 0.6; 
-    transform: scale(1.2) translateZ(0);
-    filter: blur(52px);
+    opacity: 0.4; 
+    transform: scale(1.08);
   }
-  100% { 
-    opacity: 0.2; 
-    transform: scale(1) translateZ(0);
-    filter: blur(48px);
-  }
+}
+
+/* Particule energetice mobile */
+.dark .wildfire-floating-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.dark .wildfire-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 69, 0, 0.6);
+  border-radius: 50%;
+  filter: blur(1px);
+  box-shadow: 0 0 10px rgba(255, 69, 0, 0.4);
+}
+
+/* Particula 1 - se mișcă stânga-dreapta */
+.dark .wildfire-particle-1 {
+  top: 20%;
+  left: 10%;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 85, 0, 0.7);
+  animation: moveHorizontal 15s ease-in-out infinite;
+}
+
+/* Particula 2 - se mișcă sus-jos */
+.dark .wildfire-particle-2 {
+  top: 70%;
+  right: 15%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 100, 0, 0.7);
+  animation: moveVertical 12s ease-in-out infinite;
+}
+
+/* Particula 3 - se mișcă în diagonală */
+.dark .wildfire-particle-3 {
+  top: 40%;
+  left: 60%;
+  width: 7px;
+  height: 7px;
+  background: rgba(255, 69, 0, 0.8);
+  animation: moveDiagonal 18s ease-in-out infinite;
+}
+
+/* Particula 4 - mișcare circulară */
+.dark .wildfire-particle-4 {
+  bottom: 25%;
+  left: 30%;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 140, 0, 0.6);
+  animation: moveCircle 20s linear infinite;
+}
+
+/* Particula 5 - zig-zag */
+.dark .wildfire-particle-5 {
+  top: 15%;
+  right: 40%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 68, 0, 0.7);
+  animation: moveZigZag 14s ease-in-out infinite;
+}
+
+/* Particula 6 - valuri */
+.dark .wildfire-particle-6 {
+  bottom: 40%;
+  left: 70%;
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 85, 0, 0.6);
+  animation: moveWave 16s ease-in-out infinite;
+}
+
+/* Particula 7 - bounce */
+.dark .wildfire-particle-7 {
+  top: 80%;
+  left: 10%;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 69, 0, 0.7);
+  animation: moveBounce 10s ease-in-out infinite;
+}
+
+/* Particula 8 - spirală */
+.dark .wildfire-particle-8 {
+  top: 30%;
+  right: 20%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 100, 0, 0.7);
+  animation: moveSpiral 22s linear infinite;
+}
+
+/* Animații diverse */
+@keyframes moveHorizontal {
+  0%, 100% { transform: translateX(0) translateY(0); opacity: 0.4; }
+  25% { transform: translateX(150px) translateY(-30px); opacity: 0.8; }
+  50% { transform: translateX(300px) translateY(20px); opacity: 0.5; }
+  75% { transform: translateX(150px) translateY(50px); opacity: 0.7; }
+}
+
+@keyframes moveVertical {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.4; }
+  33% { transform: translateY(-120px) translateX(40px); opacity: 0.8; }
+  66% { transform: translateY(100px) translateX(-30px); opacity: 0.6; }
+}
+
+@keyframes moveDiagonal {
+  0%, 100% { transform: translate(0, 0); opacity: 0.5; }
+  25% { transform: translate(200px, -100px); opacity: 0.9; }
+  50% { transform: translate(350px, 50px); opacity: 0.6; }
+  75% { transform: translate(150px, 150px); opacity: 0.8; }
+}
+
+@keyframes moveCircle {
+  0% { transform: rotate(0deg) translate(80px) rotate(0deg); opacity: 0.5; }
+  25% { transform: rotate(90deg) translate(80px) rotate(-90deg); opacity: 0.8; }
+  50% { transform: rotate(180deg) translate(80px) rotate(-180deg); opacity: 0.5; }
+  75% { transform: rotate(270deg) translate(80px) rotate(-270deg); opacity: 0.8; }
+  100% { transform: rotate(360deg) translate(80px) rotate(-360deg); opacity: 0.5; }
+}
+
+@keyframes moveZigZag {
+  0%, 100% { transform: translate(0, 0); opacity: 0.5; }
+  20% { transform: translate(100px, -50px); opacity: 0.8; }
+  40% { transform: translate(200px, 30px); opacity: 0.6; }
+  60% { transform: translate(280px, -40px); opacity: 0.9; }
+  80% { transform: translate(150px, 60px); opacity: 0.7; }
+}
+
+@keyframes moveWave {
+  0%, 100% { transform: translate(0, 0); opacity: 0.4; }
+  25% { transform: translate(120px, -60px); opacity: 0.7; }
+  50% { transform: translate(240px, 0); opacity: 0.5; }
+  75% { transform: translate(120px, 60px); opacity: 0.8; }
+}
+
+@keyframes moveBounce {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.5; }
+  25% { transform: translateY(-150px) translateX(50px); opacity: 0.9; }
+  50% { transform: translateY(0) translateX(120px); opacity: 0.6; }
+  75% { transform: translateY(-80px) translateX(200px); opacity: 0.8; }
+}
+
+@keyframes moveSpiral {
+  0% { transform: rotate(0deg) translate(50px) rotate(0deg); opacity: 0.5; }
+  33% { transform: rotate(120deg) translate(90px) rotate(-120deg); opacity: 0.8; }
+  66% { transform: rotate(240deg) translate(130px) rotate(-240deg); opacity: 0.6; }
+  100% { transform: rotate(360deg) translate(50px) rotate(-360deg); opacity: 0.5; }
+}
+
+/* Animații */
+@keyframes emberGlow {
+  0%, 100% { opacity: 0.5; transform: translate(0, 0) scale(1); }
+  50% { opacity: 0.7; transform: translate(10px, -10px) scale(1.05); }
+}
+
+@keyframes emberGlowReverse {
+  0%, 100% { opacity: 0.45; transform: translate(0, 0) scale(1); }
+  50% { opacity: 0.65; transform: translate(-10px, 10px) scale(1.05); }
+}
+
+@keyframes emberFloat {
+  0%, 100% { opacity: 0.4; transform: translate(0, 0); }
+  33% { opacity: 0.5; transform: translate(-15px, -5px); }
+  66% { opacity: 0.45; transform: translate(5px, -10px); }
+}
+
+@keyframes emberFloatReverse {
+  0%, 100% { opacity: 0.4; transform: translate(0, 0); }
+  33% { opacity: 0.5; transform: translate(15px, 5px); }
+  66% { opacity: 0.45; transform: translate(-5px, 10px); }
+}
+
+@keyframes energyPulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes energyPulseReverse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes particlesMove {
+  0% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+  100% { background-position: 200px 200px, 180px 180px, 150px 150px, 220px 220px, 190px 190px, 210px 210px; }
+}
+
+/* Efect la hover pe logo */
+.dark .wildfire-logo-container:hover ~ .wildfire-bg .wildfire-ember-left {
+  opacity: 0.7;
+  transition: all 0.5s ease;
+}
+
+.dark .wildfire-logo-container:hover ~ .wildfire-bg .wildfire-ember-right {
+  opacity: 0.65;
+  transition: all 0.5s ease;
+}
+
+.dark .wildfire-logo-container:hover ~ .wildfire-bg .wildfire-energy-line-1 {
+  opacity: 0.5;
+  transition: all 0.5s ease;
+}
+
+.dark .wildfire-logo-container:hover ~ .wildfire-bg .wildfire-spotlight-tl {
+  opacity: 0.5;
+  transition: all 0.5s ease;
+}
+
+.dark .wildfire-logo-container:hover ~ .wildfire-bg .wildfire-spotlight-tr {
+  opacity: 0.45;
+  transition: all 0.5s ease;
+}
+
+.dark .wildfire-logo-container:hover ~ .wildfire-bg .wildfire-spotlight-bl {
+  opacity: 0.4;
+  transition: all 0.5s ease;
+}
+
+.dark .wildfire-logo-container:hover ~ .wildfire-bg .wildfire-spotlight-br {
+  opacity: 0.42;
+  transition: all 0.5s ease;
 }
 
 .scroll-overlay {

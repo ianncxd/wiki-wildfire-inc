@@ -119,6 +119,8 @@ export default defineConfig({
         margin-top: 0.25rem;
       }
       
+
+      
       .version-container {
         display: flex;
         align-items: center;

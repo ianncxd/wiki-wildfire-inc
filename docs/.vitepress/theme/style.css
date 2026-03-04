@@ -292,3 +292,84 @@ body:not(.home) *,
   background: var(--wf-orange);
   box-shadow: 0 0 12px rgba(255, 69, 0, 0.5);
 }
+
+/*=============================================================================
+  9. ASCUNDERE SCROLLBAR-URI PENTRU TOATE SECȚIUNILE
+=============================================================================*/
+
+/* Ascunde scrollbar pentru sidebar (stânga) */
+.VPSidebar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  overflow-y: auto !important;
+}
+
+.VPSidebar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Ascunde scrollbar pentru outline (dreapta - "Pe această pagină") */
+.VPDocAsideOutline {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  overflow-y: auto !important;
+}
+
+.VPDocAsideOutline::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Ascunde scrollbar pentru containerul principal cu ambele coloane */
+.VPDoc.has-sidebar.has-aside {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.VPDoc.has-sidebar.has-aside::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Ascunde scrollbar pentru orice aside din document */
+.vp-doc aside,
+.VPDocAside,
+.VPDocAside .content,
+.aside-container {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.vp-doc aside::-webkit-scrollbar,
+.VPDocAside::-webkit-scrollbar,
+.VPDocAside .content::-webkit-scrollbar,
+.aside-container::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Asigură că scroll-ul funcționează dar bara e ascunsă */
+.VPSidebar,
+.VPDocAsideOutline,
+.VPDoc.has-sidebar.has-aside,
+.vp-doc aside,
+.VPDocAside,
+.aside-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow-y: auto;
+}
+
+.VPSidebar::-webkit-scrollbar,
+.VPDocAsideOutline::-webkit-scrollbar,
+.VPDoc.has-sidebar.has-aside::-webkit-scrollbar,
+.vp-doc aside::-webkit-scrollbar,
+.VPDocAside::-webkit-scrollbar,
+.aside-container::-webkit-scrollbar {
+  display: none;
+}
