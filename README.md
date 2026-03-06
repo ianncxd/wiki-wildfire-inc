@@ -34,10 +34,8 @@ The documentation covers multiple areas of the Wildfire ecosystem, including:
   Detailed explanations about the systems, services, and infrastructure used by Wildfire.
 
 - ⚙️ **Configuration & Setup**  
-  Guides for installing, configuring, and customizing different components.
+  Guides for configuring, and customizing different systems.
 
-- 🛠 **Development Resources**  
-  Documentation intended for developers who want to contribute or build on top of the project.
 
 - 📜 **Community Information**  
   Rules, structure, and important details about the Wildfire community.
@@ -65,4 +63,5 @@ If you want to improve the documentation, fix mistakes, or add new sections:
 Every contribution helps improve the documentation for the entire community.
 
 ---
+
 
