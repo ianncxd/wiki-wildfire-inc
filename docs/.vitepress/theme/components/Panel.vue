@@ -794,12 +794,12 @@
     </main>
 
     <!-- Toast Notifications -->
-    <div class="toast-zone">
+    <!-- <div class="toast-zone">
       <div v-for="toast in toasts" :key="toast.id" class="toast-message" :class="toast.type">
         <span>{{ toast.message }}</span>
         <button @click="removeToast(toast.id)">×</button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -827,6 +827,7 @@ export default {
       fileSearch: '',
       forceContributorsRefresh: false,
       lastContributorsFetch: null,
+      refreshInterval: null,
       
       repoStats: {
         totalCommits: 0,
@@ -1018,18 +1019,35 @@ export default {
   async mounted() {
     this.lastUpdateTime = new Date().toLocaleTimeString()
     window.addEventListener('resize', this.handleResize)
+    
+    // Refresh la încărcare
     await this.refreshAllData()
     
-    // Refresh la fiecare 5 minute
-    setInterval(() => {
+    // Refresh la 30 SECUNDE (nu 5 minute)
+    this.refreshInterval = setInterval(() => {
       this.refreshAllData()
-    }, 300000)
+    }, 30000)
+    
+    // Refresh la focus
+    window.addEventListener('focus', () => {
+      this.refreshAllData()
+    })
+    
+    // Refresh la visibility change
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        this.refreshAllData()
+      }
+    })
   },
 
   beforeUnmount() {
     if (this.charts.activity) this.charts.activity.destroy()
     if (this.charts.weekly) this.charts.weekly.destroy()
     window.removeEventListener('resize', this.handleResize)
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval)
+    }
   },
 
   methods: {
@@ -1043,22 +1061,21 @@ export default {
 
     processContributorsData(allContributors) {
       if (!allContributors || allContributors.length === 0) {
-        console.log('⚠️ Nu s-au găsit contributori, încerc metoda alternativă...')
-        this.fetchContributorsFromCommits() // Fallback
+        console.log('⚠️ Nu s-au găsit contributori')
         return
       }
       
-      // Elimină duplicatele (uneori apar)
+      // Elimină duplicatele
       const uniqueContributors = Array.from(
         new Map(allContributors.map(c => [c.login, c])).values()
       )
       
-      console.log(`✅ După eliminarea duplicatelor: ${uniqueContributors.length} contributori unici`)
+      console.log(`✅ ${uniqueContributors.length} contributori unici`)
       
       // Sortează după contribuții
       const sorted = [...uniqueContributors].sort((a, b) => b.contributions - a.contributions)
       
-      // PENTRU DASHBOARD → doar primii 10
+      // PENTRU DASHBOARD → primii 10
       this.topContributors = sorted.slice(0, 10).map(c => ({
         login: c.login,
         avatar_url: c.avatar_url,
@@ -1067,7 +1084,7 @@ export default {
         role: c.contributions > 100 ? 'core' : c.contributions > 50 ? 'regular' : 'contributor'
       }))
       
-      // Top contributor (primul)
+      // Top contributor
       if (sorted.length > 0) {
         this.topContributor = {
           login: sorted[0].login,
@@ -1085,19 +1102,18 @@ export default {
         avatar_url: c.avatar_url,
         html_url: c.html_url,
         commits: c.contributions,
-        prs: Math.floor(c.contributions * 0.3), // Aproximare
-        issues: Math.floor(c.contributions * 0.1), // Aproximare
+        prs: Math.floor(c.contributions * 0.3),
+        issues: Math.floor(c.contributions * 0.1),
         role: c.contributions > 100 ? 'core' : c.contributions > 50 ? 'regular' : 'contributor',
         impact: maxCommits ? (c.contributions / maxCommits) * 100 : 0
       }))
       
-      // Salvează timestamp-ul
       this.lastContributorsFetch = new Date().toISOString()
     },
 
-    // Metodă nouă de fallback - extrage contributori din commit-uri
+    // METODA PRINCIPALĂ - extrage contributori DIRECT din commit-uri
     async fetchContributorsFromCommits() {
-      console.log('🔄 Încerc să extrag contributori din commit-uri...')
+      console.log('🔄 Extragere contributori DIRECT din commit-uri...')
       
       const token = this.getToken()
       if (!token) return
@@ -1107,56 +1123,79 @@ export default {
       const headers = { 'Authorization': `token ${token}` }
       
       try {
-        // Ia ultimii 1000 de commit-uri
+        // Ia ultimele 500 commit-uri (5 pagini x 100)
         let allCommits = []
         let page = 1
+        let hasMore = true
         
-        while (page <= 10) { // 10 pagini * 100 = 1000 commit-uri
+        while (hasMore && page <= 5) {
           const res = await fetch(
-            `https://api.github.com/repos/${owner}/${repo}/commits?per_page=100&page=${page}`,
+            `https://api.github.com/repos/${owner}/${repo}/commits?per_page=100&page=${page}&_=${Date.now()}`,
             { headers }
           )
           
           if (res.ok) {
             const commits = await res.json()
-            if (commits.length === 0) break
-            allCommits = [...allCommits, ...commits]
-            page++
+            if (commits.length === 0) {
+              hasMore = false
+            } else {
+              allCommits = [...allCommits, ...commits]
+              page++
+            }
           } else {
-            break
+            hasMore = false
           }
         }
         
-        // Extrage autori unici
-        const authorMap = new Map()
+        // Creează map de autori unici
+        const contributorMap = new Map()
         
         allCommits.forEach(commit => {
-          const author = commit.author || commit.commit.author
-          if (author) {
-            const login = commit.author?.login || commit.commit.author.name?.replace(/\s+/g, '').toLowerCase()
-            if (login) {
-              if (!authorMap.has(login)) {
-                authorMap.set(login, {
-                  login: login,
-                  avatar_url: commit.author?.avatar_url || `https://github.com/${login}.png`,
-                  html_url: commit.author?.html_url || `https://github.com/${login}`,
-                  contributions: 1
-                })
-              } else {
-                authorMap.get(login).contributions++
-              }
+          // Încearcă toate sursele posibile pentru autor
+          let login = null
+          let avatar = null
+          let html_url = null
+          
+          if (commit.author) {
+            login = commit.author.login
+            avatar = commit.author.avatar_url
+            html_url = commit.author.html_url
+          } else if (commit.committer) {
+            login = commit.committer.login
+            avatar = commit.committer.avatar_url
+            html_url = commit.committer.html_url
+          } else {
+            // Fallback pentru commit-uri fără user
+            login = commit.commit.author.name?.replace(/\s+/g, '').toLowerCase()
+            avatar = `https://github.com/${login}.png`
+            html_url = `https://github.com/${login}`
+          }
+          
+          if (login) {
+            if (!contributorMap.has(login)) {
+              contributorMap.set(login, {
+                login: login,
+                avatar_url: avatar,
+                html_url: html_url,
+                contributions: 1
+              })
+            } else {
+              contributorMap.get(login).contributions++
             }
           }
         })
         
-        const contributorsFromCommits = Array.from(authorMap.values())
-        console.log(`✅ Găsiți ${contributorsFromCommits.length} contributori din commit-uri`)
+        const contributorsFromCommits = Array.from(contributorMap.values())
+        console.log(`✅ Găsiți ${contributorsFromCommits.length} contributori din ultimele commit-uri`)
         
         this.repoStats.contributors = contributorsFromCommits.length
         this.processContributorsData(contributorsFromCommits)
         
+        this.showToast(`✅ ${contributorsFromCommits.length} contributori actualizați`, 'success')
+        
       } catch (e) {
-        console.error('❌ Eroare la fallback:', e)
+        console.error('❌ Eroare la extragerea contributorilor:', e)
+        this.showToast('⚠️ Eroare la actualizarea contributorilor', 'error')
       }
     },
 
@@ -1176,9 +1215,12 @@ export default {
         'Accept': 'application/vnd.github.v3+json'
       }
 
+      // Cache buster pentru toate request-urile
+      const timestamp = Date.now()
+
       try {
         // Fetch repo info
-        const repoRes = await fetch(baseUrl, { headers })
+        const repoRes = await fetch(`${baseUrl}?_=${timestamp}`, { headers })
         if (repoRes.ok) {
           const repoData = await repoRes.json()
           this.repoStats.stars = repoData.stargazers_count || 0
@@ -1188,7 +1230,7 @@ export default {
         }
 
         // Fetch languages
-        const langRes = await fetch(`${baseUrl}/languages`, { headers })
+        const langRes = await fetch(`${baseUrl}/languages?_=${timestamp}`, { headers })
         if (langRes.ok) {
           const langData = await langRes.json()
           const total = Object.values(langData).reduce((a, b) => a + b, 0)
@@ -1199,13 +1241,13 @@ export default {
           }))
         }
 
-        // Fetch all commits (paginat)
+        // Fetch all commits (pentru stats generale)
         let page = 1
         let allCommits = []
         let hasMore = true
         
         while (hasMore && page <= 10) {
-          const commitsRes = await fetch(`${baseUrl}/commits?per_page=100&page=${page}`, { headers })
+          const commitsRes = await fetch(`${baseUrl}/commits?per_page=100&page=${page}&_=${timestamp}`, { headers })
           if (commitsRes.ok) {
             const commits = await commitsRes.json()
             if (commits.length === 0) {
@@ -1244,7 +1286,7 @@ export default {
           monthly[monthKey] = (monthly[monthKey] || 0) + 1
         })
 
-        // Daily commits (last 30 days)
+        // Daily commits
         const last30Days = []
         for (let i = 29; i >= 0; i--) {
           const date = new Date(now)
@@ -1279,6 +1321,7 @@ export default {
         }))
 
         // Audit log
+        this.auditLog = []
         allCommits.slice(0, 100).forEach(commit => {
           this.auditLog.push({
             id: `commit-${commit.sha}`,
@@ -1290,57 +1333,11 @@ export default {
           })
         })
 
-        // ===== FETCH CONTRIBUTORS - IA TOTI =====
-        let allContributors = []
-        let contributorsPage = 1
-        let hasMoreContributors = true
-
-        console.log('📥 Începem încărcarea contributorilor...')
-
-        // Dacă e force refresh, adaugă un timestamp la URL pentru cache busting
-        const cacheBuster = this.forceContributorsRefresh ? `&t=${Date.now()}` : ''
-
-        while (hasMoreContributors && contributorsPage <= 50) { // Limită de siguranță 50 pagini
-          try {
-            // Folosim always fresh=true și cache buster dacă e nevoie
-            const contributorsRes = await fetch(
-              `${baseUrl}/contributors?per_page=100&page=${contributorsPage}&fresh=true${cacheBuster}`, 
-              { headers }
-            )
-            
-            if (contributorsRes.ok) {
-              const contributorsPageData = await contributorsRes.json()
-              
-              if (contributorsPageData.length === 0) {
-                hasMoreContributors = false
-                console.log(`✅ Gata. Total pagini: ${contributorsPage - 1}`)
-              } else {
-                allContributors = [...allContributors, ...contributorsPageData]
-                console.log(`📊 Pagina ${contributorsPage}: +${contributorsPageData.length} (total: ${allContributors.length})`)
-                contributorsPage++
-              }
-            } else {
-              hasMoreContributors = false
-              console.log(`❌ Eroare la pagina ${contributorsPage}: ${contributorsRes.status}`)
-            }
-          } catch (e) {
-            console.log(`❌ Eroare la pagina ${contributorsPage}:`, e)
-            hasMoreContributors = false
-          }
-        }
-
-        console.log(`🏆 Total contribuitori din API: ${allContributors.length}`)
-
-        // Dacă API-ul a returnat 0, încearcă fallback-ul
-        if (allContributors.length === 0) {
-          await this.fetchContributorsFromCommits()
-        } else {
-          this.repoStats.contributors = allContributors.length
-          this.processContributorsData(allContributors)
-        }
+        // ===== FETCH CONTRIBUTORS - DIRECT DIN COMMIT-URI (IGNORĂM API-UL LENT) =====
+        await this.fetchContributorsFromCommits()
 
         // Fetch PRs
-        const prsRes = await fetch(`${baseUrl}/pulls?state=open&sort=updated&direction=desc&per_page=10`, { headers })
+        const prsRes = await fetch(`${baseUrl}/pulls?state=open&sort=updated&direction=desc&per_page=10&_=${timestamp}`, { headers })
         if (prsRes.ok) {
           const prs = await prsRes.json()
           this.recentPRs = prs.map(pr => ({
@@ -1367,7 +1364,7 @@ export default {
         }
 
         // Fetch issues
-        const issuesRes = await fetch(`${baseUrl}/issues?state=open&sort=updated&direction=desc&per_page=10`, { headers })
+        const issuesRes = await fetch(`${baseUrl}/issues?state=open&sort=updated&direction=desc&per_page=10&_=${timestamp}`, { headers })
         if (issuesRes.ok) {
           const issues = await issuesRes.json()
           const realIssues = issues.filter(issue => !issue.pull_request)
@@ -1398,7 +1395,7 @@ export default {
         if (this.topContributor.login) {
           try {
             const prCountRes = await fetch(
-              `https://api.github.com/search/issues?q=repo:${owner}/${repo}+type:pr+author:${this.topContributor.login}`,
+              `https://api.github.com/search/issues?q=repo:${owner}/${repo}+type:pr+author:${this.topContributor.login}&_=${timestamp}`,
               { headers }
             )
             if (prCountRes.ok) {
@@ -1422,7 +1419,7 @@ export default {
         this.lastUpdateTime = new Date().toLocaleTimeString()
         this.showToast('Data synchronized from GitHub', 'success')
 
-        // Reinit charts if needed
+        // Reinit charts
         if (this.currentView === 'dashboard') {
           this.$nextTick(() => this.initActivityChart())
         }
@@ -1465,7 +1462,7 @@ export default {
 
       try {
         const treeRes = await fetch(
-          `https://api.github.com/repos/${owner}/${repo}/git/trees/main?recursive=1`,
+          `https://api.github.com/repos/${owner}/${repo}/git/trees/main?recursive=1&_=${Date.now()}`,
           { headers }
         )
         if (treeRes.ok) {
@@ -1540,7 +1537,7 @@ export default {
       
       try {
         const res = await fetch(
-          `https://api.github.com/repos/ianncxd/wiki-wildfire-inc/contents/${file.path}`,
+          `https://api.github.com/repos/ianncxd/wiki-wildfire-inc/contents/${file.path}?_=${Date.now()}`,
           { headers: { 'Authorization': `token ${token}` } }
         )
         if (res.ok) {
@@ -1623,6 +1620,8 @@ export default {
         labels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }))
       }
 
+      if (this.charts.activity) this.charts.activity.destroy()
+      
       this.charts.activity = new Chart(actCtx, {
         type: 'line',
         data: {
@@ -1690,6 +1689,8 @@ export default {
       const data = this.analyticsPeriod === 'weeks' ? this.weeklyCommits : this.monthlyCommits
       const labels = this.analyticsPeriod === 'weeks' ? this.weeklyLabels : this.monthlyLabels
 
+      if (this.charts.weekly) this.charts.weekly.destroy()
+
       this.charts.weekly = new Chart(weekCtx, {
         type: 'bar',
         data: {
@@ -1737,8 +1738,7 @@ export default {
       })
     },
 
-    // Modifică refreshAllData să aibă opțiunea de force
-    async refreshAllData(forceContributors = false) {
+    async refreshAllData() {
       const token = this.getToken()
       if (!token) {
         this.error = 'GitHub token required'
@@ -1747,22 +1747,13 @@ export default {
       }
       
       this.isSyncing = true
-      
-      // Dacă e force refresh, setează flag-ul
-      if (forceContributors) {
-        this.forceContributorsRefresh = true
-      }
-      
       await this.fetchAllGitHubData(token)
-      
-      this.forceContributorsRefresh = false
       this.isSyncing = false
     },
 
-    // Metodă nouă pentru refresh doar contributori
     async refreshContributors() {
       this.showToast('Refreshing contributors...', 'info')
-      await this.refreshAllData(true)
+      await this.fetchContributorsFromCommits()
     },
 
     formatNumber(num) {
@@ -1854,6 +1845,7 @@ export default {
   }
 }
 </script>
+
 
 <style scoped>
 /* ===== GLOBAL ===== */

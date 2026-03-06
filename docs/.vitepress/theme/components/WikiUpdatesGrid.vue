@@ -488,6 +488,7 @@ export default {
       recentPRs: [],
       isLoading: true,
       filterType: 'all',
+      refreshInterval: null,
       
       // Referințe pentru scroll reveal
       card1Ref: null,
@@ -550,11 +551,36 @@ export default {
     this.setupScrollReveal();
     window.addEventListener('scroll', this.handleScroll);
     
+    // Încărcare inițială
     await this.fetchAllGitHubData(githubToken);
+    
+    // Refresh la 30 SECUNDE
+    this.refreshInterval = setInterval(() => {
+      this.fetchAllGitHubData(githubToken);
+    }, 30000);
+    
+    // Refresh la focus
+    window.addEventListener('focus', () => {
+      this.fetchAllGitHubData(githubToken);
+    });
+    
+    // Refresh la visibility change
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        this.fetchAllGitHubData(githubToken);
+      }
+    });
     
     setTimeout(() => {
       this.handleScroll();
     }, 100);
+  },
+
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
   },
 
   methods: {
@@ -570,105 +596,154 @@ export default {
         'Accept': 'application/vnd.github.v3+json'
       };
 
-      try {
-        console.log('📡 Fetching GitHub data with token...');
-        
-        // 1. Fetch commits (ultimele 4)
-        const commitsRes = await fetch(`${baseUrl}/commits?per_page=4`, { headers });
-        if (!commitsRes.ok) throw new Error(`Commits error: ${commitsRes.status}`);
-        const commits = await commitsRes.json();
-        
-        this.recentCommits = commits.map((commit, index) => ({
-          id: commit.sha.substring(0, 7),
-          message: commit.commit.message.split('\n')[0],
-          emoji: this.getCommitEmoji(commit.commit.message),
-          author: commit.author?.login || commit.commit.author.name,
-          date: commit.commit.author.date,
-          url: commit.html_url
-        }));
+      // Cache buster
+      const timestamp = Date.now();
 
-        // 2. Fetch repo info
-        const repoRes = await fetch(baseUrl, { headers });
+      try {
+        console.log('📡 Fetching GitHub data with cache buster:', timestamp);
+        
+        // ===== 1. FETCH COMMITS (ultimele 4) CU CACHE BUSTER =====
+        const commitsRes = await fetch(`${baseUrl}/commits?per_page=4&_=${timestamp}`, { headers });
+        if (commitsRes.ok) {
+          const commits = await commitsRes.json();
+          
+          this.recentCommits = commits.map((commit, index) => ({
+            id: commit.sha.substring(0, 7),
+            message: commit.commit.message.split('\n')[0],
+            emoji: this.getCommitEmoji(commit.commit.message),
+            author: commit.author?.login || commit.commit.author.name,
+            date: commit.commit.author.date,
+            url: commit.html_url
+          }));
+          
+          console.log('📋 Commits încărcate:', this.recentCommits.length);
+        }
+
+        // ===== 2. FETCH REPO INFO =====
+        const repoRes = await fetch(`${baseUrl}?_=${timestamp}`, { headers });
         if (!repoRes.ok) throw new Error(`Repo error: ${repoRes.status}`);
         const repoData = await repoRes.json();
         
-        // 3. Fetch contributors - VERSIUNE CORECTATĂ
-        let totalContributors = 0;
+        // ===== 3. FETCH CONTRIBUTORS - METODĂ NOUĂ DIN COMMIT-URI =====
+        console.log('📥 Extragem contributori DIRECT din commit-uri...');
+        
         let contributors = [];
+        let totalContributors = 0;
+        let topContributorsList = [];
+        let topContributorData = null;
         
         try {
-          // Întâi, luăm primii 5 contribuitori pentru afișare (ca să avem destui)
-          const contributorsRes = await fetch(`${baseUrl}/contributors?per_page=5&anon=1`, { headers });
-          if (contributorsRes.ok) {
-            contributors = await contributorsRes.json();
+          // Luăm ultimele 500 commit-uri pentru a extrage toți contributorii
+          let allCommits = [];
+          let page = 1;
+          let hasMore = true;
+          
+          while (hasMore && page <= 5) { // 5 pagini x 100 = 500 commit-uri
+            const commitsPageRes = await fetch(
+              `${baseUrl}/commits?per_page=100&page=${page}&_=${timestamp}`, 
+              { headers }
+            );
             
-            // Acum facem un request separat pentru a afla numărul TOTAL de contribuitori
-            const totalContributorsRes = await fetch(`${baseUrl}/contributors?per_page=1&anon=1`, { headers });
-            
-            if (totalContributorsRes.ok) {
-              const totalLink = totalContributorsRes.headers.get('Link');
-              
-              if (totalLink) {
-                const match = totalLink.match(/&page=(\d+)>; rel="last"/);
-                if (match && match[1]) {
-                  totalContributors = parseInt(match[1], 10);
-                } else {
-                  const data = await totalContributorsRes.json();
-                  totalContributors = data.length;
-                }
+            if (commitsPageRes.ok) {
+              const commitsPage = await commitsPageRes.json();
+              if (commitsPage.length === 0) {
+                hasMore = false;
               } else {
-                const data = await totalContributorsRes.json();
-                totalContributors = data.length;
+                allCommits = [...allCommits, ...commitsPage];
+                page++;
               }
             } else {
-              totalContributors = contributors.length;
+              hasMore = false;
             }
           }
-        } catch (e) {
-          console.log('⚠️ Eroare la fetch contribuitori:', e);
-          totalContributors = 0;
-          contributors = [];
-        }
-        
-        // Setează top contributor (primul) și top 3 contribuitori
-        if (contributors && contributors.length > 0) {
-          // Setează top contributor (primul)
-          this.topContributor = {
-            login: contributors[0].login,
-            contributions: contributors[0].contributions,
-            prs: 0 // Vom calcula mai târziu
-          };
           
-          // Setează top 3 contribuitori (sau câți avem)
-          this.topContributors = contributors.slice(0, 3).map(c => ({
+          // Creează un Map de contributori unici
+          const contributorMap = new Map();
+          
+          allCommits.forEach(commit => {
+            let login = null;
+            let avatar = null;
+            let html_url = null;
+            
+            if (commit.author) {
+              login = commit.author.login;
+              avatar = commit.author.avatar_url;
+              html_url = commit.author.html_url;
+            } else if (commit.committer) {
+              login = commit.committer.login;
+              avatar = commit.committer.avatar_url;
+              html_url = commit.committer.html_url;
+            } else {
+              login = commit.commit.author.name?.replace(/\s+/g, '').toLowerCase();
+              avatar = `https://github.com/${login}.png`;
+              html_url = `https://github.com/${login}`;
+            }
+            
+            if (login) {
+              if (!contributorMap.has(login)) {
+                contributorMap.set(login, {
+                  login: login,
+                  avatar_url: avatar,
+                  html_url: html_url,
+                  contributions: 1
+                });
+              } else {
+                contributorMap.get(login).contributions++;
+              }
+            }
+          });
+          
+          contributors = Array.from(contributorMap.values());
+          totalContributors = contributors.length;
+          
+          console.log(`✅ Găsiți ${totalContributors} contribuitori din commit-uri`);
+          
+          // Sortează după contribuții
+          const sorted = [...contributors].sort((a, b) => b.contributions - a.contributions);
+          
+          // Top 3 contribuitori
+          topContributorsList = sorted.slice(0, 3).map(c => ({
             login: c.login,
             contributions: c.contributions
           }));
           
-          // Încerci să calculezi PR-urile pentru top contributor
-          try {
-            // Ia PR-urile create de utilizator
-            const prsRes = await fetch(`https://api.github.com/search/issues?q=repo:${owner}/${repo}+type:pr+author:${contributors[0].login}`, { headers });
-            if (prsRes.ok) {
-              const prsData = await prsRes.json();
-              this.topContributor.prs = prsData.total_count || 0;
+          // Top contributor
+          if (sorted.length > 0) {
+            topContributorData = sorted[0];
+            
+            // Încerci să calculezi PR-urile pentru top contributor
+            try {
+              const prsRes = await fetch(
+                `https://api.github.com/search/issues?q=repo:${owner}/${repo}+type:pr+author:${topContributorData.login}&_=${timestamp}`, 
+                { headers }
+              );
+              if (prsRes.ok) {
+                const prsData = await prsRes.json();
+                topContributorData.prs = prsData.total_count || 0;
+              }
+            } catch (e) {
+              console.log('⚠️ Nu s-au putut încărca PR-urile pentru top contributor');
             }
-          } catch (e) {
-            console.log('⚠️ Nu s-au putut încărca PR-urile pentru top contributor');
           }
-        } else {
-          // Fallback dacă nu sunt contribuitori
-          this.topContributor = {
-            login: 'Niciun contributor',
-            contributions: 0,
-            prs: 0
-          };
+          
+        } catch (e) {
+          console.error('❌ Eroare la extragerea contributorilor din commit-uri:', e);
         }
 
-        // 4. Fetch total commits
+        // Setează top contributor
+        this.topContributor = {
+          login: topContributorData?.login || 'Niciun contributor',
+          contributions: topContributorData?.contributions || 0,
+          prs: topContributorData?.prs || 0
+        };
+        
+        // Setează top 3 contribuitori
+        this.topContributors = topContributorsList;
+
+        // ===== 4. CALCULEAZĂ TOTAL COMMITS =====
         let totalCommits = 0;
         try {
-          const allCommitsRes = await fetch(`${baseUrl}/commits?per_page=1`, { headers });
+          const allCommitsRes = await fetch(`${baseUrl}/commits?per_page=1&_=${timestamp}`, { headers });
           if (allCommitsRes.ok) {
             const allCommitsLink = allCommitsRes.headers.get('Link');
             if (allCommitsLink) {
@@ -682,10 +757,10 @@ export default {
           console.log('⚠️ Eroare la fetch total commits:', e);
         }
 
-        // 5. Fetch tree pentru numărul de fișiere
+        // ===== 5. FETCH TREE PENTRU NUMĂRUL DE FIȘIERE =====
         let totalFiles = 0;
         try {
-          const treeRes = await fetch(`${baseUrl}/git/trees/main?recursive=1`, { headers });
+          const treeRes = await fetch(`${baseUrl}/git/trees/main?recursive=1&_=${timestamp}`, { headers });
           if (treeRes.ok) {
             const treeData = await treeRes.json();
             totalFiles = treeData.tree?.filter(item => item.type === 'blob').length || 0;
@@ -694,56 +769,19 @@ export default {
           console.log('⚠️ Nu s-au putut încărca fișierele');
         }
 
-        // 6. Fetch ISSUE-URI (separate de PR-uri)
+        // ===== 6. FETCH ISSUE-URI =====
         let openIssues = 0;
+        let recentIssues = [];
         try {
-          const issuesRes = await fetch(`${baseUrl}/issues?state=open&per_page=100`, { headers });
+          const issuesRes = await fetch(`${baseUrl}/issues?state=open&per_page=100&_=${timestamp}`, { headers });
           
           if (issuesRes.ok) {
             const allIssues = await issuesRes.json();
             const realIssues = allIssues.filter(issue => !issue.pull_request);
             openIssues = realIssues.length;
             
-            console.log('📊 Issue-uri reale:', openIssues);
-          }
-        } catch (e) {
-          console.log('⚠️ Eroare la fetch issues:', e);
-        }
-
-        // 7. Fetch PR-uri
-        let openPRs = 0;
-        try {
-          const pullsRes = await fetch(`${baseUrl}/pulls?state=open&per_page=1`, { headers });
-          
-          if (pullsRes.ok) {
-            const pullsLink = pullsRes.headers.get('Link');
-            
-            if (pullsLink) {
-              const match = pullsLink.match(/&page=(\d+)>; rel="last"/);
-              if (match && match[1]) {
-                openPRs = parseInt(match[1], 10);
-              } else {
-                const data = await pullsRes.json();
-                openPRs = data.length;
-              }
-            } else {
-              const data = await pullsRes.json();
-              openPRs = data.length;
-            }
-            
-            console.log('📊 PR-uri deschise:', openPRs);
-          }
-        } catch (e) {
-          console.log('⚠️ Eroare la fetch PR-uri:', e);
-        }
-
-        // 8. Fetch recent issues (ultimele 5)
-        let recentIssues = [];
-        try {
-          const issuesRes = await fetch(`${baseUrl}/issues?state=open&sort=updated&direction=desc&per_page=5`, { headers });
-          if (issuesRes.ok) {
-            const issues = await issuesRes.json();
-            recentIssues = issues.filter(issue => !issue.pull_request).map(issue => ({
+            // Recent issues (ultimele 5)
+            recentIssues = realIssues.slice(0, 5).map(issue => ({
               id: issue.id,
               number: issue.number,
               title: issue.title,
@@ -754,17 +792,22 @@ export default {
               labels: issue.labels?.map(l => l.name) || [],
               repo: repo
             }));
+            
+            console.log('📊 Issue-uri reale:', openIssues);
           }
         } catch (e) {
-          console.log('⚠️ Eroare la fetch recent issues:', e);
+          console.log('⚠️ Eroare la fetch issues:', e);
         }
 
-        // 9. Fetch recent PRs (ultimele 5)
+        // ===== 7. FETCH PR-URI =====
+        let openPRs = 0;
         let recentPRs = [];
         try {
-          const prsRes = await fetch(`${baseUrl}/pulls?state=open&sort=updated&direction=desc&per_page=5`, { headers });
-          if (prsRes.ok) {
-            const prs = await prsRes.json();
+          const pullsRes = await fetch(`${baseUrl}/pulls?state=open&per_page=5&_=${timestamp}`, { headers });
+          
+          if (pullsRes.ok) {
+            const prs = await pullsRes.json();
+            openPRs = prs.length;
             recentPRs = prs.map(pr => ({
               id: pr.id,
               number: pr.number,
@@ -777,9 +820,11 @@ export default {
               commits: pr.commits,
               labels: pr.labels?.map(l => l.name) || []
             }));
+            
+            console.log('📊 PR-uri deschise:', openPRs);
           }
         } catch (e) {
-          console.log('⚠️ Eroare la fetch recent PRs:', e);
+          console.log('⚠️ Eroare la fetch PR-uri:', e);
         }
 
         // Actualizează stats
