@@ -3,7 +3,7 @@
 
 <p align="center">
     <a href="https://github.com/Josee9988/project-template/generate">
-    <img width="100%" src="blob:https://imgur.com/3bea00cf-f6f3-4f9c-b911-4c58ae3cc90d" alt="@ianncxd/wiki-wildfire-inc">
+    <img width="100%" src="https://i.imgur.com/21UXpqp.png" alt="@ianncxd/wiki-wildfire-inc">
   </a>
   <br>
   <a href="https://github.com/ianncxd/wiki-wildfire-inc/issues">
