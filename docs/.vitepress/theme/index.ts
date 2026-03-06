@@ -82,9 +82,11 @@ import WildfireTag from './components/WildfireTag.vue'
 import SiteMap from './components/SiteMap.vue'
 import PageNotFound from './components/PageNotFound.vue'
 import HomeNavbar from './components/HomeNavbar.vue'
-
-// NOUA COMPONENTĂ
+import Panel from './components/Panel.vue'
 import AboutWiki from './components/AboutWiki.vue'
+
+// NOILE COMPONENTE PENTRU DASHBOARD
+import FileTreeItem from './components/FileTreeItem.vue'
 
 // Import popout
 import './popout.js'
@@ -139,7 +141,11 @@ export default {
     app.component('SiteMap', SiteMap)
     app.component('PageNotFound', PageNotFound)
     app.component('AboutWiki', AboutWiki)
+    app.component('Panel', Panel)
     
+    // NOUA COMPONENTĂ PENTRU FILE TREE
+    app.component('FileTreeItem', FileTreeItem)
+
     // Toate tag-urile
     app.component('PageTagBlue', PageTagBlue)
     app.component('PageTagOrange', PageTagOrange)
@@ -159,5 +165,6 @@ export default {
     // 🔥 Adăugăm token-ul global
     app.config.globalProperties.$githubToken = githubToken
     console.log('✅ Token adăugat în aplicația Vue')
+    console.log('📁 Componenta FileTreeItem înregistrată cu succes')
   }
 } satisfies Theme

@@ -166,6 +166,9 @@ export default defineConfig({
       { 
         text: '<img src="/icons/faq.svg" class="nav-icon" width="16" height="16" alt=""> FAQ', 
         link: '/informatii/faq' 
+      },      { 
+        text: '<img src="/icons/faq.svg" class="nav-icon" width="16" height="16" alt=""> Dashboard', 
+        link: '/panel/panel' 
       },
     ],
 
