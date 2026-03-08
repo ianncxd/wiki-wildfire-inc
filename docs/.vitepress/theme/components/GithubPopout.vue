@@ -225,37 +225,37 @@ export default {
       required: true
     },
     targetElement: {
-      type: HTMLElement,
+      type: Object,
       required: true
     }
   },
-        data() {
-          return {
-            isVisible: false,
-            isBelow: false,
-            loading: true,
-            error: null,
-            user: {
-              username: this.username,
-              name: '',
-              avatar: `https://github.com/${this.username}.png`,
-              bio: '',
-              followers: 0,
-              following: 0,
-              publicRepos: 0,
-              location: '',
-              company: '',
-              blog: '',
-              createdAt: '',
-              profileUrl: `https://github.com/${this.username}`,
-              contributions: null
-            },
-            popoutStyle: {},
-            tagClasses: '',
-            // 🔥 TOKEN DIN VARIABILA DE MEDIU
-            githubToken: import.meta.env.VITE_GITHUB_TOKEN
-          }
-        },
+  data() {
+    return {
+      isVisible: false,
+      isBelow: false,
+      loading: true,
+      error: null,
+      user: {
+        username: this.username,
+        name: '',
+        avatar: `https://github.com/${this.username}.png`,
+        bio: '',
+        followers: 0,
+        following: 0,
+        publicRepos: 0,
+        location: '',
+        company: '',
+        blog: '',
+        createdAt: '',
+        profileUrl: `https://github.com/${this.username}`,
+        contributions: null
+      },
+      popoutStyle: {},
+      tagClasses: '',
+      // 🔥 TOKEN DIN VARIABILA DE MEDIU
+      githubToken: import.meta.env.VITE_GITHUB_TOKEN
+    }
+  },
   mounted() {
     console.log('🔥 GithubPopout - TOKEN:', this.githubToken ? 'EXISTĂ' : 'LIPSEȘTE')
     console.log('📦 Lungime token:', this.githubToken?.length)
