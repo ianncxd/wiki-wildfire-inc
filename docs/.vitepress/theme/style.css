@@ -1,0 +1,431 @@
+/**
+ * TEMA WILDFIRE - STYLE ORGANIZAT
+ * --------------------------------------------------------------------------
+ */
+
+/*=============================================================================
+  1. VARIABILE ȘI CULORI
+=============================================================================*/
+:root {
+  /* Culori Wildfire */
+  --wf-orange: #ff4500;
+  --wf-orange-light: #ff8c00;
+  --wf-orange-dark: #ff5722;
+  --wf-gray-dark: #0a0a0a;
+  --wf-gray: #6b7280;
+  --wf-gray-light: #9ca3af;
+  
+  /* VitePress overrides */
+  --vp-c-brand-1: var(--wf-orange);
+  --vp-c-brand-2: var(--wf-orange-light);
+  --vp-c-brand-3: var(--wf-orange-dark);
+  --vp-c-brand-soft: rgba(255, 69, 0, 0.16);
+  
+  --vp-c-tip-1: var(--vp-c-brand-1);
+  --vp-c-tip-2: var(--vp-c-brand-2);
+  --vp-c-tip-3: var(--vp-c-brand-3);
+  --vp-c-tip-soft: var(--vp-c-brand-soft);
+  
+  /* Home hero */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, var(--wf-orange) 30%, var(--wf-orange-light));
+  --vp-home-hero-image-background-image: linear-gradient(-45deg, var(--wf-orange) 50%, var(--wf-orange-light) 50%);
+  --vp-home-hero-image-filter: blur(44px);
+  
+  /* LIGHT MODE - Fundaluri */
+  --vp-c-bg: #ffffff;
+  --vp-c-bg-alt: #f6f6f7;
+  --vp-c-bg-elv: #ffffff;
+  --vp-c-bg-soft: #f9f9f9;
+  
+  /* LIGHT MODE - Text */
+  --vp-c-text-1: #1f2a40;
+  --vp-c-text-2: #5d6c7e;
+  --vp-c-text-3: #8e9aab;
+  
+  /* LIGHT MODE - Chenare */
+  --vp-c-divider: #e2e8f0;
+  --vp-c-divider-light: #e9edf3;
+}
+
+.dark {
+  /* DARK MODE - Fundaluri */
+  --vp-c-bg: #0a0a0a;        /* Fundal principal (dreapta) */
+  --vp-c-bg-alt: #050505;    /* Fundal sidebar (stânga) */
+  --vp-c-bg-elv: #141414;    /* Fundal elemente elevate */
+  --vp-c-bg-soft: rgba(255, 69, 0, 0.05);
+  
+  /* DARK MODE - Text */
+  --vp-c-text-1: #ffffff;
+  --vp-c-text-2: var(--wf-gray-light);
+  --vp-c-text-3: var(--wf-gray);
+  
+  /* DARK MODE - Chenare */
+  --vp-c-divider: #2a2a2a;
+  --vp-c-divider-light: #1f1f1f;
+}
+
+@media (min-width: 640px) {
+  :root { --vp-home-hero-image-filter: blur(56px); }
+}
+@media (min-width: 960px) {
+  :root { --vp-home-hero-image-filter: blur(68px); }
+}
+
+/*=============================================================================
+  2. COMPONENTE VITEPRESS
+=============================================================================*/
+
+/* Butoane */
+:root {
+  --vp-button-brand-border: transparent;
+  --vp-button-brand-text: var(--vp-c-white);
+  --vp-button-brand-bg: var(--vp-c-brand-3);
+  --vp-button-brand-hover-border: transparent;
+  --vp-button-brand-hover-text: var(--vp-c-white);
+  --vp-button-brand-hover-bg: var(--vp-c-brand-2);
+  --vp-button-brand-active-border: transparent;
+  --vp-button-brand-active-text: var(--vp-c-white);
+  --vp-button-brand-active-bg: var(--vp-c-brand-1);
+}
+
+/* Custom blocks */
+:root {
+  --vp-custom-block-tip-border: transparent;
+  --vp-custom-block-tip-text: var(--vp-c-text-1);
+  --vp-custom-block-tip-bg: var(--vp-c-brand-soft);
+  --vp-custom-block-tip-code-bg: var(--vp-c-brand-soft);
+}
+
+/*=============================================================================
+  3. NAVBAR & SEARCH
+=============================================================================*/
+
+/* Ascunde searchbar-ul default */
+.DocSearch-Button,
+.VPNavBarSearch,
+.VPNavBarSearchButton {
+  display: none !important;
+}
+
+/* Forțează afișarea butonului de theme */
+.VPNavBarAppearance {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.VPSwitchAppearance {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.VPNavBarActions .VPNavBarAppearance {
+  display: flex !important;
+  margin-left: 8px !important;
+}
+
+/*=============================================================================
+  4. ICONIȚE GLOBALE - CULOARE #737373
+=============================================================================*/
+.nav-icon {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: 6px;
+  display: inline-block;
+  position: relative;
+  top: -1px;
+  filter: brightness(0) saturate(100%) invert(45%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(97%) contrast(92%) !important;
+}
+
+.dark .nav-icon {
+  filter: brightness(0) saturate(100%) invert(45%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(97%) contrast(92%) !important;
+}
+
+/*=============================================================================
+  5. SIDEBAR - FĂRĂ SCROLLBAR
+=============================================================================*/
+.VPSidebar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.VPSidebar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+/* Elimină liniile dintre secțiuni */
+.VPSidebar .group + .group {
+  border-top: none !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Elimină orice bordură de la grupuri */
+.VPSidebar .group {
+  border-bottom: none !important;
+  border-top: none !important;
+}
+
+/* Elimină padding-ul suplimentar dintre secțiuni */
+.VPSidebar .items + .group {
+  margin-top: 0 !important;
+}
+
+/* Dacă ai separatoare și la iteme */
+.VPSidebarItem + .VPSidebarItem {
+  border-top: none !important;
+}
+
+/* Elimină orice linie orizontală din sidebar */
+.VPSidebar hr {
+  display: none !important;
+}
+
+
+/*=============================================================================
+  6. SCROLLBAR INCENDIAR - GLOBAL
+=============================================================================*/
+
+/* Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px !important;
+  height: 10px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--vp-c-bg-alt) !important;
+  border-left: 1px solid rgba(255, 69, 0, 0.2) !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff4500, #ff8c00, #ffd700) !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: 0 0 15px rgba(255, 69, 0, 0.5) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ff5722, #ff9900, #ffe135) !important;
+  box-shadow: 0 0 20px rgba(255, 69, 0, 0.8) !important;
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--vp-c-bg-alt) !important;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin !important;
+  scrollbar-color: #ff4500 var(--vp-c-bg-alt) !important;
+}
+
+/*=============================================================================
+  7. FONT PAGINA PRINCIPALĂ - PĂSTRĂM ORBITRON (comentat momentan)
+=============================================================================*/
+/* 
+.VPHome *,
+.VPHomeHero *,
+.VPHomeFeatures *,
+.VPHome .name,
+.VPHome .text,
+.VPHome .tagline {
+  font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+}
+*/
+
+/*=============================================================================
+  8. FONT DOAR PENTRU DOCUMENTAȚIE (PAGINI CARE NU SUNT HOME)
+=============================================================================*/
+
+/* Aplică font implicit doar pe paginile de documentație (orice pagină care nu are clasa .VPHome) */
+body:not(.home) *,
+.VPDoc *,
+.VPDoc h1,
+.VPDoc h2,
+.VPDoc h3,
+.VPDoc h4,
+.VPDoc h5,
+.VPDoc h6,
+.VPDoc p,
+.VPDoc .content,
+.VPDoc .vp-doc,
+.vp-doc *,
+.vp-doc h1,
+.vp-doc h2,
+.vp-doc h3,
+.vp-doc h4,
+.vp-doc h5,
+.vp-doc h6,
+.vp-doc p,
+.VPSidebar *,
+.VPSidebarItem,
+.VPDoc .VPNavBarMenuLink,
+.VPDoc .VPNavBarMenuGroup button,
+.VPDoc .VPNavBarTitle {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+}
+
+/*=============================================================================
+  9. BUTOANE ȘI ELEMENTE INTERACTIVE
+=============================================================================*/
+
+/* Buton CTA Discord */
+.discord-cta {
+  background: linear-gradient(135deg, #5865F2, #4752C4, #5865F2) !important;
+  background-size: 200% auto !important;
+  color: white !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.discord-cta:hover {
+  background-position: right center !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(88, 101, 242, 0.5) !important;
+}
+
+/* Theme Switch Custom */
+.theme-switch {
+  position: relative;
+  border-radius: 30px;
+  display: block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+  border: 2px solid var(--wf-orange);
+  background: transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  padding: 0;
+}
+
+.theme-switch.mobile {
+  width: 40px;
+  height: 22px;
+  border-width: 2px;
+}
+
+.theme-switch .switch-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--wf-orange);
+  box-shadow: 0 2px 5px rgba(255, 69, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.theme-switch.mobile .switch-thumb {
+  width: 14px;
+  height: 14px;
+  top: 2px;
+  left: 2px;
+}
+
+.theme-switch .switch-thumb.dark {
+  transform: translateX(20px);
+}
+
+.theme-switch.mobile .switch-thumb.dark {
+  transform: translateX(18px);
+}
+
+.theme-switch:hover {
+  border-color: var(--wf-orange);
+  box-shadow: 0 0 10px rgba(255, 69, 0, 0.3);
+}
+
+.theme-switch:hover .switch-thumb {
+  background: var(--wf-orange);
+  box-shadow: 0 0 12px rgba(255, 69, 0, 0.5);
+}
+
+/*=============================================================================
+  9. ASCUNDERE SCROLLBAR-URI PENTRU TOATE SECȚIUNILE
+=============================================================================*/
+
+/* Ascunde scrollbar pentru sidebar (stânga) */
+.VPSidebar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  overflow-y: auto !important;
+}
+
+.VPSidebar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Ascunde scrollbar pentru outline (dreapta - "Pe această pagină") */
+.VPDocAsideOutline {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  overflow-y: auto !important;
+}
+
+.VPDocAsideOutline::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Ascunde scrollbar pentru containerul principal cu ambele coloane */
+.VPDoc.has-sidebar.has-aside {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.VPDoc.has-sidebar.has-aside::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Ascunde scrollbar pentru orice aside din document */
+.vp-doc aside,
+.VPDocAside,
+.VPDocAside .content,
+.aside-container {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.vp-doc aside::-webkit-scrollbar,
+.VPDocAside::-webkit-scrollbar,
+.VPDocAside .content::-webkit-scrollbar,
+.aside-container::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Asigură că scroll-ul funcționează dar bara e ascunsă */
+.VPSidebar,
+.VPDocAsideOutline,
+.VPDoc.has-sidebar.has-aside,
+.vp-doc aside,
+.VPDocAside,
+.aside-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow-y: auto;
+}
+
+.VPSidebar::-webkit-scrollbar,
+.VPDocAsideOutline::-webkit-scrollbar,
+.VPDoc.has-sidebar.has-aside::-webkit-scrollbar,
+.vp-doc aside::-webkit-scrollbar,
+.VPDocAside::-webkit-scrollbar,
+.aside-container::-webkit-scrollbar {
+  display: none;
+}
+
