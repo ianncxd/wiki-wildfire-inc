@@ -2,20 +2,6 @@ import { h } from 'vue'
 import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import './style.css'
-import * as dotenv from 'dotenv'
-import * as path from 'path'
-
-// 🔥 Încărcăm .env din mai multe locații posibile
-try {
-  // Încearcă din rădăcina proiectului
-  dotenv.config({ path: path.resolve(__dirname, '../../../.env') })
-  // Încearcă și din docs folder
-  dotenv.config({ path: path.resolve(__dirname, '../../.env') })
-  // Încearcă din theme folder
-  dotenv.config({ path: path.resolve(__dirname, '../.env') })
-} catch (e) {
-  console.log('📥 Nu s-a putut încărca .env din fișier, încercăm surse alternative...')
-}
 
 // 📝 Tipuri pentru TypeScript
 declare global {
@@ -30,46 +16,8 @@ declare global {
   }
 }
 
-// 🔥 Încercăm să luăm token-ul din TOATE sursele posibile
-let githubToken: string | undefined
-
-// 1. Din import.meta.env (Vite)
-try {
-  if (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_GITHUB_TOKEN) {
-    githubToken = import.meta.env.VITE_GITHUB_TOKEN
-    console.log('📥 Sursa 1 - import.meta.env: GĂSIT')
-  }
-} catch (e) {
-  console.log('📥 Sursa 1 - import.meta.env: EȘUAT')
-}
-
-// 2. Din process.env (dotenv)
-if (!githubToken && typeof process !== 'undefined' && process.env && process.env.VITE_GITHUB_TOKEN) {
-  githubToken = process.env.VITE_GITHUB_TOKEN
-  console.log('📥 Sursa 2 - process.env: GĂSIT')
-}
-
-// 3. Din window (dacă e setat manual)
-if (!githubToken && typeof window !== 'undefined' && window.__GITHUB_TOKEN) {
-  githubToken = window.__GITHUB_TOKEN
-  console.log('📥 Sursa 3 - window.__GITHUB_TOKEN: GĂSIT')
-}
-
-// 4. Din variabilele de sistem
-if (!githubToken && typeof process !== 'undefined' && process.env && process.env.VITE_GITHUB_TOKEN) {
-  githubToken = process.env.VITE_GITHUB_TOKEN
-  console.log('📥 Sursa 4 - System env: GĂSIT')
-}
-
-console.log('🔥 Token în index.ts:', githubToken ? 'EXISTĂ' : 'LIPSEȘTE')
-if (githubToken) {
-  console.log('📦 Lungime token:', githubToken.length)
-}
-
-// Facem token-ul disponibil global
-if (typeof window !== 'undefined' && githubToken) {
-  window.__GITHUB_TOKEN = githubToken
-}
+// 🔥 Get token from Vite env (SSR-safe)
+const githubToken = import.meta.env.VITE_GITHUB_TOKEN || ''
 
 // Import componente principale
 import WikiHome from './components/WikiHome.vue'
